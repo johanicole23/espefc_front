@@ -1,0 +1,68 @@
+:root {
+  /*specifications general like global atributtes*/
+  --blanco: #EEEEEE;
+  --oscuro: #034b6e;
+  --oscuro: #00334d;
+  --primario: #005f8f;
+  --secundario: #b0d626;
+  --terciario: #2596be;
+}
+
+.App {
+  text-align: center;
+
+}
+
+.App-logo {
+  height: 8vmin;
+  pointer-events: none;
+}
+
+.App-logo2 {
+  height: 6vmin;
+  pointer-events: none;
+}
+
+.formatoContenidoCarrusel {
+  position: 'absolute';
+  top: '100px';
+  left: '20%';
+}
+
+@media screen and (max-width: 600px) {
+  .formatoContenidoCarrusel {
+    position: 'absolute';
+    top: '100px';
+    left: '5%';
+  }
+}
+
+.App-subtitulo {
+  font-family: 'Lato';
+  color: var(--primario);
+  font-weight: normal;
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+}
+
+.App-subtitulo:after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: -0.5em;
+  width: 100%;
+  height: 0.2em;
+  background-color: transparent;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.App-subtitulo:hover:after {
+  background-color: var(--oscuro);
+}
+
+.App-subtitulo:hover {
+  color: var(--oscuro);
+}
+
