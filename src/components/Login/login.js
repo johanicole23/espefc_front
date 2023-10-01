@@ -56,6 +56,11 @@ function Login() {
     const textFieldsRef = useRef([]);
     const [isAlertEmptyCodeOpen, setIsAlertEmptyCodeOpen] = useState(false);
     const [isAlertCredentialsOpen, setIsAlertCredentialsOpen] = useState(false);
+    const [isAlertIdOpen, setIsAlertIdOpen] = useState(false);
+    const [isAlertIdSuccessOpen, setIsAlertIdSuccessOpen] = useState(false);
+    const [isAlertCheckEmailOpen, setIsAlertCheckEmailOpen] = useState(false);
+    const [isAlertCheckEmailWrongOpen, setIsAlertCheckEmailWrongOpen] = useState(false);
+    const [inputValue, setInputValue] = useState('');
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
 
@@ -71,6 +76,7 @@ function Login() {
 
 
     }
+    
 
     const handleCloseCodeConfirm = () => {
         //setIsModalCodeConfirmOpen(false);
@@ -132,6 +138,35 @@ function Login() {
         setIsModalForgetPasswordOpen(false);
     };
 
+    // función para validar la cédula incorrecta para olvidar contraseña
+    const handleIdOpen = (event) => {
+       if (true) {
+            //setIsAlertIdOpen(true);
+            setIsAlertIdSuccessOpen(true);
+        }
+       /*else  (true) {
+            setIsAlertIdOpen(true);
+        }*/
+    }
+
+    // Cuando se hace clic en el TextField de Cedula (Modal Forget Password) establece el valor en una cadena vacía  abre el modal de cedula inválida
+    const handleTextFieldClick = () => {        
+        setInputValue('');
+        setIsAlertIdOpen(false);
+    };
+
+    // función para mensaje de revisar el correo con nueva contraseña 
+    const handleCheckEmailSuccessOpen = (event) => {
+        if (true) {
+            setIsAlertCheckEmailWrongOpen(true);
+            //setIsAlertCheckEmailOpen(true);
+        }
+        
+       /*else  (true) {
+            setIsAlertIdOpen(true);
+        }*/
+    }
+
 
     return (
         <ThemeProvider theme={theme} >
@@ -185,19 +220,21 @@ function Login() {
                                             Ingrese su número de cédula:
                                         </Typography>
                                         <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', my: 2 }}>
-                                            <TextField type="password" sx={login.textoInputCedula} id="password" label={<Typography sx={login.textoInput} >Cédula</Typography>}
-                                                variant="standard"
-                                                value={contrasena}
-                                                onChange={(e) => setContrasena(e.target.value)} />
-                                            <Button size="small" variant="contained" color="terciary" onClick={handleSubmit} sx={login.textoBotonCedula}>
+                                            <TextField type="password" sx={login.textoInputCedula} id="cedula" label={<Typography sx={login.textoInput} >Cédula</Typography>}
+                                                variant="standard"                                              
+                                                value={inputValue}
+                                                onChange={(e) => setInputValue(e.target.value)}
+                                                onClick={handleTextFieldClick}
+                                                />
+                                            <Button size="small" variant="contained" color="terciary" onClick={handleIdOpen} sx={login.textoBotonCedula}>
                                                 Verificar
                                             </Button>
                                         </Box>
                                         <Stack sx={{ width: '100%' }} spacing={2}>
-                                            {isAlertCredentialsOpen && (
+                                            {isAlertIdOpen && (
                                                 <Alert
-                                                    open={isAlertCredentialsOpen}
-                                                    onClose={handleCodeAgain}
+                                                    open={isAlertIdOpen}
+                                                    
                                                     severity="error"
                                                     sx={{
                                                         fontFamily: 'Cairo',
@@ -206,12 +243,28 @@ function Login() {
                                                         fontWeight: 600,
                                                     }}
                                                 >
-                                                    Usuario y/o contraseña inválidos.
+                                                    Cédula inválida
+                                                </Alert>
+                                            )}
+                                        </Stack>
+                                        <Stack sx={{ width: '100%' }} spacing={2}>
+                                            {isAlertIdSuccessOpen && (
+                                                <Alert
+                                                    open={isAlertIdSuccessOpen}                                                    
+                                                    severity="success"
+                                                    sx={{
+                                                        fontFamily: 'Cairo',
+                                                        textAlign: 'Right',
+                                                        fontSize: "14px",
+                                                        fontWeight: 600,
+                                                    }}
+                                                >
+                                                    Cédula válida
                                                 </Alert>
                                             )}
                                         </Stack>
 
-                                        <Typography id="modal-modal-title" sx={home.homeTextH4Left}>
+                                        <Typography id="modal-modal-title" sx={home.homeTextH4Left} >
                                             A continuación, responde las siguientes preguntas de seguridad.
                                         </Typography>
 
@@ -223,13 +276,43 @@ function Login() {
                                         </Box>
 
                                         <Button size="medium" variant="contained" color="secondary"
-                                            onClick={() => {
-
-
-                                            }} sx={buttons.registerButton} >
+                                            onClick={handleCheckEmailSuccessOpen}
+                                            sx={buttons.registerButton} >
                                             Continuar
                                         </Button>
-
+                                        <br/>
+                                        <Stack sx={{ width: '100%' }} spacing={2}>
+                                            {isAlertCheckEmailOpen && (
+                                                <Alert
+                                                    open={isAlertCheckEmailOpen}                                                   
+                                                    severity="success"
+                                                    sx={{
+                                                        fontFamily: 'Cairo',
+                                                        textAlign: 'Right',
+                                                        fontSize: "14px",
+                                                        fontWeight: 600,
+                                                    }}
+                                                >
+                                                    Revisa tu correo, se te asignó una nueva contraseña
+                                                </Alert>
+                                            )}
+                                        </Stack>
+                                        <Stack sx={{ width: '100%' }} spacing={2}>
+                                            {isAlertCheckEmailOpen && (
+                                                <Alert
+                                                    open={isAlertCheckEmailOpen}                                                   
+                                                    severity="success"
+                                                    sx={{
+                                                        fontFamily: 'Cairo',
+                                                        textAlign: 'Right',
+                                                        fontSize: "14px",
+                                                        fontWeight: 600,
+                                                    }}
+                                                >
+                                                    Revisa tu correo, se te asignó una nueva contraseña
+                                                </Alert>
+                                            )}
+                                        </Stack>
 
 
                                     </Box>
@@ -311,7 +394,7 @@ function Login() {
                                                 <Button size="small" variant="outlined" color="secondary" width="30%" onClick={handleCodeAgain} sx={login.textoBoton} >
                                                     Enviar de nuevo
                                                 </Button>
-                                                <Button size="small" variant="contained" color="secondary" onClick={handleSubmit} sx={login.textoBoton}>
+                                                <Button size="small" variant="contained" color="secondary" onClick={handleSubmit} sx={login.textoBoton} href='/cuenta'>
                                                     Verificar
                                                 </Button>
                                             </Box>

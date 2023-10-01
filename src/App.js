@@ -9,7 +9,7 @@ import Simulator from './components/LoanSimulator/simulator';
 import News from './components/News/news';
 import Login from './components/Login/login';
 import Register from './components/Register/register';
-import Account from './components/Account/account';
+import Account from './components/Account/accountHome';
 //import Account from './pages/account/accountHome';
 function App() {
   return (

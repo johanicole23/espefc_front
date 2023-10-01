@@ -42,15 +42,12 @@ import ElectricCarIcon from '@mui/icons-material/ElectricCar';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import MedicationIcon from '@mui/icons-material/Medication';
 import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
-
+import { Button } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import home from '../../../styles/pages/home';
 import loan from '../../../styles/pages/loan';
 import appbar from '../../../styles/components/appbar';
-
-
-import { Button } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { display } from '@mui/system';
+import AppBarDrawer from '../AppBarDrawer';
 
 
 const QontoStepIconRoot = styled('div')(({ theme, ownerState }) => ({
@@ -131,44 +128,8 @@ function Chirographic() {
       opacity: 0,
       transform: 'translateY(-20px)',
     },
-  };
-  const drawerWidth = 300;
-  const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-      flexGrow: 1,
-      padding: theme.spacing(3),
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      marginRight: -drawerWidth,
-      ...(open && {
-        transition: theme.transitions.create('margin', {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginRight: 0,
-      }),
-    }),
-  );
+  }; 
 
-  const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-  })(({ theme, open }) => ({
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    background: 'white', // Agregar esta línea para establecer el fondo blanco
-    ...(open && {
-      width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginRight: drawerWidth,
-    }),
-  }));
 
 
   const [open, setOpen] = React.useState(false);
@@ -181,17 +142,7 @@ function Chirographic() {
     setOpen(false);
   };
 
-  const DrawerHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-start',
-
-    height: '6rem',
-  }));
-
+  
   const [checked, setChecked] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [activePaperIndex, setActivePaperIndex] = React.useState(0);
@@ -374,36 +325,10 @@ function Chirographic() {
   ];
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar disableGutters sx={{ height: '6rem', padding: '1rem' }}>
-
-          <Box display="flex" alignItems="center" sx={{ width: '30%', flex: '0 0 30%', flexGrow: 1 }} noWrap component="div" >
-            <Box sx={appbar.appBarTitleFormat}>
-              <img src={logo} className="App-logo" alt="logo" />
-              <Box display="flex" flexDirection="column" marginLeft={'1%'}>
-                <Typography variant="h6" noWrap component="a" href="/" sx={appbar.appBarTitleFc}>FONDO DE CESANTÍA</Typography>
-                <Typography variant="h8" noWrap component="a" href="/" sx={appbar.appBarTitleEspe}>UNIVERSIDAD DE LAS FUERZAS ARMADAS</Typography>
-              </Box>
-            </Box>
-          </Box>
-          <IconButton
-            color="#005f8f"
-            aria-label="open drawer"
-            edge="end"
-            onClick={handleDrawerOpen}
-            sx={{ ...(open && { display: 'none' }), marginRight: '200px' }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+    <div>
+      <AppBarDrawer />      
       <Box sx={{ flexGrow: 1, padding: '0px' }} open={open}>
-        <DrawerHeader />
         <ThemeProvider theme={theme} >
-
-          <div><MyAppBar title="AppBar Component" /></div>
           <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ padding: '0 0', marginTop: 1 }}>
             <Typography variant="body2" sx={home.homeTextH3Light}>PRÉSTAMO QUIROGRAFÁRIO</Typography>
             <Typography variant="body2" sx={home.homeTextH4Left}>Llenar el siguiente formulario:</Typography>
@@ -445,69 +370,8 @@ function Chirographic() {
           </Box>
         </ThemeProvider>
       </Box>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-          },
-        }}
-        variant="persistent"
-        anchor="right"
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {[
-            { text: 'Quirografarios', icon: <AttachMoneyIcon />, link: '/quirografario' },
-            { text: 'Prendarios', icon: <ElectricCarIcon />, link: '/prendario' },
-            { text: 'Educativos', icon: <MenuBookIcon />, link: '/prendario' },
-            { text: 'Emergencia de Salud', icon: <MedicationIcon />, link: '/prendario' },
-          ].map((item, index) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton onClick={() => window.location.href = item.link}>
-                <ListItemIcon sx={{ color: '#2596be' }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={
-                  <Typography variant="body1" sx={home.homeTextH4Left} color="textPrimary">
-                    {item.text}
-                  </Typography>
-                } />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
 
-          {[
-            { text: 'Historial de Préstamos', icon: <InboxIcon /> },
-            { text: 'Simulador de Préstamos', icon: <MailIcon /> },
-            { text: 'Configuración Cuenta', icon: <PermDataSettingIcon /> },
-          ].map((item, index) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon sx={{ color: '#2596be' }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={
-                  <Typography variant="body1" sx={home.homeTextH4Left} color="textPrimary">
-                    {item.text}
-                  </Typography>
-                } />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-    </Box >
+    </div>
 
   );
 }
