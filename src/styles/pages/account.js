@@ -28,6 +28,8 @@ const account = {
         },
 
     },
+    
+    
     formularyCardLoanLogo: {
         display: 'flex',
         height: '150px',

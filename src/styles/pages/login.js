@@ -66,6 +66,13 @@ const login = {
         fontSize: "16px",
         width: '100%',
     },
+
+    textoMensajeAbajoInput: {
+        fontFamily: "Cairo",
+        textTransform: 'none',
+        fontSize: "12px",
+        width: '100%',
+    },
     textoInputCedula: {
         fontFamily: "Cairo",
         textTransform: 'none',

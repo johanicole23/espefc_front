@@ -1,7 +1,8 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
+import React, { useState } from 'react';
+import AppBarDrawer from '../AppBarDrawer';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Tabs, Tab, Typography, Box } from '@mui/material';
 import logo from '../../../assets/logoFC.png';
-import { ThemeProvider, createTheme, } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
@@ -26,7 +27,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -46,351 +46,196 @@ import { Button } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import home from '../../../styles/pages/home';
 import loan from '../../../styles/pages/loan';
+import login from '../../../styles/pages/login';
 import appbar from '../../../styles/components/appbar';
-import AppBarDrawer from '../AppBarDrawer';
+import { useRef } from 'react';
+import { Document, Page } from 'react-pdf';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { PDFDocument, rgb } from 'pdf-lib';
+import Select from 'react-select';
+import MenuItem from '@mui/material/MenuItem';
+import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
+import ArrowCircleRightTwoToneIcon from '@mui/icons-material/ArrowCircleRightTwoTone';
+import NumbersOutlinedIcon from '@mui/icons-material/NumbersOutlined';
+import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+import { validarCedulaEcuatoriana } from '../../Register/registerConstants';
+import Tab1 from './loanDataChrigraphic';
+import Tab2 from './personalDataChrigraphic';
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#005f8f'
 
-const QontoStepIconRoot = styled('div')(({ theme, ownerState }) => ({
-  color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
-  display: 'flex',
-  height: 22,
-  alignItems: 'center',
-  ...(ownerState.active && {
-    color: '#b0d626',
-  }),
-  '& .QontoStepIcon-completedIcon': {
-    color: '#b0d626',
-    zIndex: 1,
-    fontSize: 18,
-  },
-  '& .QontoStepIcon-circle': {
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-    backgroundColor: 'currentColor',
-  },
-}));
+    },
+    secondary: {
+      main: '#005F8F'
+    },
+    terciary: {
+      main: '#005F8F'
 
-const QontoConnector = styled(StepConnector)(({ theme }) => ({
-  [`&.${stepConnectorClasses.alternativeLabel}`]: {
-    top: 10,
-    left: 'calc(-50% + 16px)',
-    right: 'calc(50% + 16px)',
-  },
-  [`&.${stepConnectorClasses.active}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      borderColor: '#b0d626',
     },
   },
-  [`&.${stepConnectorClasses.completed}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      borderColor: '#b0d626',
-    },
-  },
-  [`& .${stepConnectorClasses.line}`]: {
-    borderColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
-    borderTopWidth: 3,
-    borderRadius: 1,
-  },
-}));
+});
 
-function Chirographic() {
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#FFFFFF'
 
-      },
-      secondary: {
-        main: '#005F8F'
-      },
-      terciary: {
-        main: '#005F8F'
 
-      },
-    },
+
+
+
+
+function Tab3() {
+  return (
+    <div>
+      <Typography variant="h6">Contenido de la Pestaña 3</Typography>
+      {/* Agrega contenido específico para la Pestaña 3 */}
+    </div>
+  );
+}
+function App() {
+
+  const [activeTab, setActiveTab] = useState(0);
+
+  const [isTerm, setTerm] = useState('');
+
+  const handleNextTab = () => {
+    setActiveTab(activeTab + 1);
+  };
+
+  const handlePrevTab = () => {
+    setActiveTab(activeTab - 1);
+  };
+
+  const [formData, setFormData] = useState({
+
+    institution: '',
+    id: '',
+    name: '',
+    amount: '',
+    isTerm:'',
+    accountNumber: '',
+    isCheckedAhorro: true,
+    isCheckedCorriente: false,
+    isCheckedFrances: false,
+    isCheckedAleman: true,
+
+
+    field2: '', field3: ''
   });
-
-  const transitionStyles = {
-    entering: {
-      opacity: 0,
-      transform: 'translateY(20px)',
-    },
-    entered: {
-      opacity: 1,
-      transform: 'translateY(0)',
-    },
-    exiting: {
-      opacity: 0,
-      transform: 'translateY(-20px)',
-    },
-    exited: {
-      opacity: 0,
-      transform: 'translateY(-20px)',
-    },
-  }; 
-
-
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
+  const handleTabChange = (event, newIndex) => {
+    setActiveTab(newIndex);
+  };
+  const handleDataChange = (newData) => {
+    setFormData(newData);
   };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
 
-  
-  const [checked, setChecked] = React.useState(false);
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [activePaperIndex, setActivePaperIndex] = React.useState(0);
-
-  const nextForm = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setActivePaperIndex(activePaperIndex + 1);
-  };
-
-  const backForm = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    setActivePaperIndex(activePaperIndex - 1);
-  };
-  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-  const steps = ['Datos para el Préstamo', 'Datos Personales', 'Datos del Garante 1', 'Datos del Garante 2', 'Datos del Garante 3'];
-  const papers = [
-    {
-      index: 0, title: 'Datos para el Préstamo', code: <div>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Nombres y apellidos completos" variant="standard" fullWidth margin="normal" />
-          <CalendarMonthIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Fecha" variant="standard" margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Cédula" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <AttachMoneyIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Monto" variant="standard" fullWidth margin="normal" />
-          <EventIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Plazo (Meses)" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
-          <Typography sx={loan.marcaRellenoAux}>Tipo de cuenta para el préstamo:</Typography>
-          <Box display={'flex'} >
-            <Typography sx={home.homeTextH4Left}>Ahorros:<Checkbox {...label} sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626', }, }} /></Typography>
-            <Typography sx={home.homeTextH4Left}>Corriente:<Checkbox {...label} sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626', }, }} /></Typography>
-
-            <TextField id="input-with-sx" label="Número de cuenta" variant="standard" fullWidth margin="normal" />
-
-          </Box>
-
-        </Box>
-
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
-          <Typography sx={loan.marcaRellenoAux}>Tipo de amortización del préstamo:</Typography>
-          <Box display={'flex'} >
-            <Typography sx={home.homeTextH4Left}>Alemán:<Checkbox {...label} sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626', }, }} /></Typography>
-            <Typography sx={home.homeTextH4Left}>Francés:<Checkbox {...label} sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626', }, }} /></Typography>
-          </Box>
-        </Box>
-      </div>
-    },
-    {
-      index: 1, title: 'Datos Personales', code: <div>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Dirección Domicilio" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <ContactPhoneIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Teléfono Celular" variant="standard" fullWidth margin="normal" />
-          <TtyIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Teléfono Convencional" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
-          <Typography sx={loan.marcaRellenoAux}>Categoría:</Typography>
-          <Box display={'flex'} >
-            <Typography sx={home.homeTextH4Left}>Administrativo<Checkbox {...label} sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626', }, }} /></Typography>
-            <Typography sx={home.homeTextH4Left}>Docente<Checkbox {...label} sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626', }, }} /></Typography>
-
-            <TextField id="input-with-sx" label="Sede" variant="standard" fullWidth margin="normal" />
-          </Box>
-        </Box>
-
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
-          <Typography sx={loan.marcaRellenoAux}>Tipo de contrato:</Typography>
-          <Box display={'flex'} >
-            <Typography sx={home.homeTextH4Left}>Nombramiento<Checkbox {...label} sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626', }, }} /></Typography>
-            <Typography sx={home.homeTextH4Left}>Contrato<Checkbox {...label} sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626', }, }} /></Typography>
-
-            <TextField id="input-with-sx" label="Otros" variant="standard" fullWidth margin="normal" />
-          </Box>
-        </Box>
-
-        <Box sx={{ alignContent: 'center' }} paddingTop={'5%'} paddingLeft={'40%'}>
-          <Typography sx={home.homeTextH4Left}>Añadir garante? </Typography>
-          <Button sx={{ marginLeft: '5%' }}><AddCircleOutlineIcon sx={home.homeTextH1}></AddCircleOutlineIcon></Button>
-        </Box>
-      </div>
-    },
-    {
-      index: 2, title: 'Datos del Garante 1', code: <div>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Nombres y Apellidos completos" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Cédula de ciudadanía o identidad" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <ContactPhoneIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Celular" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <TtyIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Convencional" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ alignContent: 'center' }} paddingTop={'5%'} paddingLeft={'35%'}>
-          <Typography sx={home.homeTextH4Left}>Añadir otro garante? </Typography>
-          <Button sx={{ marginLeft: '10%' }}><AddCircleOutlineIcon sx={home.homeTextH1}></AddCircleOutlineIcon></Button>
-        </Box>
-
-      </div>
-    },
-    {
-      index: 3, title: 'Datos del Garante 2', code: <div>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Nombres y Apellidos completos" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Cédula de ciudadanía o identidad" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <ContactPhoneIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Celular" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <TtyIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Convencional" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ alignContent: 'center' }} paddingTop={'5%'} paddingLeft={'35%'}>
-          <Typography sx={home.homeTextH4Left}>Añadir otro garante? </Typography>
-          <Button sx={{ marginLeft: '10%' }}><AddCircleOutlineIcon sx={home.homeTextH1}></AddCircleOutlineIcon></Button>
-        </Box>
-      </div>
-    },
-    {
-      index: 4, title: 'Datos del Garante 3', code: <div>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Nombres y Apellidos completos" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Cédula de ciudadanía o identidad" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <ContactPhoneIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Celular" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-          <TtyIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField id="input-with-sx" label="Convencional" variant="standard" fullWidth margin="normal" />
-        </Box>
-
-      </div>
-    },
-  ];
 
   return (
     <div>
-      <AppBarDrawer />      
-      <Box sx={{ flexGrow: 1, padding: '0px' }} open={open}>
-        <ThemeProvider theme={theme} >
-          <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ padding: '0 0', marginTop: 1 }}>
-            <Typography variant="body2" sx={home.homeTextH3Light}>PRÉSTAMO QUIROGRAFÁRIO</Typography>
-            <Typography variant="body2" sx={home.homeTextH4Left}>Llenar el siguiente formulario:</Typography>
+      <AppBarDrawer />
+      <ThemeProvider theme={theme}>
+        <Box display={'flex'} sx={{ marginLeft: "10%" }}>
+          <Tabs value={activeTab} onChange={handleTabChange}>
+            <Tab label="Pestaña 1" />
+            <Tab label="Pestaña 2" />
+            <Tab label="Pestaña 3" />
+          </Tabs>
+        </Box>
+        <Box display={'flex'} justifyContent={'center'} >
+          <Box >
+            {activeTab === 0 && (
+              <Tab1 data={formData} onDataChange={handleDataChange} onNextTab={handleNextTab} />
+            )}
+            {activeTab === 1 && (
+              <Tab2 data={formData} onDataChange={handleDataChange} onPrevTab={handlePrevTab} />
+            )}
+
+            {activeTab === 2 && <Tab3 />}
           </Box>
-
-          <Box display="flex" flexDirection={"column"} justifyContent={"center"} sx={{ paddingLeft: '5%', paddingRight: '5%' }}>
-            <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />} >
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel StepIconComponent={QontoStepIcon} ><Typography sx={home.homeTextH4Left}>{label}</Typography></StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-
-            <Box display="flex" flexDirection={"row"} justifyContent={"center"} component={"form"} sx={{ m: 3 }}>
-
-              <Carousel
-
-                navButtonsAlwaysVisible={true}
-                next={nextForm}
-                prev={backForm}
-                sx={{ width: '60%', alignItems: 'center', alignContent: 'center' }}
-                animation="fade" autoPlay={false}>
-                {papers.map((item) => (
-                  <Box display={'flex'} alignContent={'center'} alignItems={'center'} justifyContent={'center'}>
-                    <Paper elevation={5} sx={{ paddingTop: '1%', paddingBottom: '1%', paddingLeft: '3%', paddingRight: '3%', width: '65%' }}>
-                      <Typography variant="body2" sx={home.homeTextH3Light}>{item.title}</Typography>
-                      {item.code}
-                      <InputLabel></InputLabel>
-                    </Paper>
-                  </Box>
-
-                ))}
-              </Carousel>
-
-            </Box>
-
-
-          </Box>
-        </ThemeProvider>
-      </Box>
-
-    </div>
-
+        </Box>
+        <div>
+          <h1>Generar PDF</h1>
+          <button onClick={() => generatePDF(formData)}>Generar PDF a partir de los campos</button>
+        </div>
+      </ThemeProvider>
+    </div >
   );
 }
 
+export default App;
 
+async function generatePDF(formData) {
+  try {
+    // Ruta al PDF existente
+    const rutaPDFExistente = '/files/solicitud_credito_quirografario.pdf';
+    const existingPdfBytes = await fetch(rutaPDFExistente).then((res) => res.arrayBuffer());
 
+    // Cargar el PDF existente
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
 
-function QontoStepIcon(props) {
-  const { active, completed, className } = props;
+    // Obtener la primera página del PDF
+    const [page] = pdfDoc.getPages();
 
-  return (
-    <QontoStepIconRoot ownerState={{ active }} className={className}>
-      {completed ? (
-        <Check className="QontoStepIcon-completedIcon" />
-      ) : (
-        <div className="QontoStepIcon-circle" />
-      )}
-    </QontoStepIconRoot>
-  );
+    // Obtener el contenido de los campos de entrada
+    const { institution, id, name, amount,isTerm, accountNumber,isCheckedAhorro, isCheckedCorriente,isCheckedFrances, isCheckedAleman } = formData;
+    console.log(name);
+    const date = new Date().toISOString().slice(0, 10); 
+
+    const contentToInsert = [
+      { text: 'X', x: 382, y: 748, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: date, x: 80, y: 743, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: name, x: 75, y: 713, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: id, x: 110, y: 691, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: amount, x: 378, y: 691, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: String(isTerm), x: 495, y: 691, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: accountNumber, x: 200, y: 649, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: institution, x: 70, y: 630, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+    ];
+   if (isCheckedAhorro) {
+      contentToInsert.push(
+        { text: 'X', x: 87, y: 650, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+      );
+    }
+    else if (!isCheckedAhorro){
+      contentToInsert.push(
+        { text: 'X', x: 160, y: 650, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+      );
+    }
+
+    if (isCheckedFrances) {
+      contentToInsert.push(
+        { text: 'X', x: 205, y: 608, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+      );
+    }
+    else if (!isCheckedFrances){
+      contentToInsert.push(
+        { text: 'X', x: 275, y: 608, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+      );
+    }
+
+    // Agregar el contenido al PDF existente
+    contentToInsert.forEach(({ text, x, y, size, color }) => {
+      page.drawText(text, { x, y, size, color });
+    });
+
+    // Serializar el PDF modificado
+    const modifiedPdfBytes = await pdfDoc.save();
+
+    // Guardar el PDF modificado en una nueva ruta
+    const nuevaRutaPDF = 'pdf_modificado.pdf';
+    const nuevoPdfBlob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
+    const nuevoPdfUrl = URL.createObjectURL(nuevoPdfBlob);
+
+    // Descargar el PDF modificado o realizar otras acciones necesarias
+    const link = document.createElement('a');
+    link.href = nuevoPdfUrl;
+    link.download = 'formulario_modificado.pdf';
+    link.click();
+  } catch (error) {
+    console.error('Error al generar el PDF:', error);
+  }
 }
-
-export default Chirographic;
