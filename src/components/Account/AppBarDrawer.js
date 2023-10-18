@@ -167,7 +167,7 @@ function AppBarDrawer() {
                             <List sx={{ background: 'none' }}>
                                 {[
                                     { text: 'Préstamos Quirografarios', icon: <InboxIcon />, link: '/cuenta/proceso-quirografario/formulario-quirografario' },
-                                    { text: 'Préstamos Prendarios', icon: <MailIcon />, link: '/cuenta/proceso-quirografario/formulario-quirografario' },
+                                    { text: 'Préstamos Prendarios', icon: <MailIcon />, link: '/cuenta/proceso-prendario/formulario-prendario' },
                                 ].map((item, index) => (
                                     <ListItem href={item.link} disablePadding sx={{ color: 'gray' }}>
                                         <ListItemButton onClick={() => window.location.href = item.link}> 

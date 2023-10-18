@@ -5,6 +5,10 @@ import Loans from './components/Loan/loan';
 import Chirographic from './components/Account/Chirographic/chrigraphic';
 import formChirographic from './components/Account/Chirographic/formChirographic';
 import filesChirographic from './components/Account/Chirographic/uploadFilesChirographic';
+import HomeChirographic from './components/Account/Chirographic/homeChrigraphic';
+import formCollateral from './components/Account/Collateral/formCollateral';
+import filesCollateral from './components/Account/Collateral/uploadFilesCollateral';
+import HomeCollateral from './components/Account/Collateral/homeCollateral';
 import History from './components/History/history';
 import Simulator from './components/LoanSimulator/simulator';
 import News from './components/News/news';
@@ -12,7 +16,7 @@ import Login from './components/Login/login';
 import Register from './components/Register/register';
 import Account from './components/Account/accountHome';
 import PasswordChange from './components/Account/Configuration/passwordChange';
-import HomeChirographic from './components/Account/Chirographic/homeChrigraphic';
+
 import AccountSimulator from './components/Account/AccountSimulator/simulator';
 import Liquidations from './components/Account/Liquidation';
 import Variation from './components/Account/AportVariation';
@@ -39,6 +43,11 @@ function App() {
         <Route exact path="/cuenta/simulador-personalizado" Component={AccountSimulator} />
         <Route exact path="/cuenta/liquidacion-cesantia" Component={Liquidations} />
         <Route exact path="/cuenta/variacion-aporte" Component={Variation} />
+
+        
+        <Route exact path="/cuenta/proceso-prendario/formulario-prendario" Component={formCollateral} />
+        <Route exact path="/cuenta/proceso-prendario/archivos-prendario" Component={filesCollateral} />
+        <Route exact path="/cuenta/proceso-prendario" Component={HomeCollateral} />
       </Routes>
     </BrowserRouter>
   );

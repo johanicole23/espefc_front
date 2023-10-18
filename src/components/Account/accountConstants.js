@@ -10,7 +10,7 @@ export const cardLoan = [
         image: prendary,
         title: "Proceso para Préstamos Prendarios",
         description: "Llena el formulario, descarga tu pdf y envíanos todos los archivos necesarios para iniciar tu proceso de solicitud de préstamo.",
-        link: '/cuenta/proceso-quirografario'
+        link: '/cuenta/proceso-prendario'
     },
     {
         image: quiro,
@@ -58,6 +58,26 @@ export const cardLoanChirographic= [
         title: "Completar Formulario de Préstamo",
         description: "Llena el formulario y luego descarga tu pdf.",
         link: '/cuenta/proceso-quirografario/formulario-quirografario',
+        icon :PictureAsPdfIcon,
+        color:'#005f8f'
+    },
+]; 
+
+export const cardLoanCollateral= [    
+    
+    {
+       
+        title: "Subir archivos",
+        description: "Carga todos los archivos requeridos aquí.",
+        link: '/cuenta/proceso-prendario/archivos-prendario',
+        icon :UploadIcon,
+        color:'#b0d626',
+    },
+    {
+        
+        title: "Completar Formulario de Préstamo",
+        description: "Llena el formulario y luego descarga tu pdf.",
+        link: '/cuenta/proceso-prendario/formulario-prendario',
         icon :PictureAsPdfIcon,
         color:'#005f8f'
     },

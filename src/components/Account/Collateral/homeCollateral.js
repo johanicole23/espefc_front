@@ -61,7 +61,7 @@ import NumbersOutlinedIcon from '@mui/icons-material/NumbersOutlined';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
-import { cardLoanChirographic } from '../accountConstants';
+import { cardLoanCollateral } from '../accountConstants';
 import CardMedia from '@mui/material/CardMedia';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -95,14 +95,16 @@ function App() {
                     <Box display="flex" flexDirection={"row"} justifyContent={"center"} component={"form"} sx={{}}>
                         <Box display={'flex'} justifyContent={'center'} >
                             <Paper elevation={5} sx={{ padding: '2% 4% ', width: '800px', marginBottom: '2rem' }}>
-                                <Typography sx={home.homeTextH1}>Préstamos Quirografarios</Typography>
+                                <Typography sx={home.homeTextH1}>Préstamos Prendarios</Typography>
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
+
                                     <Typography sx={home.homeTextH3Light}
                                     >
-                                        <br /> Para iniciar con el proceso de solictud de crédito quirografario, debe llenar el formulario de solictud y luego subirlo junto con los demás archivos requeridos para el proceso.
-                                        Los archivos se entregaran al oficial de crédito, el cual revisará su cuenta individual y si tiene garantías comprometidas.<br />
-                                        <span style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer' }} >  IMPORTANTE: </span> el monto al cual podrá acceder es el total de su cuenta individual, si desea un monto superior al de su cuenta individual, podrá presentar
-                                        hasta 3 garantes que respalden el monto solicitado con sus cuentas individuales.<br /><br />
+                                        <br /> Para iniciar con el proceso de solictud de crédito prendario, debe llenar el formulario de solictud y luego subirlo junto con los demás archivos requeridos para el proceso.
+                                        <br /><br />Los archivos se entregaran al oficial de crédito, el cual revisará su capacidad de pago, para lo cual, se considerará el
+                                        valor neto del último confidencial, el cual expresa un valor referencial de sus ingresos y si este es el
+                                        <span style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer' }} >  mínimo del 40% del valor neto de sus ingresos, </span> podrá cubrir la cuota con la cual se ejecutará el préstamo prendario.<br />
+                                        <br />
                                     </Typography>
 
                                 </Box>
@@ -112,7 +114,7 @@ function App() {
                     </Box>
                 </Box>
                 <Box display="flex" justifyContent="space-around" alignItems="center" sx={{ margin: '0 15% 5% 15%' }} >
-                    {cardLoanChirographic.map((item) => (
+                    {cardLoanCollateral.map((item) => (
                         <Card sx={account.formularyFormatCardLoan}>
                             <CardActionArea href={item.link}>
                                 <CardContent >
