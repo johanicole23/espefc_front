@@ -166,8 +166,8 @@ function AppBarDrawer() {
                         <AccordionDetails>
                             <List sx={{ background: 'none' }}>
                                 {[
-                                    { text: 'Préstamos Quirografarios', icon: <InboxIcon />, link: '/cuenta/formulario-quirografario' },
-                                    { text: 'Préstamos Prendarios', icon: <MailIcon />, link: '/cuenta/formulario-prendario' },
+                                    { text: 'Préstamos Quirografarios', icon: <InboxIcon />, link: '/cuenta/proceso-quirografario/formulario-quirografario' },
+                                    { text: 'Préstamos Prendarios', icon: <MailIcon />, link: '/cuenta/proceso-quirografario/formulario-quirografario' },
                                 ].map((item, index) => (
                                     <ListItem href={item.link} disablePadding sx={{ color: 'gray' }}>
                                         <ListItemButton onClick={() => window.location.href = item.link}> 
@@ -184,9 +184,9 @@ function AppBarDrawer() {
                         </AccordionDetails>
                     </Accordion>
                     {[                        
-                        { text: 'Simulador de Préstamos', icon: <CurrencyBitcoinIcon/>, link: '/simulador' },
-                        { text: 'Liquidaciones', icon: <StackedLineChartIcon />, link: '/historial' },
-                        { text: 'Variación de Aporte', icon: <AddchartIcon/>, link: '/historial' },                      
+                        { text: 'Simulador de Préstamos', icon: <CurrencyBitcoinIcon/>, link: '/cuenta/simulador-personalizado' },
+                        { text: 'Liquidaciones', icon: <StackedLineChartIcon />, link: '/cuenta/liquidacion-cesantia' },
+                        { text: 'Variación de Aporte', icon: <AddchartIcon/>, link: '/cuenta/variacion-aporte' },                      
                     ].map((item, index) => (
                         <ListItem key={item.text} disablePadding>
                             <ListItemButton onClick={() => window.location.href = item.link}>
@@ -205,7 +205,7 @@ function AppBarDrawer() {
                 <Divider /> 
                 <List>
                     {[
-                        { text: 'Configuración Cuenta', icon: <PermDataSettingIcon />, link: '/configuracion' },
+                        { text: 'Configuración Cuenta', icon: <PermDataSettingIcon />, link: '/cuenta/configuracion' },
                         { text: 'Ayuda', icon: <HelpIcon />, link: '/simulador' },
                     ].map((item, index) => (
                         <ListItem key={item.text} disablePadding>

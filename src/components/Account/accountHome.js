@@ -16,6 +16,7 @@ import Box from '@mui/material/Box';
 import { cardLoan, cardLoanSimulator, cardLoanPassword } from './accountConstants';
 import CardMedia from '@mui/material/CardMedia';
 import fondo from '../../assets/account/fondoAccount.png';
+import { Link } from 'react-router-dom';
 
 
 const theme = createTheme({
@@ -46,8 +47,8 @@ function App() {
                     width: '100%',
                     height: '120vh',
                     position: 'absolute',
-                    
-                
+
+
                 }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={5} md={2}></Grid>
@@ -62,53 +63,8 @@ function App() {
                     </Grid>
                     <Box display="flex" justifyContent="space-around" alignItems="center" sx={{ margin: '0 15%' }} >
                         {cardLoan.map((item) => (
-                            <Card sx={account.formularyFormatCardLoan}>
-                                <CardActionArea>
-                                    <CardMedia
-                                        sx={account.formularyCardLoanLogo} image={item.image} alt="Descripción de la imagen" />
-                                    <CardContent >
-                                        <Box display="flex" flexDirection={'column'} >
-                                            <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
-                                            <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
-                                        </Box>
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions >
-                                    <Box marginLeft="90px" >
-                                        <Button size="small" variant="outlined" color="secondary" sx={buttons.appBarButtonText} href="/prestamos">
-                                            Más Información
-                                        </Button>
-                                    </Box>
-                                </CardActions>
-                            </Card>
-                        ))}
-                    </Box>
-                    
-                        <Box display="flex" justifyContent="space-around" alignItems="center" sx={{ margin: '0 15%' }} >
-                            {cardLoanPassword.map((item) => (
-                                <Card sx={account.formularyFormatCardLoan}>
-                                    <CardActionArea>
-                                       
-                                        <CardContent >
-                                            <Box display="flex" flexDirection={'column'} >
-                                                <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
-                                                <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
-                                            </Box>
-                                        </CardContent>
-                                    </CardActionArea>
-                                    <CardActions >
-                                        <Box marginLeft="58px" >
-                                            <Button size="medium" variant="contained" fullWidth color="secondary" sx={buttons.accountButtonTextPrimary} href="/prestamos">
-                                               {item.button}
-                                            </Button>
-                                        </Box>
-                                    </CardActions>
-                                </Card>
-                            ))}
-                       
-                            {cardLoanSimulator.map((item) => (
-                                <Card sx={account.formularyFormatCardLoan}>
-                                    <CardActionArea>
+                            <Card sx={account.formularyFormatCardLoan}  >                                
+                                    <CardActionArea href={item.link}>
                                         <CardMedia
                                             sx={account.formularyCardLoanLogo} image={item.image} alt="Descripción de la imagen" />
                                         <CardContent >
@@ -118,17 +74,63 @@ function App() {
                                             </Box>
                                         </CardContent>
                                     </CardActionArea>
-                                    
-                                </Card>
-                            ))}
-                        
-                        
-                        </Box>
-                        
-                        
+                                    <CardActions >
+                                        <Box marginLeft="90px" >
+                                            <Button size="small" variant="outlined" color="secondary" sx={buttons.appBarButtonText} href={item.link}>
+                                                Más Información
+                                            </Button>
+                                        </Box>
+                                    </CardActions>
+                                
+                            </Card>
+                        ))}
+                    </Box>
+
+                    <Box display="flex" justifyContent="space-around" alignItems="center" sx={{ margin: '0 15%' }} >
+                        {cardLoanPassword.map((item) => (
+                            <Card sx={account.formularyFormatCardLoan}>
+                                <CardActionArea>
+
+                                    <CardContent >
+                                        <Box display="flex" flexDirection={'column'} >
+                                            <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
+                                            <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
+                                        </Box>
+                                    </CardContent>
+                                </CardActionArea>
+                                <CardActions >
+                                    <Box marginLeft="58px" >
+                                        <Button size="medium" variant="contained" fullWidth color="secondary" sx={buttons.accountButtonTextPrimary} href="/cuenta/configuracion/contrasena">
+                                            {item.button}
+                                        </Button>
+                                    </Box>
+                                </CardActions>
+                            </Card>
+                        ))}
+
+                        {cardLoanSimulator.map((item) => (
+                            <Card sx={account.formularyFormatCardLoan}>
+                                <CardActionArea href={item.link}>
+                                    <CardMedia
+                                        sx={account.formularyCardLoanLogo} image={item.image} alt="Descripción de la imagen" />
+                                    <CardContent >
+                                        <Box display="flex" flexDirection={'column'} >
+                                            <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
+                                            <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
+                                        </Box>
+                                    </CardContent>
+                                </CardActionArea>
+
+                            </Card>
+                        ))}
+
+
+                    </Box>
+
+
 
                 </Box>
-                
+
             </ThemeProvider>
         </div>
     );

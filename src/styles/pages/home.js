@@ -81,6 +81,37 @@ const home = {
         fontSize: "16px",
     },
 
+    homeTextH5Light: {
+        fontFamily: 'Cairo',
+        color: myTheme.palette.common.customPrimary,
+        textAlign: 'center',
+        fontSize: "12px",
+    },
+    homeTextH14Light: {
+        fontFamily: 'Cairo',
+        color: myTheme.palette.common.customPrimary,
+        textAlign: 'center',
+        fontSize: "14px",
+    },
+    homeTextH14LightGray: {
+        fontFamily: 'Cairo',
+        color: myTheme.palette.common.customGrayDarker,
+        textAlign: 'center',
+        fontSize: "14px",
+    },
+    homeTextH14LightWhite: {
+        fontFamily: 'Cairo',
+        color: 'white',
+        textAlign: 'center',
+        fontSize: "14px",
+    },
+
+    homeTextH4White: {
+        fontFamily: 'Cairo',
+        color: myTheme.palette.common.customPrimary,
+        textAlign: 'center',
+        fontSize: "16px",
+    },
     homeTextH2Left: {
         fontFamily: 'Cairo',
         color: myTheme.palette.common.customDarker,

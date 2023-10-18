@@ -28,6 +28,14 @@ const account = {
         },
 
     },
+    uploadFormatCardLoan: {
+        maxWidth: '1050px',
+        marginTop: 5,
+        zIndex: 1,
+        transition: 'transform .1s',
+        boxShadow: '0px 0px 10px 5px rgba(0, 0, 0, 0.1)',       
+
+    },
     
     
     formularyCardLoanLogo: {
@@ -39,6 +47,18 @@ const account = {
         //marginLeft: "150px",
         paddingTop: 0
 
+    },
+    accountEditModalMessage:{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        height: 150,
+        bgcolor: 'background.paper',
+        border: '0px solid #000',
+        boxShadow: 20,
+        p: 4,
     },
 
 }

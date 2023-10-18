@@ -222,11 +222,11 @@ function Register() {
     };
 
     function handleClickDownloadDocuments() {
-        const url = 'prueba.pdf'; // Reemplaza con la ruta correcta de tu documento
+        const url = '/files/contrato_adhesion.pdf'; // Reemplaza con la ruta correcta de tu documento
 
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'prueba.pdf';
+        link.download = 'ContratoAdhesion.pdf';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
-import { createTheme } from '@mui/material/styles';
-import { Typography, Box } from '@mui/material';
-import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import MyAppBar from '../../MyComponents/myAppBar';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import BadgeIcon from '@mui/icons-material/Badge';
-import { Button } from '@mui/material';
-import home from '../../../styles/pages/home';
-import loan from '../../../styles/pages/loan';
-import login from '../../../styles/pages/login';
-import { useRef } from 'react';
+import React, { useState, useRef, useEffect} from 'react';
+import {
+    createTheme,
+    Typography,
+    Box,
+    TextField,
+    Button,    
+    Paper,
+    Checkbox,
+    Alert,
+    Stack,
+  } from '@mui/material';
+
 import MenuItem from '@mui/material/MenuItem';
 import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
 import ArrowCircleRightTwoToneIcon from '@mui/icons-material/ArrowCircleRightTwoTone';
 import NumbersOutlinedIcon from '@mui/icons-material/NumbersOutlined';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
-import { validarCedulaEcuatoriana } from '../../Register/registerConstants';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import BadgeIcon from '@mui/icons-material/Badge';
+import { validarCedulaEcuatoriana } from '../../../Register/registerConstants';
+import home from '../../../../styles/pages/home';
+import loan from '../../../../styles/pages/loan';
+import login from '../../../../styles/pages/login';
 
 const theme = createTheme({
     palette: {
@@ -120,6 +122,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
         setTerm(selectedValueString); // Almacena la cadena en el estado 'isTerm'
         const newData = { ...data, isTerm: event.target.value };
         onDataChange(newData);
+        
     };
 
     const handleFieldChange = (fieldName, event) => {
@@ -136,14 +139,14 @@ function Tab1({ data, onDataChange, onNextTab }) {
         const fullName = fullNameInputRef.current.value.trim();
         const idValid = validarCedulaEcuatoriana(id);
         const amount = amountInputRef.current.value.trim();
-
+       
         const numberAccount = accountNumberInputRef.current.value.trim();
         const institution = institutionInputRef.current.value.trim();
         //const noneChecked = isCheckedCorriente==true && isCheckedAhorro==true;
         //const atLeastOneChecked = (isCheckedCorriente===true && isCheckedAhorro===false)||(isCheckedCorriente===false && isCheckedAhorro===true);
 
         // Verifica si los campos requeridos están llenos y válidos y al menos un Checkbox está marcado
-        setIsNextButtonDisabled(!(fullName.trim() !== '' && id.trim() !== '' && idValid && amount.trim() !== '' && numberAccount.trim() !== '' && institution.trim() !== ''));
+        setIsNextButtonDisabled(!(fullName.trim() !== '' &&  currentIndex === 0&&id.trim() !== '' && idValid && isTerm !== -1 && amount.trim() !== '' && numberAccount.trim() !== '' && institution.trim() !== ''));
 
     }
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -152,6 +155,18 @@ function Tab1({ data, onDataChange, onNextTab }) {
             setCurrentIndex(currentIndex - 1);
         }
     };
+
+    useEffect(() => {
+        // Esta función se ejecutará cada vez que cambie el contenido de los campos de entrada
+        const id = idInputRef.current.value.trim();
+        const idValid = validarCedulaEcuatoriana(id);
+        const amount = amountInputRef.current.value.trim();
+        const numberAccount = accountNumberInputRef.current.value.trim();
+        const institution = institutionInputRef.current.value.trim();
+        const fullName = fullNameInputRef.current.value.trim();
+        // Verifica todas las condiciones necesarias para habilitar el botón de "Siguiente"
+        setIsNextButtonDisabled(!(id && idValid && amount && numberAccount && institution && fullName));
+    }, [data, setIsNextButtonDisabled]);
 
 
 
@@ -229,13 +244,13 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                 id="standard-select-currency"
                                 select
                                 label={<Typography sx={login.textoInput} >Plazo(Meses) </Typography>}
-
+                               
                                 helperText={<Typography sx={login.textoMensajeAbajoInput} >Seleccione una opción</Typography>}
                                 variant="standard"
                                 fullWidth
-                                defaultValue={data.term}
+                                value={data.isTerm}
                                 onChange={(event) => {
-                                    handleFieldChange('term', event);
+                                    handleFieldChange('isTerm', event);
                                     handleChangeTerm(event); // Llama a la primera función
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}

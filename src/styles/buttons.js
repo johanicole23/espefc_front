@@ -20,6 +20,18 @@ const buttons = {
         color: 'white',
         width: '45%'
     },
+    accountLiquidationButton: {
+        fontFamily: "Cairo",
+        textTransform: 'none',
+        fontSize: "16px",
+        color: 'white',
+        
+    },
+    accountVariationButton: {
+        fontFamily: "Cairo",
+        textTransform: 'none',
+        fontSize: "16px",    
+    },
     registerButton: {
         fontFamily: "Cairo",
         textTransform: 'none',
@@ -39,9 +51,22 @@ const buttons = {
         fontFamily: "Cairo",
         textTransform: 'none',
         fontSize: "16px",
-
+        
         fontWeight: 400,
 
+    },
+    accountLoanChirographic: {
+        fontFamily: "Cairo",
+        textTransform: 'none',
+        fontSize: "16px",
+        width:'35%'
+        
+    },
+    accountLoanChirographicImage: {
+        fontFamily: "Cairo",
+        textTransform: 'none',
+        fontSize: "16px",
+        color: 'white',
     },
 }
 

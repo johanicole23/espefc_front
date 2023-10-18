@@ -8,25 +8,38 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea, CardActions } from '@mui/material';
-import myTheme from '../../components/MyComponents/myTheme';
-import { Grid } from '@mui/material';
+import myTheme from '../../../components/MyComponents/myTheme';
+import {
+    Chip, Stack, Grid, Paper, Table, TableBody, TableCell,
+    TableContainer, TableHead, TableRow,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Modal from '@mui/material/Modal';
 import { useState } from 'react';
-import { calcularTablaAmortizacionAleman, calcularTablaAmortizacionFrances } from '../../utils/simulatorFunctions';
+import { calcularTablaAmortizacionAleman, calcularTablaAmortizacionFrances } from '../../../utils/simulatorFunctions';
 import {
 
     cardFinality,
     style
 } from './loanSimulatorConstants';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import PaidIcon from '@mui/icons-material/Paid';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PeopleIcon from '@mui/icons-material/People';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
-import home from '../../styles/pages/home';
-import loan from '../../styles/pages/loan';
-import buttons from '../../styles/buttons';
-import login from '../../styles/pages/login';
-import simulator from '../../styles/pages/simulator';
+import home from '../../../styles/pages/home';
+import account from '../../../styles/pages/account';
+import loan from '../../../styles/pages/loan';
+import buttons from '../../../styles/buttons';
+import login from '../../../styles/pages/login';
+import simulator from '../../../styles/pages/simulator';
 
 
 function LoanSimulator() {
@@ -98,9 +111,11 @@ function LoanSimulator() {
                 <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', margin: '0 18%' }} >
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
-                        } variant="standard" fullWidth margin="normal"
+                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo"
+                            label={
+                                <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
+                            }
+                            variant="standard" fullWidth margin="normal"
                             value={valorPrestamo}
                             onChange={handleValorPrestamoChange} /> </Grid>
                         <Grid item xs={12} md={1}></Grid>
@@ -234,6 +249,7 @@ function LoanSimulator() {
     return (
         <Box>
             <Box display="flex" justifyContent="space-evenly" alignItems="center" sx={{ margin: '0 10%' }} >
+
                 {cardFinality.map((item, index) => (
                     <Card key={index}
                         onClick={() => handleCardClick(index, item)}
@@ -375,8 +391,8 @@ function LoanSimulator() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {table.map((fila) => (
-                                            <tr >
+                                        {table.map((fila, index) => (
+                                            <tr key={index}>
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.mes}</Typography></td>
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.pagoCapital}</Typography></td>
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.pagoInteres}</Typography></td>
@@ -402,3 +418,6 @@ function LoanSimulator() {
     );
 }
 export default LoanSimulator;
+
+
+

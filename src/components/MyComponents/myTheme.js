@@ -9,6 +9,7 @@ const myTheme = createTheme({
       customAuxiliary: '#2596be',
       customDarker: '#00334d',
       customGray: '#757474',
+      customGrayDarker: '#4D4D4D',
       
     },
   },

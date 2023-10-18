@@ -63,6 +63,7 @@ import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlin
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { validarCedulaEcuatoriana } from '../../Register/registerConstants';
+
 const QontoStepIconRoot = styled('div')(({ theme, ownerState }) => ({
   color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
   display: 'flex',
