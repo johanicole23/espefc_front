@@ -1,25 +1,26 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect} from 'react';
 import {
     createTheme,
     Typography,
     Box,
     TextField,
-    Button,
+    Button,    
     Paper,
     Checkbox,
     Alert,
     Stack,
-} from '@mui/material';
+  } from '@mui/material';
 
 import MenuItem from '@mui/material/MenuItem';
 import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
 import ArrowCircleRightTwoToneIcon from '@mui/icons-material/ArrowCircleRightTwoTone';
 import NumbersOutlinedIcon from '@mui/icons-material/NumbersOutlined';
-
+import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import CarCrashIcon from '@mui/icons-material/CarCrash';
-import TimeToLeaveIcon from '@mui/icons-material/TimeToLeave';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import BadgeIcon from '@mui/icons-material/Badge';
+import { validarCedulaEcuatoriana } from '../../../Register/registerConstants';
 import home from '../../../../styles/pages/home';
 import loan from '../../../../styles/pages/loan';
 import login from '../../../../styles/pages/login';
@@ -41,18 +42,20 @@ const theme = createTheme({
 });
 function Tab1({ data, onDataChange, onNextTab }) {
     const options = [
-        { value: 12, label: '12 Meses' },
-        { value: 24, label: '24 Meses' },
         { value: 36, label: '36 Meses' },
         { value: 48, label: '48 Meses' },
-         // Agrega más opciones según sea necesario
+        { value: 60, label: '60 Meses' },
+        { value: 72, label: '72 Meses' },
+        { value: 84, label: '84 Meses' },
+        // Agrega más opciones según sea necesario
     ];
 
-
-    const markInputRef = useRef(null);
+    const [isAlertIdOpen, setIsAlertIdOpen] = useState(false);
+    const idInputRef = useRef(null);
+    const fullNameInputRef = useRef(null);
     const amountInputRef = useRef(null);
-    const yearCarInputRef = useRef(null);
-    const modelCarInputRef = useRef(null);
+    const accountNumberInputRef = useRef(null);
+    const institutionInputRef = useRef(null);
 
     const [isTerm, setTerm] = useState('');
     const [isCheckedAhorro, setIsCheckedAhorro] = useState(true);
@@ -60,7 +63,41 @@ function Tab1({ data, onDataChange, onNextTab }) {
     const [isCheckedAleman, setIsCheckedAleman] = useState(true);
     const [isCheckedFrances, setIsCheckedFrances] = useState(false);
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
-   
+
+
+
+    /* const handleAmountTextFieldFocus = () => {
+       setIsAlertIdOpen(true);
+       const id = idInputRef.current.value.trim().toLowerCase();
+       let flag=true;
+       if(validarCedulaEcuatoriana(id)){
+        
+           flag = false;        
+       }
+       
+     }*/
+
+    const handleChangeId = (event) => {
+        const id = idInputRef.current.value.trim().toLowerCase();
+        setIsAlertIdOpen(!validarCedulaEcuatoriana(id));
+    }
+
+    const handleCheckboxCorrienteChange = (event) => {
+        setIsCheckedCorriente(!isCheckedCorriente);
+        if (isCheckedAhorro) {
+            setIsCheckedAhorro(false);
+        }
+        fieldsFilled();
+    };
+
+
+    const handleCheckboxAhorroChange = (event) => {
+        setIsCheckedAhorro(!isCheckedAhorro);
+        if (isCheckedCorriente) {
+            setIsCheckedCorriente(false);
+        }
+        fieldsFilled();
+    };
 
     const handleCheckboxFrancesChange = (event) => {
         setIsCheckedFrances(!isCheckedFrances);
@@ -85,7 +122,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
         setTerm(selectedValueString); // Almacena la cadena en el estado 'isTerm'
         const newData = { ...data, isTerm: event.target.value };
         onDataChange(newData);
-
+        
     };
 
     const handleFieldChange = (fieldName, event) => {
@@ -93,21 +130,23 @@ function Tab1({ data, onDataChange, onNextTab }) {
         onDataChange(newData);
     };
 
-    const handleCheckboxChange = (checkedName, event) => {
+    const handleCheckboxChange = (checkedName,event) => {
         const newData = { ...data, [checkedName]: event.target.checked };
         onDataChange(newData);
     };
     const fieldsFilled = (event) => {
-    
-        const mark = markInputRef.current.value.trim();        
+        const id = idInputRef.current.value.trim();
+        const fullName = fullNameInputRef.current.value.trim();
+        const idValid = validarCedulaEcuatoriana(id);
         const amount = amountInputRef.current.value.trim();
-        const yearCar = yearCarInputRef.current.value.trim();
-        const modelCar = modelCarInputRef.current.value.trim();
+       
+        const numberAccount = accountNumberInputRef.current.value.trim();
+        const institution = institutionInputRef.current.value.trim();
         //const noneChecked = isCheckedCorriente==true && isCheckedAhorro==true;
         //const atLeastOneChecked = (isCheckedCorriente===true && isCheckedAhorro===false)||(isCheckedCorriente===false && isCheckedAhorro===true);
 
         // Verifica si los campos requeridos están llenos y válidos y al menos un Checkbox está marcado
-        setIsNextButtonDisabled(!(mark.trim() !== '' && currentIndex === 0  && isTerm !== -1 && amount.trim() !== '' && yearCar.trim() !== '' && modelCar.trim() !== ''));
+        setIsNextButtonDisabled(!(fullName.trim() !== '' &&  currentIndex === 0&&id.trim() !== '' && idValid && isTerm !== -1 && amount.trim() !== '' && numberAccount.trim() !== '' && institution.trim() !== ''));
 
     }
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -119,13 +158,14 @@ function Tab1({ data, onDataChange, onNextTab }) {
 
     useEffect(() => {
         // Esta función se ejecutará cada vez que cambie el contenido de los campos de entrada
-           
+        const id = idInputRef.current.value.trim();
+        const idValid = validarCedulaEcuatoriana(id);
         const amount = amountInputRef.current.value.trim();
-        const yearCar = yearCarInputRef.current.value.trim();
-        const modelCar = modelCarInputRef.current.value.trim();
-        const mark = markInputRef.current.value.trim();
+        const numberAccount = accountNumberInputRef.current.value.trim();
+        const institution = institutionInputRef.current.value.trim();
+        const fullName = fullNameInputRef.current.value.trim();
         // Verifica todas las condiciones necesarias para habilitar el botón de "Siguiente"
-        setIsNextButtonDisabled(!( amount && yearCar && modelCar && mark));
+        setIsNextButtonDisabled(!(id && idValid && amount && numberAccount && institution && fullName));
     }, [data, setIsNextButtonDisabled]);
 
 
@@ -139,49 +179,47 @@ function Tab1({ data, onDataChange, onNextTab }) {
                 <Box display={'flex'} justifyContent={'center'} >
                     <Paper elevation={5} sx={{ padding: '2% 4% ', width: '800px', marginBottom: '2rem' }}>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-                            <TimeToLeaveIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
-                                id="mark"
-                                label={<Typography sx={login.textoInput} >Marca del vehículo </Typography>}
-                                defaultValue={data.mark}
+                                id="fullName"
+                                label={<Typography sx={login.textoInput} >Nombres y apellidos completos </Typography>}
+                                defaultValue={data.name}
                                 onChange={(event) => {
-                                    handleFieldChange('mark', event);
+                                    handleFieldChange('name', event);
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
-                                variant="standard" inputRef={markInputRef} fullWidth margin="normal"
+                                variant="standard" inputRef={fullNameInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
 
-                        <Box display={'flex'} >
-                            <NumbersOutlinedIcon sx={{ color: 'action.active', mr: 1, my: 5 }} />
-                            <TextField
-                                inputRef={yearCarInputRef}
-                                type="number"
-                                id="yearCar"
-                                defaultValue={data.yearCar}
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
+                            <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <TextField type="number" id="numberId" label={<Typography sx={login.textoInput} >Cédula </Typography>}
+                                defaultValue={data.id}
                                 onChange={(event) => {
-                                    handleFieldChange('yearCar', event);
+                                    handleFieldChange('id', event);
+                                    handleChangeId(event); // Llama a la primera función
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
-
-                                label={<Typography sx={login.textoInput}  >Año del vehículo</Typography>}
-                                helperText={<Typography sx={login.textoMensajeAbajoInput} >Cuenta a transferir el valor del préstamo</Typography>} variant="standard" fullWidth margin="normal" />
+                                inputRef={idInputRef} variant="standard" fullWidth margin="normal" />
                         </Box>
 
-                        <Box display={'flex'} >
-                            <CarCrashIcon sx={{ color: 'action.active', mr: 1, my: 5 }} />
-                            <TextField
-                                inputRef={modelCarInputRef}
-                                id="modelCar"
-                                defaultValue={data.modelCar}
-                                onChange={(event) => {
-                                    handleFieldChange('modelCar', event);
-                                    fieldsFilled(event);
-                                }}
-                                helperText={<Typography sx={login.textoMensajeAbajoInput} >Institución correspondiente a la cuenta</Typography>} label={<Typography sx={login.textoInput} >Modelo del vehículo</Typography>} variant="standard" fullWidth margin="normal" />
-                        </Box>
-
-
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertIdOpen && (
+                                <Alert
+                                    open={isAlertIdOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Cédula inválida
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <AttachMoneyIcon sx={{ color: 'action.active', mr: 1, my: 4 }} />
                             <TextField
@@ -206,7 +244,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                 id="standard-select-currency"
                                 select
                                 label={<Typography sx={login.textoInput} >Plazo(Meses) </Typography>}
-
+                               
                                 helperText={<Typography sx={login.textoMensajeAbajoInput} >Seleccione una opción</Typography>}
                                 variant="standard"
                                 fullWidth
@@ -226,6 +264,66 @@ function Tab1({ data, onDataChange, onNextTab }) {
 
                         </Box>
 
+                        <Box sx={{ justifyContent: 'space-around', padding: '2%' }}>
+                            <Typography sx={loan.marcaRellenoAux}>Tipo de cuenta para el préstamo:</Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Typography
+                                        sx={home.homeTextH4Left}
+                                    >Ahorros:</Typography>
+                                    <Checkbox
+                                        sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
+                                        checked={data.isCheckedAhorro}
+                                        onChange={(event) => {
+                                            handleCheckboxChange("isCheckedAhorro",event);
+                                            handleCheckboxAhorroChange(event);
+                                        }} />
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Typography
+                                        sx={home.homeTextH4Left}
+                                    >Corriente:</Typography>
+                                    <Checkbox
+                                        sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
+                                        checked={data.isCheckedCorriente}
+                                        onChange={(event) => {
+                                            handleCheckboxChange("isCheckedCorriente",event);
+                                            handleCheckboxCorrienteChange(event);
+                                        }} />
+                                </Box>
+                            </Box>
+
+                            <Box display={'flex'} >
+                                <NumbersOutlinedIcon sx={{ color: 'action.active', mr: 1, my: 5 }} />
+                                <TextField
+                                    inputRef={accountNumberInputRef}
+                                    type="number"
+                                    id="accountNumber"
+                                    defaultValue={data.accountNumber}
+                                    onChange={(event) => {
+                                        handleFieldChange('accountNumber', event);
+                                        fieldsFilled(event);   // Llama a la segunda función
+                                    }}
+
+                                    label={<Typography sx={login.textoInput}  >Número de cuenta</Typography>}
+                                    helperText={<Typography sx={login.textoMensajeAbajoInput} >Cuenta a transferir el valor del préstamo</Typography>} variant="standard" fullWidth margin="normal" />
+                            </Box>
+
+                            <Box display={'flex'} >
+                                <AccountBalanceOutlinedIcon sx={{ color: 'action.active', mr: 1, my: 5 }} />
+                                <TextField
+                                    inputRef={institutionInputRef}
+                                    id="institution"
+                                    defaultValue={data.institution}
+                                    onChange={(event) => {
+                                        handleFieldChange('institution', event);
+                                        fieldsFilled(event);
+                                    }}
+                                    helperText={<Typography sx={login.textoMensajeAbajoInput} >Institución correspondiente a la cuenta</Typography>} label={<Typography sx={login.textoInput} >Institución financiera</Typography>} variant="standard" fullWidth margin="normal" />
+                            </Box>
+
+                        </Box>
+
                         <Box sx={{ justifyContent: 'space-around', padding: '2%', marginBottom: "2rem" }}>
                             <Typography sx={loan.marcaRellenoAux}>Tipo de amortización del préstamo:</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: "2rem" }}>
@@ -235,7 +333,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedAleman}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedAleman", event);
+                                            handleCheckboxChange("isCheckedAleman",event);
                                             handleCheckboxAlemanChange(event);
                                         }} />
                                 </Box>
@@ -245,7 +343,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedFrances}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedFrances", event);
+                                            handleCheckboxChange("isCheckedFrances",event);
                                             handleCheckboxFrancesChange(event);
                                         }} />
 

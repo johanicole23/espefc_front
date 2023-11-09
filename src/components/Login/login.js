@@ -22,6 +22,8 @@ import loan from '../../styles/pages/loan';
 import buttons from '../../styles/buttons';
 import login from '../../styles/pages/login';
 import registerStyle from '../../styles/pages/register';
+import { Component, useEffect } from 'react';
+import axios from 'axios';
 
 function Login() {
     const theme = createTheme({

@@ -4,10 +4,10 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
 import logo from '../../../assets/logoFC.png';
 import cedula from '../../../assets/account/loanChirographic/cedula.png';
-import formularioImagen from '../../../assets/account/loanCollateral/formulario.png';
+import formularioImagen from '../../../assets/account/loanChirographic/formulario.png';
 import pagare from '../../../assets/account/loanChirographic/pagare.png';
 import contrato from '../../../assets/account/loanChirographic/contrato_adhesion.png';
-import planilla from '../../../assets/account/loanCollateral/planilla.png';
+import libreta from '../../../assets/account/loanChirographic/libreta.png';
 import confidencial from '../../../assets/account/loanChirographic/confidencial.png';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
@@ -101,94 +101,45 @@ function App() {
             title: "Cargar solicitud de crédito",
             image: formularioImagen,
             download: true,
-            url: '/files/solicitud_prestamo_prendario.pdf',
-            namePDF: "solicitud_prestamo_prendario.pdf"
-
+            url: '/files/solicitud_credito_quirografario.pdf',
+            namePDF:"solicitud_credito_quirografario.pdf"
+           
         },
         {
             index: 1,
             title: "Cargar copia de cédula",
             image: cedula,
             download: false,
-
-
+            
+            
         },
         {
             index: 2,
             title: "Cargar último confidencial",
             image: confidencial,
             download: false,
-
+           
         },
         {
             index: 3,
-            title: "Cargar planilla de servicios básicos",
-            image: planilla,
+            title: "Cargar libreta de la cuenta bancaria",
+            image: libreta,
             download: false,
-
+          
         },
         {
             index: 4,
-            title: "Cargar factura del vehículo financiado",
-            image: planilla,
-            download: false,
-
-        },
-        {
-            index: 5,
-            title: "Cargar proforma del vehículo",
-            image: planilla,
-            download: false,
-
-        },
-        {
-            index: 6,
             title: "Cargar pagaré ",
             image: pagare,
             download: true,
             url: '/files/pagare.pdf',
-            namePDF: "Pagare.pdf",
+            namePDF:"Pagare.pdf",
         },
         {
-            index: 7,
-            title: "Cargar tabla de amortización firmada ",
-            image: planilla,
-            download: false,
-
-        },
-        {
-            index: 8,
-            title: "Cargar declaración de licitud",
-            image: planilla,
-            download: false,
-
-        },
-        {
-            index: 9,
-            title: "Cargar factura de seguro vehicular",
-            image: planilla,
-            download: false,
-
-        },
-        {
-            index: 10,
-            title: "Cargar factura de servicio de rastreo",
-            image: planilla,
-            download: false,
-
-        },
-        {
-            index: 11,
-            title: "Cargar contrato de compra-venta",
+            index: 5,
+            title: "Cargar contrato de adhesión",
             image: contrato,
             download: false,
-        },
-        {
-            index: 12,
-            title: "Cargar endoso de la póliza de seguro",
-            image: planilla,
-            download: false,
-
         },
     ]
 
@@ -267,24 +218,13 @@ function App() {
                                     <Typography sx={home.homeTextH4LeftLight}
                                     >
                                         <br />
-                                        <li>Solicitud de crédito con datos personales, firma del deudor y cónyuge</li>
+                                        <li>Solicitud de crédito con datos personales, firma del deudor y garantes (s)</li>
                                         <li>Copia a color de cédula de ciudadanía o identidad actual del deudor y garante (s)</li>
                                         <li>Último confidencial del deudor y garante (s)</li>
-                                        <li>Original de planilla de servicios básicos actualizada</li>
-                                        <li>Copia de la factura del vehículo financiado</li>
-                                        <li>Proforma de vehículo financiado</li>
-                                        <li>Pagaré original a la orden del Fondo de Cesantía ESPE</li>
-                                        <li>Tabla de amortización firmada</li>
-                                        <li>Declaración de Licitud de fondos (cuando aplique)</li>
-                                        <li>Factura de seguro vehicular contratado por el tiempo de financiamiento</li>
-                                        <li>Factura de servicio de rastreo satelital contratado por el tiempo de
-                                            financiamiento (cuando aplique)</li>
-                                        <li>Contrato de compra-venta con reserva de dominio a favor del Fondo o el
-                                            contrato de prenda industrial, debidamente notariado e inscrito en el
-                                            Registro Mercantil</li>
-                                        <li>Endoso de la póliza de seguro del vehículo y desgravamen del cliente a
-                                            favor del Fondo Complementario Previsional Cerrado de Cesantía de la
-                                            Universidad de las Fuerzas Armadas ESPE</li>
+                                        <li>Copia de certificado, copia de libreta o documento electrónico de la cuenta bancaria (cuando sea diferente a la cuenta detallada en el confidencial del deudor);</li>
+                                        <li>Pagaré con firma del deudor y garante (s)</li>
+                                        <li>Contrato de adhesión.</li>
+
                                     </Typography>
 
                                 </Box>
@@ -299,7 +239,7 @@ function App() {
                             <Box display="flex" flexDirection={"row"} justifyContent={"space-between"}>
                                 {item.download && (
                                     <Button
-                                        onClick={() => handleClickDownloadDocuments(item.url, item.namePDF)}
+                                    onClick={() => handleClickDownloadDocuments(item.url, item.namePDF)}
                                         size="small" variant="outlined" color="secondary" sx={buttons.appBarButtonText} component="label" startIcon={<DownloadForOfflineIcon />}>
                                         Descargar
                                     </Button>

@@ -13,7 +13,7 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import CheckIcon from '@mui/icons-material/Check';
 import Modal from '@mui/material/Modal';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
@@ -27,7 +27,9 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import HomeIcon from '@mui/icons-material/Home';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import EmailIcon from '@mui/icons-material/Email';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import axios from 'axios';
 
 
 function Register() {
@@ -36,11 +38,14 @@ function Register() {
     const [isModalUserConfirmOpen, setIsModalUserConfirmOpen] = useState(false);
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [isAlertUserOpen, setIsAlertUserOpen] = useState(false);
+    const [isAlertIdOpen, setIsAlertIdOpen] = useState(false);
+    const [questions, setQuestions] = useState([]);
 
     const [iconNameColor, setIconNameColor] = useState('action.active');
     const [iconIdColor, setIconIdColor] = useState('action.active');
     const [iconNumberColor, setIconNumberColor] = useState('action.active');
     const [iconEmailColor, setIconEmailColor] = useState('action.active');
+    const [iconEmailPersonalColor, setIconEmailPersonalColor] = useState('action.active');
     const [iconDirColor, setIconDirColor] = useState('action.active');
 
     const nameInputRef = useRef(null);
@@ -49,8 +54,30 @@ function Register() {
     const emailInputRef = useRef(null);
     const emailPersonalInputRef = useRef(null);
     const dirInputRef = useRef(null);
+    const question1InputRef = useRef(null);
+    const question2InputRef = useRef(null);
+    const [answers, setAnswers] = useState(['', '', '']);
 
     const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        user_ci: "",
+        customer_name: "",
+        customer_personal_email: "",
+        customer_espe_email: "",
+        customer_phone: "",
+        customer_direction: "",
+        security_questions: [
+            {
+                question_id: 1,
+                user_answer: ""
+            },
+            {
+                question_id: 2,
+                user_answer: ""
+            }
+        ]
+    });
 
     const textFieldRegister = [
 
@@ -60,30 +87,29 @@ function Register() {
             textLabel: "Nombres y Apellidos",
             textError: " * Solo letras",
             inputRef: nameInputRef,
+            name: 'customer_name',
+            value: formData.customer_name,
 
         },
-        {
-            icon: BadgeIcon,
-            iconColor: iconIdColor,
-            textLabel: "Cédula de ciudadanía",
-            textError: " *Cédula Inválida",
-            inputRef: idInputRef,
 
-        },
         {
             icon: EmailIcon,
             iconColor: iconEmailColor,
             textLabel: "Correo Electrónico de la ESPE",
             textError: " *Correo Inválido",
             inputRef: emailInputRef,
+            name: 'customer_espe_email',
+            value: formData.customer_espe_email,
 
         },
         {
-            icon: EmailIcon,
-            iconColor: iconEmailColor,
+            icon: ContactMailIcon,
+            iconColor: iconEmailPersonalColor,
             textLabel: "Correo Electrónico Personal",
             textError: " *Correo Inválido",
             inputRef: emailPersonalInputRef,
+            name: 'customer_personal_email',
+            value: formData.customer_personal_email,
 
         },
         {
@@ -92,6 +118,8 @@ function Register() {
             textLabel: "Teléfono Celular",
             textError: " * Solo números",
             inputRef: numberInputRef,
+            name: 'customer_phone',
+            value: formData.customer_phone,
 
         },
         {
@@ -100,23 +128,26 @@ function Register() {
             textLabel: "Dirección de domicilio",
             textError: "",
             inputRef: dirInputRef,
+            name: 'customer_direction',
+            value: formData.customer_direction,
 
         },
 
     ];
 
-    const securityQuestions = [
 
-        {
-            questionLabel: "¿Cuál es su cantante favorito?",
-        },
-        {
-            questionLabel: "¿Cómo se llamó su primera mascota?",
-        }
-    ]
+    useEffect(() => {
+        // Realiza una solicitud GET al servidor para obtener las preguntas
+        axios.get('http://localhost:3000/api/questions')
+            .then((response) => {
+                setQuestions(response.data);
+            })
+            .catch((error) => {
+                console.error('Error al obtener las preguntas', error);
+            });
+    }, []); // El array vacío como segundo argumento asegura que se ejecute solo una vez
 
     const handleOpenQuestion = (event) => {
-        event.preventDefault(); // Detener la redirección predeterminada del botón
         const nameValue = nameInputRef.current.value.trim().toLowerCase();
         const idValue = idInputRef.current.value.trim().toLowerCase();
         const numberValue = numberInputRef.current.value.trim().toLowerCase();
@@ -128,83 +159,67 @@ function Register() {
         let flag3 = false;
         let flag4 = false;
         let flag5 = false;
-        
 
-      /*if (nameValue.length === 0 || idValue.length === 0 || numberValue.length === 0 || dirValue.length === 0 || emailValue.length === 0 || emailPersonalValue.length == 0) {
+        if (nameValue.length === 0 || idValue.length === 0 || numberValue.length === 0 || dirValue.length === 0 || emailValue.length === 0 || emailPersonalValue.length == 0) {
             // setIsModalEmptyOpen(true);
             //flagEmpty = true;
             setIsAlertOpen(true);
         }
-        if else (buscarUsuario(idValue) ) {            
-           setIsAlertUserOpen(true);
-           setIsAlertOpen(false);
+
+        if (!/^[a-zA-Z\s]+$/.test(nameValue)) {
+            setIconNameColor('error.main');
+            flag1 = false;
         }
         else {
-            setIsAlertOpen(false);
-            setIsAlertUserOpen(false);
-            if (!/^[a-zA-Z\s]+$/.test(nameValue)) {
-                setIconNameColor('error.main');
-                flag1 = false;
-            }
-            else {
-                setIconNameColor('action.active');
-                flag1 = true;
-            }
-
-            if (!/^\d+$/.test(idValue)) {
-                setIconIdColor('error.main');
-                flag2 = false;
-            }
-            else {
-
-                if (validarCedulaEcuatoriana(idValue)) {
-                    flag2 = true;
-                    setIconIdColor('action.active');
-                }
-                else {
-                    flag2 = false;
-                    setIconIdColor('error.main');
-                }
-            }
-            if (!/^\d+$/.test(numberValue)) {
-                setIconNumberColor('error.main');
-                flag3 = false;
-            }
-            else {
-                setIconNumberColor('action.active');
-                flag3 = true;
-            }
-
-            if (!emailValue.endsWith('@espe.edu.ec')) {
-                // El correo electrónico no es válido, abre el modal Email
-                setIconEmailColor('error.main');
-                flag4 = false;
-            }
-            else {
-                setIconEmailColor('action.active');
-                flag4 = true
-            }
-
-            if (!emailPersonalValue.endsWith('.com')) {
-                // El correo electrónico no es válido, abre el modal Email
-                setIconEmailColor('error.main');
-                flag5 = false;
-            }
-            else {
-                setIconEmailColor('action.active');
-                flag5 = true
-            }
-
+            setIconNameColor('action.active');
+            flag1 = true;
         }
 
-        if (flag1 == true && flag2 == true && flag3 == true && flag4 == true && flag5 == true) {
-          */  setIsModalSucessOpen(true);
-        /* setTimeout(() => {
-             setIsModalSucessOpen(false);
-             navigate('/login');
-         }, 3000);
-          }*/
+        if (isAlertIdOpen) {
+            flag2 = false;
+        } else {
+            flag2 = true;
+        }
+        if (!/^\d+$/.test(numberValue)) {
+            setIconNumberColor('error.main');
+            flag3 = false;
+        }
+        else {
+            setIconNumberColor('action.active');
+            flag3 = true;
+        }
 
+        if (!emailValue.endsWith('@espe.edu.ec')) {
+            // El correo electrónico no es válido, abre el modal Email
+            setIconEmailColor('error.main');
+            flag4 = false;
+        }
+        else {
+            setIconEmailColor('action.active');
+            flag4 = true
+        }
+
+        if (!emailPersonalValue.endsWith('.com')) {
+            // El correo electrónico no es válido, abre el modal Email
+            setIconEmailPersonalColor('error.main');
+            flag5 = false;
+        }
+        else {
+            setIconEmailPersonalColor('action.active');
+            flag5 = true
+        }
+
+
+
+        if (flag1 == true && flag2 == true && flag3 == true && flag4 == true && flag5 == true) {
+            setIsModalSucessOpen(true);
+            /* setTimeout(() => {
+                 setIsModalSucessOpen(false);
+                 navigate('/login');
+             }, 3000);
+              }*/
+
+        }
     }
 
     const handleCloseQuestion = () => {
@@ -212,10 +227,96 @@ function Register() {
         setIsAlertUserOpen(false);
         setIsModalSucessOpen(false);
     };
+    const [security_questions, setSecurityQuestions] = useState([
+        { question_id: 1, user_answer: '' },
+        { question_id: 2, user_answer: '' },
+    ]);
+
+    const handleAnswerChange = (index, value) => {
+        setSecurityQuestions((prevQuestions) => {
+            const newQuestions = [...prevQuestions];
+            newQuestions[index].user_answer = value;
+            return newQuestions;
+        });
+    };
+
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:3000/api/createUser', formData);
+
+            if (response.status === 201) {
+                const data = response.data;
+                console.log('Usuario creado con éxito');
+                setIsModalUserConfirmOpen(true);
+            } else {
+                console.error('Error usuario ya existe');
+                setIsAlertUserOpen(true);
+                setIsAlertOpen(false);
+            }
+        } catch (error) {
+            // Handle network or other errors
+            console.error(error);
+            console.error('Error usuario ya existe');
+            setIsAlertUserOpen(true);
+            setIsAlertOpen(false);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleUserAnswerChange = (e, index) => {
+        const { value } = e.target;
+        const updatedSecurityQuestions = [...formData.security_questions];
+        updatedSecurityQuestions[index].user_answer = value;
+        setFormData({ ...formData, security_questions: updatedSecurityQuestions });
+    };
 
     const handleOpenUserConfirm = (event) => {
 
-        setIsModalUserConfirmOpen(true);
+        // Detener la redirección predeterminada del botón
+        const user_ci = idInputRef.current.value.trim().toLowerCase();
+        const customer_name = nameInputRef.current.value.trim().toLowerCase();
+        const customer_phone = numberInputRef.current.value.trim().toLowerCase();
+        const customer_espe_email = emailInputRef.current.value.trim().toLowerCase();
+        const customer_personal_email = emailPersonalInputRef.current.value.trim().toLowerCase();
+        const customer_direction = dirInputRef.current.value.trim().toLowerCase();
+
+        // Preguntas de seguridad quemadas (modifica según tus necesidades)
+
+
+        // Construye un objeto con los datos que se enviarán al servidor
+        const userData = {
+            user_ci: '17510',
+            customer_name: 'Jhon Doe',
+            customer_personal_email: 'dfhsdh',
+            customer_espe_email: 'gdfsgdf',
+            customer_phone: '222345',
+            customer_direction: 'sf',
+            security_questions: [
+                { question_id: 1, user_answer: 'Respuesta 1' },
+                { question_id: 2, user_answer: 'Respuesta 2' },
+
+            ],
+        };
+
+        // Realiza una solicitud POST al servidor para crear un nuevo usuario con cliente
+        axios.post('http://localhost:3000/api/createUser', userData)
+            .then((response) => {
+                console.log('Usuario creado con éxito');
+                setIsModalUserConfirmOpen(true);
+                // Puedes realizar acciones adicionales después de la creación del usuario, como redirigir o mostrar un mensaje de éxito.
+            })
+            .catch((error) => {
+                console.error('Error al crear el usuario', error);
+            });
+
+
     }
     const handleCloseUserConfirm = () => {
         setIsModalUserConfirmOpen(false);
@@ -231,6 +332,13 @@ function Register() {
         link.click();
         document.body.removeChild(link);
     }
+
+    const handleChangeId = (event) => {
+        const id = idInputRef.current.value.trim().toLowerCase();
+        setIsAlertIdOpen(!validarCedulaEcuatoriana(id));
+    }
+
+
 
     return (
         <ThemeProvider theme={theme} >
@@ -273,7 +381,46 @@ function Register() {
 
                         <Grid item xs={12} sm={7} md={6}>
                             <Paper sx={login.cardLogin}>
+
                                 <Typography variant="subtitle1" sx={home.homeTextH3Light}>Registro de cuenta</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                    <BadgeIcon sx={{ color: iconIdColor, mr: 1, my: 0.5 }} />
+                                    <TextField id="input-with-sx" label={<Typography
+                                        sx={{
+                                            fontFamily: "Cairo",
+                                            textTransform: 'none',
+                                            fontSize: "16px",
+                                            width: '100%',
+                                            color: iconIdColor
+                                        }} >Cédula</Typography>}
+                                        inputRef={idInputRef}
+                                        name={'user_ci'}
+                                        value={formData.user_ci}
+                                        onChange={(event) => {
+                                            handleInputChange(event);
+                                            handleChangeId(event); // Llama a la primera función
+
+                                        }}
+                                        variant="standard" fullWidth margin="normal" />
+
+                                </Box>
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    {isAlertIdOpen && (
+                                        <Alert
+                                            open={isAlertIdOpen}
+                                            severity="error"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            Cédula inválida
+                                        </Alert>
+                                    )}
+                                </Stack>
+
                                 {textFieldRegister.map((item) => (
                                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                         <item.icon sx={{ color: item.iconColor, mr: 1, my: 0.5 }} />
@@ -284,8 +431,13 @@ function Register() {
                                                 fontSize: "16px",
                                                 width: '100%',
                                                 color: item.iconColor
-                                            }} >{item.textLabel}{item.iconColor === 'error.main' ? item.textError : ''} </Typography>} inputRef={item.inputRef}
+                                            }} >{item.textLabel}{item.iconColor === 'error.main' ? item.textError : ''} </Typography>}
+                                            inputRef={item.inputRef}
+                                            name={item.name}
+                                            value={item.value}
+                                            onChange={handleInputChange}
                                             variant="standard" fullWidth margin="normal" />
+
                                     </Box>
                                 ))}
 
@@ -305,26 +457,12 @@ function Register() {
                                             Ningún campo debe estar vacío.
                                         </Alert>
                                     )}
-                                    {isAlertUserOpen && (
-                                        <Alert
-                                            open={isAlertUserOpen}
-                                            onClose={handleCloseQuestion}
-                                            severity="error"
-                                            sx={{
-                                                fontFamily: 'Cairo',
-                                                textAlign: 'Right',
-                                                fontSize: "14px",
-                                                fontWeight: 600,
-                                            }}
-                                        >
-                                           Este usuario ya está registrado.
-                                        </Alert>
-                                    )}
+
                                 </Stack>
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-evenly' }}>
 
-                                    <Button size="medium" variant="contained" color="secondary" onClick={handleOpenQuestion} sx={buttons.registerButton} href="/login">
-                                        Completar mi afiliación
+                                    <Button size="medium" variant="contained" color="secondary" onClick={handleOpenQuestion} sx={buttons.registerButton} >
+                                        Continuar con el registro
                                     </Button>
                                     <Modal
                                         open={isModalSucessOpen}
@@ -335,22 +473,53 @@ function Register() {
                                         <Box sx={registerStyle.registerModalSuccess}>
 
                                             <Typography id="modal-modal-title" sx={home.homeTextH4Left}>
-                                                A continuación, responde las siguientes preguntas de seguridad.
+                                                A continuación, debe responder las siguientes preguntas de seguridad.
                                             </Typography>
 
-                                            <Box sx={{ display: 'flex', flexDirection: "column", alignItems: 'flex-end', }}>
-                                                <Typography sx={registerStyle.questionText} >{securityQuestions[0].questionLabel} </Typography>
-                                                <TextField id="input-with-sx" variant="standard" fullWidth margin="normal" />
-                                                <Typography sx={registerStyle.questionText} >{securityQuestions[1].questionLabel} </Typography>
-                                                <TextField id="input-with-sx" variant="standard" fullWidth margin="normal" />
+                                            <Box sx={{ display: 'flex', flexDirection: "column", }}>
+
+                                                {questions.map((question, index) => (
+                                                    <div key={question.question_id}>
+                                                        <Typography variant="body1" sx={home.homeTextH4Left}>
+                                                            {question.question_description}
+                                                        </Typography>
+                                                        <TextField id="input-with-sx" label={<Typography
+                                                            sx={{
+                                                                fontFamily: "Cairo",
+                                                                textTransform: 'none',
+                                                                fontSize: "16px",
+                                                                width: '100%',
+                                                                color: iconNumberColor
+                                                            }} > {`Respuesta ${index + 1}`}</Typography>}
+                                                            value={formData.security_questions[index].user_answer || ''}
+                                                            onChange={(e) => handleUserAnswerChange(e, index)}
+                                                            variant="standard" fullWidth margin="normal" />
+
+                                                    </div>
+                                                ))}
+
+
                                             </Box>
+                                            {isAlertUserOpen && (
+                                                <Alert
+                                                    open={isAlertUserOpen}
+                                                    onClose={handleCloseQuestion}
+                                                    severity="error"
+                                                    sx={{
+                                                        fontFamily: 'Cairo',
+                                                        textAlign: 'Right',
+                                                        fontSize: "14px",
+                                                        fontWeight: 600,
+                                                    }}
+                                                >
+                                                    Este usuario ya está registrado.
+                                                </Alert>
+                                            )}
 
                                             <Button size="medium" variant="contained" color="secondary"
-                                                onClick={() => {
-
-                                                    handleOpenUserConfirm();
-                                                }} sx={buttons.registerButton} >
-                                                Continuar
+                                                onClick={handleSubmit}
+                                                sx={buttons.registerButton} >
+                                                Confirmar registro
                                             </Button>
                                             <Modal
                                                 open={isModalUserConfirmOpen}

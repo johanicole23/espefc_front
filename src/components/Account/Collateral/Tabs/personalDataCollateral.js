@@ -1,37 +1,54 @@
-import React, { useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     createTheme,
     Typography,
     Box,
     TextField,
-    Button,    
+    Button,
     Paper,
-    Checkbox
-  } from '@mui/material';
+    Checkbox, Stack, Alert,
+} from '@mui/material';
 import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
 import ArrowCircleRightTwoToneIcon from '@mui/icons-material/ArrowCircleRightTwoTone';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import BadgeIcon from '@mui/icons-material/Badge';
+import CakeIcon from '@mui/icons-material/Cake';
+import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
+import HomeIcon from '@mui/icons-material/Home';
+import EmailIcon from '@mui/icons-material/Email';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
 import TtyIcon from '@mui/icons-material/Tty';
 import home from '../../../../styles/pages/home';
 import loan from '../../../../styles/pages/loan';
 import login from '../../../../styles/pages/login';
-
+import { validarCedulaEcuatoriana } from '../../../Register/registerConstants';
 
 function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
 
+    const [isAlertIdOpen, setIsAlertIdOpen] = useState(false);
+    const idInputRef = useRef(null);
+    const fullNameInputRef = useRef(null);
+    const civilStateInputRef = useRef(null);
+    const ageInputRef = useRef(null);
+    const bornDateInputRef = useRef(null);
     const directionInputRef = useRef(null);
     const cellphoneInputRef = useRef(null);
-    const phoneConventionInputRef = useRef(null);
+    const emailInputRef = useRef(null);
     const sedeInputRef = useRef(null);
-    const othersInputRef = useRef(null);
+
 
     const [isCheckedAdmin, setIsCheckedAdmin] = useState(true);
     const [isCheckedTeacher, setIsCheckedTeacher] = useState(false);
-    const [isCheckedNombrament, setIsCheckedNombrament] = useState(true);
-    const [isCheckedContract, setIsCheckedContract] = useState(false);   
+    const [isCheckedYes, setIsCheckedYes] = useState(true);
+    const [isCheckedNo, setIsCheckedNo] = useState(false);
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
 
+    const handleChangeId = (event) => {
+        const id = idInputRef.current.value.trim().toLowerCase();
+        setIsAlertIdOpen(!validarCedulaEcuatoriana(id));
+    }
     const handleCheckboxAdminChange = (event) => {
         setIsCheckedAdmin(!isCheckedAdmin);
         if (isCheckedTeacher) {
@@ -49,19 +66,19 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         fieldsFilled();
     };
 
-    const handleCheckboxNombramentChange = (event) => {
-        setIsCheckedNombrament(!isCheckedNombrament);
-        if (isCheckedContract) {
-            setIsCheckedContract(false);
+    const handleCheckboxYesChange = (event) => {
+        setIsCheckedYes(!isCheckedYes);
+        if (isCheckedNo) {
+            setIsCheckedNo(false);
         }
         fieldsFilled();
     };
 
 
-    const handleCheckboxContractChange = (event) => {
-        setIsCheckedContract(!isCheckedContract);
-        if (isCheckedNombrament) {
-            setIsCheckedNombrament(false);
+    const handleCheckboxNoChange = (event) => {
+        setIsCheckedNo(!isCheckedNo);
+        if (isCheckedYes) {
+            setIsCheckedYes(false);
         }
         fieldsFilled();
     };
@@ -77,21 +94,33 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
     };
     const fieldsFilled = (event) => {
 
+        const id = idInputRef.current.value.trim();
+        const fullName = fullNameInputRef.current.value.trim();
+        const idValid = validarCedulaEcuatoriana(id);
         const direction = directionInputRef.current.value.trim();
         const cellphone = cellphoneInputRef.current.value.trim();
-        const phoneConvention = phoneConventionInputRef.current.value.trim();
+        const civilState = civilStateInputRef.current.value.trim();
+        const age = ageInputRef.current.value.trim();
+        const bornDate = bornDateInputRef.current.value.trim();
+        const email = emailInputRef.current.value.trim();
         const sede = sedeInputRef.current.value.trim();
-        setIsNextButtonDisabled(!(direction.trim() !== '' &&  cellphone === 0&& phoneConvention.trim() !== '' && sede.trim() !== '' ));
+        setIsNextButtonDisabled(!(civilState.trim() !== '' && age.trim() !== '' && bornDate.trim() !== '' && email.trim() !== '' && fullName.trim() !== '' && currentIndex === 0 && id.trim() !== '' && idValid && direction.trim() !== '' && cellphone === 0  && sede.trim() !== ''));
 
     }
 
     useEffect(() => {
         // Esta función se ejecutará cada vez que cambie el contenido de los campos de entrada
+        const id = idInputRef.current.value.trim();
+        const idValid = validarCedulaEcuatoriana(id);
+        const fullName = fullNameInputRef.current.value.trim();
+        const civilState = civilStateInputRef.current.value.trim();
+        const age = ageInputRef.current.value.trim();
+        const bornDate = bornDateInputRef.current.value.trim();
+        const email = emailInputRef.current.value.trim();
         const direction = directionInputRef.current.value.trim();
         const cellphone = cellphoneInputRef.current.value.trim();
-        const phoneConvention = phoneConventionInputRef.current.value.trim();
         const sede = sedeInputRef.current.value.trim();
-        setIsNextButtonDisabled(!(direction && cellphone && phoneConvention && sede ));
+        setIsNextButtonDisabled(!(civilState && age && bornDate && email && id && idValid && fullName && direction && cellphone  && sede));
     }, [data, setIsNextButtonDisabled]);
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -114,6 +143,86 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                     <Paper elevation={5} sx={{ padding: '2% 4% ', width: '800px', marginBottom: '2rem' }}>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <TextField
+                                id="fullName"
+                                label={<Typography sx={login.textoInput} >Nombres y apellidos completos </Typography>}
+                                defaultValue={data.name}
+                                onChange={(event) => {
+                                    handleFieldChange('name', event);
+                                    fieldsFilled(event);   // Llama a la segunda función
+                                }}
+                                variant="standard" inputRef={fullNameInputRef} fullWidth margin="normal"
+                                sx={{ color: 'action.active' }} />
+                        </Box>
+
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
+                            <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <TextField type="number" id="numberId" label={<Typography sx={login.textoInput} >Cédula </Typography>}
+                                defaultValue={data.id}
+                                onChange={(event) => {
+                                    handleFieldChange('id', event);
+                                    handleChangeId(event); // Llama a la primera función
+                                    fieldsFilled(event);   // Llama a la segunda función
+                                }}
+                                inputRef={idInputRef} variant="standard" fullWidth margin="normal" />
+                        </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertIdOpen && (
+                                <Alert
+                                    open={isAlertIdOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Cédula inválida
+                                </Alert>
+                            )}
+                        </Stack>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
+                            <FamilyRestroomIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <TextField
+                                id="civilState"
+                                label={<Typography sx={login.textoInput} >Estado Civil </Typography>}
+                                defaultValue={data.civilState}
+                                onChange={(event) => {
+                                    handleFieldChange('civilState', event);
+                                    fieldsFilled(event);   // Llama a la segunda función
+                                }}
+                                variant="standard" inputRef={civilStateInputRef} fullWidth margin="normal"
+                                sx={{ color: 'action.active' }} />
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
+                            <CakeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <TextField
+                                id="age"
+                                label={<Typography sx={login.textoInput} >Edad </Typography>}
+                                defaultValue={data.age}
+                                onChange={(event) => {
+                                    handleFieldChange('age', event);
+                                    fieldsFilled(event);   // Llama a la segunda función
+                                }}
+                                variant="standard" inputRef={ageInputRef} fullWidth margin="normal"
+                                sx={{ color: 'action.active' }} />
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
+                            <DateRangeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <TextField
+                                id="bornDate"
+                                label={<Typography sx={login.textoInput} >Fecha de Nacimiento DD/MM/AAAA</Typography>}
+                                defaultValue={data.bornDate}
+                                onChange={(event) => {
+                                    handleFieldChange('bornDate', event);
+                                    fieldsFilled(event);   // Llama a la segunda función
+                                }}
+                                variant="standard" inputRef={bornDateInputRef} fullWidth margin="normal"
+                                sx={{ color: 'action.active' }} />
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
+                            <HomeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
                                 id="direction"
                                 label={<Typography sx={login.textoInput} >Dirección Domicilio</Typography>}
@@ -140,20 +249,51 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 }}
                                 variant="standard" inputRef={cellphoneInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
-                            <TtyIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <EmailIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
-                                id="phoneConvention"
-                                type="number"
-                                label={<Typography sx={login.textoInput} >Teléfono Convencional</Typography>}
-                                defaultValue={data.phoneConvention}
+                                id="email"
+                                type="email"
+                                label={<Typography sx={login.textoInput} >Correo electrónico</Typography>}
+                                defaultValue={data.email}
                                 onChange={(event) => {
-                                    handleFieldChange('phoneConvention', event);
+                                    handleFieldChange('email', event);
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
-                                variant="standard" inputRef={phoneConventionInputRef} fullWidth margin="normal"
+                                variant="standard" inputRef={emailInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
-
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
+                            <Typography sx={loan.marcaRellenoAux}>Separación de Bienes</Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Typography
+                                        sx={home.homeTextH4Left}
+                                    >Si</Typography>
+                                    <Checkbox
+                                        sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
+                                        checked={data.isCheckedYes}
+                                        onChange={(event) => {
+                                            handleCheckboxChange("isCheckedYes", event);
+                                            handleCheckboxYesChange(event);
+                                        }}
+                                    />
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Typography
+                                        sx={home.homeTextH4Left}
+                                    >No</Typography>
+                                    <Checkbox
+                                        sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
+                                        checked={data.isCheckedNo}
+                                        onChange={(event) => {
+                                            handleCheckboxChange("isCheckedNo", event);
+                                            handleCheckboxNoChange(event);
+                                        }}
+                                    />
+                                </Box>
+                               
+                            </Box>
+                        </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
                             <Typography sx={loan.marcaRellenoAux}>Categoría:</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -165,9 +305,9 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedAdmin}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedAdmin",event);
+                                            handleCheckboxChange("isCheckedAdmin", event);
                                             handleCheckboxAdminChange(event);
-                                        }} 
+                                        }}
                                     />
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -178,9 +318,9 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedTeacher}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedTeacher",event);
+                                            handleCheckboxChange("isCheckedTeacher", event);
                                             handleCheckboxTeacherChange(event);
-                                        }} 
+                                        }}
                                     />
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: '2rem' }}>
@@ -198,49 +338,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
 
                             </Box>
                         </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
-                            <Typography sx={loan.marcaRellenoAux}>Tipo de contrato</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <Typography
-                                        sx={home.homeTextH4Left}
-                                    >Nombramiento:</Typography>
-                                    <Checkbox
-                                        sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
-                                        checked={data.isCheckedNombrament}
-                                        onChange={(event) => {
-                                            handleCheckboxChange("isCheckedNombrament",event);
-                                            handleCheckboxNombramentChange(event);
-                                        }} 
-                                    />
-                                </Box>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <Typography
-                                        sx={home.homeTextH4Left}
-                                    >Contrato:</Typography>
-                                    <Checkbox
-                                        sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
-                                        checked={data.isCheckedContract}
-                                        onChange={(event) => {
-                                            handleCheckboxChange("isCheckedContract",event);
-                                            handleCheckboxContractChange(event);
-                                        }} 
-                                    />
-                                </Box>
-                                <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: '2rem' }}>
-                                    <TextField
-                                        id="others"
-                                        label={<Typography sx={login.textoInput} >Otros</Typography>}
-                                        defaultValue={data.others}
-                                        onChange={(event) => {
-                                            handleFieldChange('others', event);
-                                            fieldsFilled(event);   // Llama a la segunda función
-                                        }}
-                                        variant="standard" inputRef={othersInputRef} fullWidth margin="normal"
-                                        sx={{ color: 'action.active' }} />
-                                </Box>
-                            </Box>
-                        </Box>
+
 
                         <Box display="flex" justifyContent="space-between">
                             <Button size="small" variant="outlined" color="secondary" width="30%" sx={login.textoBoton} onClick={onPrevTab} >

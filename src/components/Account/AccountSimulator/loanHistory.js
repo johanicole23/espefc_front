@@ -2,26 +2,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import { ThemeProvider, createTheme, } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { CardActionArea, CardActions } from '@mui/material';
-import myTheme from '../../../components/MyComponents/myTheme';
 import {
-    Chip, Stack, Grid, Paper, Table, TableBody, TableCell,
-    TableContainer, TableHead, TableRow,
+    Chip,  Paper,
 } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import { calcularTablaAmortizacionAleman, calcularTablaAmortizacionFrances } from '../../../utils/simulatorFunctions';
 import {
 
-    cardFinality,
     style
 } from './loanSimulatorConstants';
 import Accordion from '@mui/material/Accordion';
@@ -35,11 +23,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 import home from '../../../styles/pages/home';
-import account from '../../../styles/pages/account';
-import loan from '../../../styles/pages/loan';
-import buttons from '../../../styles/buttons';
-import login from '../../../styles/pages/login';
-import simulator from '../../../styles/pages/simulator';
+
 
 
 function LoanHistory() {
@@ -113,7 +97,7 @@ function LoanHistory() {
             amortization: 'Alemán',
         },
         {
-            index: 0,
+            index: 3,
             loan: 'Quirografario',
             amount: '50 000',
             date: '2022/12/11',
@@ -125,7 +109,7 @@ function LoanHistory() {
             amortization: 'Alemán',
         },
         {
-            index: 0,
+            index: 4,
             loan: 'Quirografario',
             amount: '2593',
             date: '2022/12/11',

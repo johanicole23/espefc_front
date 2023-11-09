@@ -5,8 +5,8 @@ import home from '../../../styles/pages/home';
 import { PDFDocument, rgb } from 'pdf-lib';
 import Tab1 from './Tabs/loanDataCollateral';
 import Tab2 from './Tabs/personalDataCollateral';
-import Tab3 from './Tabs/guarantor1DataCollateral';
-import Tab4 from './Tabs/guarantor2DataCollateral';
+import Tab3 from './Tabs/spouseDataCollateral';
+import Tab4 from './Tabs/referencesDataCollateral';
 import Tab6 from './messageCollateral';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 const theme = createTheme({
@@ -41,40 +41,38 @@ function App() {
 
   const [formData, setFormData] = useState({
 
-    modelCar: '',   
+    modelCar: '',
     mark: '',
+    yearCar: '',
     amount: '',
     isTerm: '',
-    yearCar: '',
-    isCheckedAhorro: true,
-    isCheckedCorriente: false,
     isCheckedFrances: false,
     isCheckedAleman: true,
 
+    id: '',
+    name: '',
+    civilState: '',
+    age: '',
+    bornDate: '',
     direction: '',
     cellphone: '',
-    phoneConvention: '',
+    email: '',
     sede: '',
-    others: '',
     isCheckedAdmin: true,
     isCheckedTeacher: false,
-    isCheckedNombrament: true,
-    isCheckedContract: false,
+    isCheckedYes: true,
+    isCheckedNo: false,
 
     idGuarantor1: '',
     fullNameGuarantor1: '',
     cellphoneGuarantor1: '',
-    phoneGuarantor1: '',
+    emailSpouse: '',
 
-    idGuarantor2: '',
     fullNameGuarantor2: '',
+    emailReference: '',
     cellphoneGuarantor2: '',
-    phoneGuarantor2: '',
-
-    idGuarantor3: '',
-    fullNameGuarantor3: '',
-    cellphoneGuarantor3: '',
-    phoneGuarantor3: '',
+    directionSpouse: '',
+    directionWork: '',
 
 
   });
@@ -95,9 +93,9 @@ function App() {
           <Tabs value={activeTab} onChange={handleTabChange}>
             <Tab label={<Typography sx={home.homeTextH4} >Datos del Vehículo</Typography>} />
             <Tab label={<Typography sx={home.homeTextH4} >Datos personales</Typography>} />
-            <Tab label={<Typography sx={home.homeTextH4} >Datos del Conyuge</Typography>} />
+            <Tab label={<Typography sx={home.homeTextH4} >Datos del Cónyuge</Typography>} />
             <Tab label={<Typography sx={home.homeTextH4} >Referencias Personales</Typography>} />
-            
+
             <Tab />
           </Tabs>
         </Box>
@@ -115,7 +113,7 @@ function App() {
             {activeTab === 3 && (
               <Tab4 data={formData} onDataChange={handleDataChange} onPrevTab={handlePrevTab} onNextTab={handleNextTab} />
             )}
-            
+
             {activeTab === 4 && (
               <Tab6 />
             )}
@@ -137,7 +135,7 @@ export default App;
 async function generatePDF(formData) {
   try {
     // Ruta al PDF existente
-    const rutaPDFExistente = '/files/solicitud_credito_quirografario.pdf';
+    const rutaPDFExistente = '/files/solicitud_prestamo_prendario.pdf';
     const existingPdfBytes = await fetch(rutaPDFExistente).then((res) => res.arrayBuffer());
 
     // Cargar el PDF existente
@@ -147,105 +145,84 @@ async function generatePDF(formData) {
     const [page] = pdfDoc.getPages();
 
     // Obtener el contenido de los campos de entrada
-    const { institution, id, name, amount, isTerm, accountNumber, isCheckedAhorro, isCheckedCorriente, isCheckedFrances, isCheckedAleman,
-      direction, cellphone, phoneConvention, isCheckedAdmin, sede, isCheckedNombrament, isCheckedContract, others,
-      idGuarantor1, fullNameGuarantor1, cellphoneGuarantor1, phoneGuarantor1,
-      idGuarantor2, fullNameGuarantor2, cellphoneGuarantor2, phoneGuarantor2,
-      idGuarantor3, fullNameGuarantor3, cellphoneGuarantor3, phoneGuarantor3, } = formData;
+    const { modelCar, mark, yearCar, amount, isTerm, isCheckedFrances, isCheckedAleman,
+      id, name, civilState, age, bornDate, direction, cellphone, email, sede, isCheckedAdmin, isCheckedTeacher, isCheckedYes, isCheckedNo,
+      idGuarantor1, fullNameGuarantor1, cellphoneGuarantor1, emailSpouse,
+      fullNameGuarantor2, emailReference, cellphoneGuarantor2, directionSpouse, directionWork,
+    } = formData;
 
     console.log(name);
     const date = new Date().toISOString().slice(0, 10);
+  
+    const contentToInsert = [     
+      { text: date, x: 80, y: 723, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: modelCar, x: 90, y: 678, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: mark, x: 75, y: 698, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: amount, x: 340, y: 658, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: String(isTerm), x: 100, y: 658, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: yearCar, x: 335, y: 697, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
 
-    const contentToInsert = [
-      { text: 'X', x: 382, y: 748, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: date, x: 80, y: 743, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: name, x: 75, y: 713, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: id, x: 110, y: 691, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: amount, x: 378, y: 691, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: String(isTerm), x: 495, y: 691, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: accountNumber, x: 200, y: 649, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: institution, x: 70, y: 630, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      
+      { text: id, x: 190, y: 590, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: name, x: 200, y: 610, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: civilState, x: 100, y: 570, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: age, x: 335, y: 590, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: bornDate, x: 400, y: 531, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: direction, x: 180, y: 550, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: cellphone, x: 130, y: 531, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: email, x: 135, y: 511, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: sede, x: 75, y: 491, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
 
-      { text: direction, x: 130, y: 572, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: cellphone, x: 130, y: 556, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: phoneConvention, x: 320, y: 556, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: sede, x: 285, y: 536, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: idGuarantor1, x: 200, y: 443, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: fullNameGuarantor1, x: 200, y: 463, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: cellphoneGuarantor1, x: 100, y: 423, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: emailSpouse, x: 400, y: 423, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
 
-      { text: idGuarantor1, x: 375, y: 480, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: fullNameGuarantor1, x: 75, y: 480, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: cellphoneGuarantor1, x: 184, y: 447, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: phoneGuarantor1, x: 365, y: 447, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: name, x: 230, y: 463, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+     
+      { text: fullNameGuarantor2, x: 270, y: 395, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: cellphoneGuarantor2, x: 100, y: 356, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: emailReference, x: 135, y: 376, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: directionSpouse, x: 180, y: 335, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+      { text: directionWork, x: 400, y: 355, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
 
-      { text: idGuarantor2, x: 375, y: 418, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: fullNameGuarantor2, x: 75, y: 418, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: cellphoneGuarantor2, x: 184, y: 386, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: phoneGuarantor2, x: 365, y: 386, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-
-
-      { text: idGuarantor3, x: 375, y: 3558, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: fullNameGuarantor3, x: 75, y: 355, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: cellphoneGuarantor3, x: 184, y: 325, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      { text: phoneGuarantor3, x: 365, y: 325, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
 
     ];
-    if (isCheckedAhorro) {
-      contentToInsert.push(
-        { text: 'X', x: 87, y: 650, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
-      );
-    }
-    else if (!isCheckedAhorro) {
-      contentToInsert.push(
-        { text: 'X', x: 160, y: 650, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
-      );
-    }
+    
 
     if (isCheckedFrances) {
       contentToInsert.push(
-        { text: 'X', x: 205, y: 608, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+        { text: 'X', x: 230, y: 638, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
       );
     }
     else if (!isCheckedFrances) {
       contentToInsert.push(
-        { text: 'X', x: 275, y: 608, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+        { text: 'X', x: 290, y: 638, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
       );
     }
 
     if (isCheckedAdmin) {
       contentToInsert.push(
-        { text: 'X', x: 158, y: 536, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+        { text: 'X', x: 423, y: 491, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
       );
     }
     else if (!isCheckedAdmin) {
       contentToInsert.push(
-        { text: 'X', x: 230, y: 536, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+        { text: 'X', x: 485, y: 491, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
       );
     }
-    if (isCheckedNombrament) {
+    if (isCheckedYes) {
       contentToInsert.push(
-        { text: 'X', x: 184, y: 516, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+        { text: 'X', x: 413, y: 570, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
       );
     }
-    else if (isCheckedContract) {
+    else {
       contentToInsert.push(
-        { text: 'X', x: 265, y: 516, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+        { text: 'X', x: 453, y: 570, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
       );
     }
-    else if (!isCheckedContract && !isCheckedNombrament) {
-      contentToInsert.push(
-        { text: others, x: 320, y: 516, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
-      );
-    }
-    if (fullNameGuarantor2 != '') {
-      contentToInsert.push(
-        { text: name, x: 230, y: 401, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      );
-    }
-    if (fullNameGuarantor3 != '') {
-      contentToInsert.push(
-        { text: name, x: 230, y: 339, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-      );
-    }
+   
+   
+  
     // Agregar el contenido al PDF existente
     contentToInsert.forEach(({ text, x, y, size, color }) => {
       page.drawText(text, { x, y, size, color });
@@ -262,7 +239,7 @@ async function generatePDF(formData) {
     // Descargar el PDF modificado o realizar otras acciones necesarias
     const link = document.createElement('a');
     link.href = nuevoPdfUrl;
-    link.download = 'formulario_modificado.pdf';
+    link.download = 'formulario_prestamo_prendario.pdf';
     link.click();
   } catch (error) {
     console.error('Error al generar el PDF:', error);
