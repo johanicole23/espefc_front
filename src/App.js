@@ -27,7 +27,8 @@ import Admin from './components/Admin/accountHome';
 import PasswordChangeAdmin from './components/Admin/Configuration/passwordChange';
 import ConfigurationAdmin from './components/Admin/Configuration/configuration';
 import LoanAdmin from './components/Admin/Loan/loanManagment';
-import ClientAdmin from './components/Admin/Clients/clientManagment';
+import ClientAdmin from './components/Admin/ClientsAccepted/clientManagment';
+import ClientPendingAdmin from './components/Admin/ClientsPending/clientManagment';
 import AccessAdmin from './components/Admin/Liquidation';
 //import Account from './pages/account/accountHome';
 function App() {
@@ -59,6 +60,7 @@ function App() {
         <Route exact path="/admin-cuenta/configuracion" Component={ConfigurationAdmin} />
         <Route exact path="/admin-cuenta/prestamos" Component={LoanAdmin} />
         <Route exact path="/admin-cuenta/clientes" Component={ClientAdmin} />
+        <Route exact path="/admin-cuenta/clientes-pendientes" Component={ClientPendingAdmin} />
         <Route exact path="/admin-cuenta/accesos" Component={AccessAdmin} />        
 
       </Routes>

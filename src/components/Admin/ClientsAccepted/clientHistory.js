@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider, createTheme, } from '@mui/material/styles';
 import {
-  Chip,  Paper,  Switch,
+  Chip, Paper, Switch,
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
@@ -12,17 +12,16 @@ import { calcularTablaAmortizacionAleman, calcularTablaAmortizacionFrances } fro
 import home from '../../../styles/pages/home';
 import login from '../../../styles/pages/login';
 import SearchIcon from '@mui/icons-material/Search';
-
+import { useEffect } from 'react';
+import axios from 'axios';
 function LoanHistory() {
 
 
   const [open, setOpen] = React.useState(false);
-
   const [table1, setTable1] = React.useState([]);
-
   const [selectedForm, setSelectedForm] = useState(null);
-
   const [isModalSucessOpen, setIsModalSucessOpen] = useState(false);
+  const [pendingUsers, setPendingUsers] = useState([]);
 
   const handleOpenLoanHistory = (amortization, amount, interest, term, item, index) => {
     var tablaAmortizacion = [];
@@ -84,9 +83,6 @@ function LoanHistory() {
       color: '#b0d626',
     },
 
-
-
-
   ]
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
   const theme = createTheme({
@@ -105,13 +101,34 @@ function LoanHistory() {
     },
   });
   const [searchValue, setSearchValue] = useState('');
-  const filteredLoans = loanHistory.filter(item =>
+  const filteredClients = loanHistory.filter(item =>
     item.name.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   const handleSearchChange = (event) => {
     setSearchValue(event.target.value);
   };
+
+  useEffect(() => {
+    const fetchPendingUsers = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/pendingUsers');
+
+        // Verificar si la solicitud fue exitosa antes de actualizar el estado
+        if (response.data.success) {
+          setPendingUsers(response.data);
+        } else {
+          console.error('Error al cargar los usuarios pendientes:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error de red:', error.message);
+      }
+    };
+
+    // Llamar a la función para obtener los usuarios pendientes al montar el componente
+    fetchPendingUsers();
+  }, []); // El array vacío indica que este efecto se ejecutará solo una vez al montar el componente
+
   return (
     <Box>
       <ThemeProvider theme={theme}>
@@ -133,7 +150,7 @@ function LoanHistory() {
 
             <Box display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} marginTop={'2rem'} >
 
-              {filteredLoans.map((item, index) => (
+              {filteredClients.map((item, index) => (
                 <Box marginBottom={'20px'} key={item.index}>
 
                   <Paper sx={{ height: '2.2rem' }}>

@@ -21,6 +21,7 @@ export const images = [
         titulo: '¿Quiénes Somos? ',
         subtitulo: 'Conocenos y conoce nuestra historia',
         boton: 'Leer Ahora',
+        href: '/historia'
     },
     {
         src: carruselP2,
@@ -28,13 +29,15 @@ export const images = [
         titulo: 'Horarios de Atención',
         subtitulo: 'Revisa los horarios para visitar nuestra agencia',
         boton: 'Revisar Horarios',
+        href:'/historia#horarios'
     },
     {
         src: carruselP3,
         alt: 'Descripción de la imagen 2',
-        titulo: 'Tu dinero disponible cuando quieras',
-        subtitulo: 'Ten al día todos tus pagos, sin límites',
-        boton: 'Conoce más',
+        titulo: 'Accede a un préstamo cuando desees',
+        subtitulo: 'Completa los formularios disponibles',
+        boton: 'Comenzar una cuenta',
+        href:'/login'
     },
 
     {
@@ -43,6 +46,7 @@ export const images = [
         titulo: 'Mándonos tus sugerencias cuando quieras',
         subtitulo: 'O las preguntas que te hayas olvidado de realizar',
         boton: 'Visualizar formulario',
+        href:'/historia#sugerencias'
     },
 ];
 

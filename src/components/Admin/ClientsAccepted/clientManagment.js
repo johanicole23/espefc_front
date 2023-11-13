@@ -35,7 +35,7 @@ function SimulatorLoan() {
               maxWidth: '100%',
             
             }} >
-            <Typography variant="body2" sx={home.homeTextH4}>Todos los préstamos realizados por cada usuario se encuentran aquí </Typography>
+            <Typography variant="body2" sx={home.homeTextH4}>Todos las cuentas de usuario creadas se encuentran aquí </Typography>
 
             <LoanHistory></LoanHistory>
             

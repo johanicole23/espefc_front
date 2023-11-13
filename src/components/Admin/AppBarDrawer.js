@@ -156,7 +156,8 @@ function AppBarDrawer() {
                    
                     {[                        
                         { text: 'Préstamos ', icon: <CurrencyBitcoinIcon/>, link: '/admin-cuenta/prestamos' },
-                        { text: 'Clientes ', icon: <StackedLineChartIcon />, link: '/admin-cuenta/clientes' },
+                        { text: 'Clientes Aprobados ', icon: <StackedLineChartIcon />, link: '/admin-cuenta/clientes' },
+                        { text: 'Clientes Pendientes', icon: <StackedLineChartIcon />, link: '/admin-cuenta/clientes-pendientes' },
                         { text: 'Accesos', icon: <AddchartIcon/>, link: '/cuenta/variacion-aporte' },                      
                     ].map((item, index) => (
                         <ListItem key={item.text} disablePadding>

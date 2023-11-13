@@ -17,7 +17,7 @@ import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
 import MyAppBar from '../MyComponents/myAppBar';
 import MyFooter from '../MyComponents/myFooter';
-import { images, imagesCel, cardLoan, cards,  imagesNews, carImages, loanCards, style } from './homeConstants';
+import { images, imagesCel, cardLoan, cards, imagesNews, carImages, loanCards, style } from './homeConstants';
 
 function Home() {
   const theme = createTheme({
@@ -36,7 +36,10 @@ function Home() {
     },
   });
 
-
+  const handleButtonClick = (href) => {
+    // Redirigir a la página deseada con el fragmento de URL
+    window.location.href = href;
+  };
   return (
     <ThemeProvider theme={theme}>
       <div><MyAppBar title="AppBar Component" /></div>
@@ -63,7 +66,7 @@ function Home() {
                 <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>{item.subtitulo}</Typography>
               </Box>
               <Box sx={{ mt: '5%' }}>
-                <Button variant="contained" color="secondary" sx={buttons.appBarButtonText}>{item.boton} </Button>
+                <Button href={item.href} onClick={() => handleButtonClick(item.href)} variant="contained" color="secondary" sx={buttons.appBarButtonText}>{item.boton} </Button>
               </Box>
 
             </Box>

@@ -24,7 +24,7 @@ import login from '../../styles/pages/login';
 import registerStyle from '../../styles/pages/register';
 import { Component, useEffect } from 'react';
 import axios from 'axios';
-
+import { validarCedulaEcuatoriana } from '../Register/registerConstants';
 function Login() {
     const theme = createTheme({
         palette: {
@@ -55,17 +55,44 @@ function Login() {
     const [isModalCodeConfirmOpen, setIsModalCodeConfirmOpen] = useState(false);
     const [isModalForgetPasswordOpen, setIsModalForgetPasswordOpen] = useState(false);
     const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
+    const [codeJSON, setcodeJSON] = useState('');
     const textFieldsRef = useRef([]);
     const [isAlertEmptyCodeOpen, setIsAlertEmptyCodeOpen] = useState(false);
+    const [isAlertCodeOpen, setIsAlertCodeOpen] = useState(false);
     const [isAlertCredentialsOpen, setIsAlertCredentialsOpen] = useState(false);
     const [isAlertIdOpen, setIsAlertIdOpen] = useState(false);
+    const [isAlertIdLoginOpen, setIsAlertIdLoginOpen] = useState(false);
     const [isAlertIdSuccessOpen, setIsAlertIdSuccessOpen] = useState(false);
     const [isAlertCheckEmailOpen, setIsAlertCheckEmailOpen] = useState(false);
     const [isAlertCheckEmailWrongOpen, setIsAlertCheckEmailWrongOpen] = useState(false);
+    const [questionsRecuperation, setQuestionsRecuperation] = useState([]);
+    const [userCiRecuperation, setUserCiRecuperation] = useState('');
+    const [iconNumberColor, setIconNumberColor] = useState('action.active');
+
     const [inputValue, setInputValue] = useState('');
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
 
+    const idInputRef = useRef(null);
+    const idRecuperationInputRef = useRef(null);
+
+    const [iconIdColor, setIconIdColor] = useState('action.active');
+
+    const [formData, setFormData] = useState({
+        user_ci: "",
+        user_password: ""
+    })
+
+    function numberToArray(number) {
+
+        // Convierte el número en una cadena
+        const numberString = number.toString();
+
+        // Divide la cadena en un arreglo de caracteres y luego convierte cada carácter de nuevo en número
+        const digitArray = numberString.split('').map(Number);
+
+        return digitArray;
+    }
     const handleOpenCodeConfirm = (event) => {
         if (true) {
             setIsAlertCredentialsOpen(true);
@@ -78,7 +105,7 @@ function Login() {
 
 
     }
-    
+
 
     const handleCloseCodeConfirm = () => {
         //setIsModalCodeConfirmOpen(false);
@@ -102,12 +129,29 @@ function Login() {
 
 
     const handleSubmit = () => {
+        const emptyVerificationCode = ['', '', '', '', '', ''];
+        setVerificationCode(emptyVerificationCode);
+        setIsAlertEmptyCodeOpen(false);
+        setIsAlertCodeOpen(false);
+
         if (verificationCode.every((code) => code !== '')) {
             // Aquí puedes realizar la acción deseada con el código completo
             const completeCode = verificationCode.join('');
-            console.log("Código completo:", completeCode);
+            const digitArray = numberToArray(codeJSON)
+            if (verificationCode.join() === digitArray.join()) {
+                console.log("Código coincide:");
+                window.location.href = '/cuenta';
+            }
+            else {
+                console.log("Código no coincide:");
+                setVerificationCode(emptyVerificationCode);
+                setIsAlertCodeOpen(true)
+                setIsAlertEmptyCodeOpen(false);
+            }
+
         } else {
             setIsAlertEmptyCodeOpen(true);
+            setIsAlertCodeOpen(false)
         }
     };
 
@@ -120,15 +164,55 @@ function Login() {
 
 
 
-    const handleLogin = () => {
-        if (usuario.trim() === '' || contrasena.trim() === '') {
+    const handleLogin = async () => {
+
+        const emptyVerificationCode = ['', '', '', '', '', ''];
+        setVerificationCode(emptyVerificationCode);
+        setIsAlertEmptyCodeOpen(false);
+        setIsAlertCodeOpen(false);
+
+        try {
+            if (formData.user_ci.trim() === '' || formData.user_password.trim() === '') {
+                setIsAlertCredentialsOpen(true);
+            }
+
+            else {
+                const response = await axios.post('http://localhost:3000/api/loginUser', formData);
+
+                const { success, customer, token, code, message } = response.data;
+
+                if (response.data.success) {
+                    console.log('Inicio de sesión exitoso');
+                    //console.log('Datos del cliente:', customer);
+                    console.log('Token:', token);
+                    //console.log('Código de verificación:', code);
+                    setcodeJSON(code);
+                    //console.log(response.data.message);
+                    setIsAlertCredentialsOpen(false);
+                    setIsModalCodeConfirmOpen(true);
+                    //console.log('Usuario:', formData.user_ci);
+                   // console.log('Contraseña:', formData.user_password);
+                } else {
+                    // La solicitud no fue exitosa
+                    setIsAlertCredentialsOpen(true);
+                    if (response.data.error === 'Contraseña inválida') {
+                        console.error('Contraseña inválida:', response.data.message);
+                    } else if (response.data.error === 'Usuario no encontrado') {
+                        console.error('Usuario no encontrado:', response.data.message);
+                    } else {
+                        console.error('Error desconocido:', response.data.message);
+                    }
+                }
+
+            }
+        } catch (error) {
+            // Manejar errores de red u otros errores
+            console.error('Error de red:', error.message);
             setIsAlertCredentialsOpen(true);
-        } else {
-            setIsAlertCredentialsOpen(false);
-            setIsModalCodeConfirmOpen(true);
-            console.log('Usuario:', usuario);
-            console.log('Contraseña:', contrasena);
         }
+
+
+
     };
 
     const handlePasswordForget = () => {
@@ -140,19 +224,9 @@ function Login() {
         setIsModalForgetPasswordOpen(false);
     };
 
-    // función para validar la cédula incorrecta para olvidar contraseña
-    const handleIdOpen = (event) => {
-       if (true) {
-            //setIsAlertIdOpen(true);
-            setIsAlertIdSuccessOpen(true);
-        }
-       /*else  (true) {
-            setIsAlertIdOpen(true);
-        }*/
-    }
 
     // Cuando se hace clic en el TextField de Cedula (Modal Forget Password) establece el valor en una cadena vacía  abre el modal de cedula inválida
-    const handleTextFieldClick = () => {        
+    const handleTextFieldClick = () => {
         setInputValue('');
         setIsAlertIdOpen(false);
     };
@@ -163,12 +237,117 @@ function Login() {
             setIsAlertCheckEmailWrongOpen(true);
             //setIsAlertCheckEmailOpen(true);
         }
-        
-       /*else  (true) {
-            setIsAlertIdOpen(true);
-        }*/
+
+        /*else  (true) {
+             setIsAlertIdOpen(true);
+         }*/
     }
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+    const handleChangeIdLogin = (event) => {
+        const id = idInputRef.current.value.trim().toLowerCase();
+        setIsAlertIdLoginOpen(!validarCedulaEcuatoriana(id));
+    }
+
+    const handleUserCiChange = (event) => {
+        const id = idRecuperationInputRef.current.value.trim().toLowerCase();
+        setUserCiRecuperation(event.target.value);
+        if (validarCedulaEcuatoriana(id)) {
+            setIsAlertIdOpen(false);
+            setIsAlertIdSuccessOpen(true);
+        }
+        else {
+            setIsAlertIdOpen(true);
+            setIsAlertIdSuccessOpen(false);
+        }
+
+    };
+
+
+
+    const handleIdOpen = async () => {
+        try {
+            // Hacer la solicitud POST para obtener las preguntas del usuario
+            const responsePost = await axios.post('http://localhost:3000/api/userQuestions', { user_ci: userCiRecuperation });
+
+            // Extraer las preguntas de la respuesta POST
+            const questions = responsePost.data;
+
+            // Si todo sale bien en la solicitud POST, realizar una solicitud GET adicional
+            const responseGet = await axios.get('http://localhost:3000/api/questions');
+            const data = responseGet.data;
+
+            if (Array.isArray(data)) {
+                setQuestionsRecuperation(data);
+            } else {
+                console.error('La respuesta del servidor no es un array:', data);
+            }
+            // Manejar la respuesta de la solicitud GET según tus necesidades
+            console.log('Respuesta GET:', responseGet.data);
+
+            // Realizar otras acciones después de obtener las preguntas y la respuesta GET
+            setIsAlertIdOpen(false);
+            setIsAlertIdSuccessOpen(false);
+        } catch (error) {
+            console.error('Error al obtener las preguntas', error);
+            setIsAlertIdOpen(true);
+        }
+    };
+
+
+
+
+
+    const [userData, setUserData] = useState({
+        user_ci: "",
+        user_answers_body: [
+            {
+                question_id: 1,
+                user_answer: ""
+            },
+            {
+                question_id: 2,
+                user_answer: ""
+            }
+        ]
+    });
+
+    const handleUserAnswerChange = (e, index) => {
+        const { value } = e.target;
+        const updatedUserData = { ...userData };
+        updatedUserData.user_answers_body[index].user_answer = value;
+        setUserData(updatedUserData);
+    };
+
+    const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        userData.user_ci = userCiRecuperation;
+        try {
+            // Enviar el formulario al servidor utilizando Axios
+            const response = await axios.post('http://localhost:3000/api/userAnswers', userData);
+            if (response.data.success) {
+                setIsAlertCheckEmailOpen(true);
+                setIsAlertCheckEmailWrongOpen(false);
+                setIsSubmitDisabled(true);
+            }
+            else {
+                setIsAlertCheckEmailWrongOpen(true);
+                setIsAlertCheckEmailOpen(false);
+            }
+
+            // Manejar la respuesta del servidor según tus necesidades
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error al enviar el formulario:', error);
+            setIsAlertCheckEmailWrongOpen(true);
+            setIsAlertCheckEmailOpen(false);
+        }
+    };
 
     return (
         <ThemeProvider theme={theme} >
@@ -194,20 +373,56 @@ function Login() {
                                 <Typography variant="subtitle1" sx={home.homeTextH3Light}>Inicio de Sesión</Typography>
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', my: 2 }}>
                                     <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                                    <TextField id="user" label={<Typography sx={login.textoInput} >Usuario</Typography>}
-                                        variant="standard" sx={login.textoInput}
-                                        value={usuario}
-                                        onChange={(e) => setUsuario(e.target.value)}
-                                    />
+
+                                    <TextField id="user_ci" label={<Typography
+                                        sx={{
+                                            fontFamily: "Cairo",
+                                            textTransform: 'none',
+                                            fontSize: "16px",
+                                            width: '100%',
+                                            color: iconIdColor
+                                        }} >Usuario (Cédula de Ciudadanía)</Typography>}
+                                        type="number"
+                                        inputRef={idInputRef}
+                                        name={'user_ci'}
+                                        value={formData.user_ci}
+                                        onChange={(event) => {
+                                            handleInputChange(event);
+                                            handleChangeIdLogin(event); // Llama a la primera función
+                                            setUsuario(event.target.value)
+
+                                        }}
+                                        variant="standard" fullWidth margin="normal" />
 
                                 </Box>
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    {isAlertIdLoginOpen && (
+                                        <Alert
+                                            open={isAlertIdLoginOpen}
+                                            severity="error"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            Cédula inválida
+                                        </Alert>
+                                    )}
+                                </Stack>
 
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', my: 2 }}>
                                     <PasswordIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                                    <TextField type="password" sx={login.textoContrasena} id="password" label={<Typography sx={login.textoInput} >Contraseña</Typography>}
+                                    <TextField type="password" sx={login.textoContrasena} id="user_password" label={<Typography sx={login.textoInput} >Contraseña</Typography>}
                                         variant="standard"
-                                        value={contrasena}
-                                        onChange={(e) => setContrasena(e.target.value)} />
+                                        name={'user_password'}
+                                        value={formData.user_password}
+                                        onChange={(event) => {
+                                            handleInputChange(event);
+
+                                        }}
+                                    />
 
                                 </Box>
                                 <Typography variant="subtitle1" onClick={handlePasswordForget} sx={login.textoPregunta}>¿Olvidaste tu contraseña?</Typography>
@@ -217,17 +432,23 @@ function Login() {
                                     aria-labelledby="modal-modal-title"
                                     aria-describedby="modal-modal-description"
                                 >
+                                    
                                     <Box sx={login.loginModalSuccess}>
                                         <Typography id="modal-modal-title" sx={home.homeTextH4Left}>
                                             Ingrese su número de cédula:
                                         </Typography>
                                         <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', my: 2 }}>
-                                            <TextField type="password" sx={login.textoInputCedula} id="cedula" label={<Typography sx={login.textoInput} >Cédula</Typography>}
-                                                variant="standard"                                              
-                                                value={inputValue}
-                                                onChange={(e) => setInputValue(e.target.value)}
-                                                onClick={handleTextFieldClick}
-                                                />
+                                            <TextField
+                                                type="number"
+                                                sx={login.textoInputCedula}
+                                                id="userCiRecuperation"
+                                                label={<Typography sx={login.textoInput} >Cédula</Typography>}
+                                                inputRef={idRecuperationInputRef}
+                                                name={'userCiRecuperation'}
+                                                value={userCiRecuperation}
+                                                onChange={handleUserCiChange}
+                                                variant="standard" fullWidth margin="normal" />
+
                                             <Button size="small" variant="contained" color="terciary" onClick={handleIdOpen} sx={login.textoBotonCedula}>
                                                 Verificar
                                             </Button>
@@ -236,7 +457,7 @@ function Login() {
                                             {isAlertIdOpen && (
                                                 <Alert
                                                     open={isAlertIdOpen}
-                                                    
+
                                                     severity="error"
                                                     sx={{
                                                         fontFamily: 'Cairo',
@@ -252,7 +473,7 @@ function Login() {
                                         <Stack sx={{ width: '100%' }} spacing={2}>
                                             {isAlertIdSuccessOpen && (
                                                 <Alert
-                                                    open={isAlertIdSuccessOpen}                                                    
+                                                    open={isAlertIdSuccessOpen}
                                                     severity="success"
                                                     sx={{
                                                         fontFamily: 'Cairo',
@@ -270,23 +491,45 @@ function Login() {
                                             A continuación, responde las siguientes preguntas de seguridad.
                                         </Typography>
 
-                                        <Box sx={{ display: 'flex', flexDirection: "column", alignItems: 'flex-end', }}>
-                                            <Typography sx={registerStyle.questionText} >{securityQuestions[0].questionLabel} </Typography>
-                                            <TextField id="input-with-sx" variant="standard" fullWidth margin="normal" />
-                                            <Typography sx={registerStyle.questionText} >{securityQuestions[1].questionLabel} </Typography>
-                                            <TextField id="input-with-sx" variant="standard" fullWidth margin="normal" />
+                                        <Box sx={{ display: 'flex', flexDirection: "column", }}>
+
+                                            <Box sx={{ display: 'flex', flexDirection: "column", }}>
+                                                {questionsRecuperation.map((question, index) => (
+                                                    <div key={question.question_id}>
+                                                        <Typography variant="body1" sx={home.homeTextH4Left}>
+                                                            {question.question_description}
+                                                        </Typography>
+                                                        <TextField
+                                                            label={<Typography
+                                                                sx={{
+                                                                    fontFamily: "Cairo",
+                                                                    textTransform: 'none',
+                                                                    fontSize: "16px",
+                                                                    width: '100%',
+                                                                    color: iconNumberColor
+                                                                }} > {`Respuesta ${index + 1}`}</Typography>}
+                                                            value={userData.user_answers_body[index].user_answer || ''}
+                                                            onChange={(e) => handleUserAnswerChange(e, index)}
+                                                            variant="standard"
+                                                            fullWidth
+                                                            margin="normal"
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </Box>
                                         </Box>
 
                                         <Button size="medium" variant="contained" color="secondary"
-                                            onClick={handleCheckEmailSuccessOpen}
-                                            sx={buttons.registerButton} >
+                                            onClick={handleFormSubmit}
+                                            sx={buttons.registerButton} 
+                                            disabled={isSubmitDisabled}>
                                             Continuar
                                         </Button>
-                                        <br/>
+                                        <br />
                                         <Stack sx={{ width: '100%' }} spacing={2}>
                                             {isAlertCheckEmailOpen && (
                                                 <Alert
-                                                    open={isAlertCheckEmailOpen}                                                   
+                                                    open={isAlertCheckEmailOpen}
                                                     severity="success"
                                                     sx={{
                                                         fontFamily: 'Cairo',
@@ -300,10 +543,10 @@ function Login() {
                                             )}
                                         </Stack>
                                         <Stack sx={{ width: '100%' }} spacing={2}>
-                                            {isAlertCheckEmailOpen && (
+                                            {isAlertCheckEmailWrongOpen && (
                                                 <Alert
-                                                    open={isAlertCheckEmailOpen}                                                   
-                                                    severity="success"
+                                                    open={isAlertCheckEmailWrongOpen}
+                                                    severity="error"
                                                     sx={{
                                                         fontFamily: 'Cairo',
                                                         textAlign: 'Right',
@@ -311,7 +554,7 @@ function Login() {
                                                         fontWeight: 600,
                                                     }}
                                                 >
-                                                    Revisa tu correo, se te asignó una nueva contraseña
+                                                    Las respuestas ingresadas no coinciden con las registradas
                                                 </Alert>
                                             )}
                                         </Stack>
@@ -338,7 +581,7 @@ function Login() {
                                 </Stack>
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-evenly', my: 2, mt: 2 }}>
 
-                                    <Button size="small" variant="outlined" color="secondary" width="30%" sx={login.textoBoton} href="/">
+                                    <Button size="small" variant="outlined" color="secondary" width="30%" sx={login.textoBoton} href="/registro">
                                         Registrarse
                                     </Button>
                                     <Button size="small" variant="contained" color="secondary" onClick={handleLogin} sx={login.textoBoton} >
@@ -392,11 +635,27 @@ function Login() {
                                                     </Alert>
                                                 )}
                                             </Stack>
+                                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                                {isAlertCodeOpen && (
+                                                    <Alert
+                                                        open={isAlertCodeOpen}
+                                                        severity="error"
+                                                        sx={{
+                                                            fontFamily: 'Cairo',
+                                                            textAlign: 'Right',
+                                                            fontSize: "14px",
+                                                            fontWeight: 600,
+                                                        }}
+                                                    >
+                                                        Código inválido
+                                                    </Alert>
+                                                )}
+                                            </Stack>
                                             <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-evenly', my: 2, mt: 2 }}>
-                                                <Button size="small" variant="outlined" color="secondary" width="30%" onClick={handleCodeAgain} sx={login.textoBoton} >
+                                                <Button size="small" variant="outlined" color="secondary" width="30%" onClick={handleLogin} sx={login.textoBoton} >
                                                     Enviar de nuevo
                                                 </Button>
-                                                <Button size="small" variant="contained" color="secondary" onClick={handleSubmit} sx={login.textoBoton} href='/cuenta'>
+                                                <Button size="small" variant="contained" color="secondary" onClick={handleSubmit} sx={login.textoBoton} >
                                                     Verificar
                                                 </Button>
                                             </Box>

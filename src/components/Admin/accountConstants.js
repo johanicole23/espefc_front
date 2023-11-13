@@ -10,13 +10,13 @@ export const cardLoan = [
         image: cliente,
         title: "Gestión de Clientes",
         description: "Aceptar a los clientes afiliados al Fondo de Cesantía ESPE o rechazar a los que aun no pertenezcan.",
-        link: '/cuenta/proceso-prendario'
+        link: '/admin-cuenta/clientes'
     },
     {
         image: quiro,
         title: "Gestión de Préstamos",
         description: "Seleccionar el estado en el que se encuentran los diferentes procesos de solicitud de préstamos en el sistema.",
-        link: '/cuenta/proceso-quirografario'
+        link: '/admin-cuenta/prestamos'
     },
 ];
 

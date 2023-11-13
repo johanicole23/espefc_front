@@ -30,6 +30,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import axios from 'axios';
+import { fabClasses } from '@mui/material';
 
 
 function Register() {
@@ -160,16 +161,17 @@ function Register() {
         let flag4 = false;
         let flag5 = false;
 
-        if (nameValue.length === 0 || idValue.length === 0 || numberValue.length === 0 || dirValue.length === 0 || emailValue.length === 0 || emailPersonalValue.length == 0) {
+        if (nameValue.length === 0 || idValue.length === 0 || numberValue.length === 0 || dirValue.length === 0 || emailValue.length === 0 || emailPersonalValue.length === 0) {
             // setIsModalEmptyOpen(true);
             //flagEmpty = true;
             setIsAlertOpen(true);
         }
 
-        if (!/^[a-zA-Z\s]+$/.test(nameValue)) {
+        if (!/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(nameValue)) {
             setIconNameColor('error.main');
             flag1 = false;
         }
+        
         else {
             setIconNameColor('action.active');
             flag1 = true;
@@ -209,16 +211,10 @@ function Register() {
             flag5 = true
         }
 
-
-
-        if (flag1 == true && flag2 == true && flag3 == true && flag4 == true && flag5 == true) {
+        if (flag1 === true && flag2 ===true && flag3 ===true && flag4 === true && flag5 ===true) {
             setIsModalSucessOpen(true);
-            /* setTimeout(() => {
-                 setIsModalSucessOpen(false);
-                 navigate('/login');
-             }, 3000);
-              }*/
-
+            setIsAlertOpen(false);
+          
         }
     }
 
@@ -277,47 +273,7 @@ function Register() {
         setFormData({ ...formData, security_questions: updatedSecurityQuestions });
     };
 
-    const handleOpenUserConfirm = (event) => {
-
-        // Detener la redirección predeterminada del botón
-        const user_ci = idInputRef.current.value.trim().toLowerCase();
-        const customer_name = nameInputRef.current.value.trim().toLowerCase();
-        const customer_phone = numberInputRef.current.value.trim().toLowerCase();
-        const customer_espe_email = emailInputRef.current.value.trim().toLowerCase();
-        const customer_personal_email = emailPersonalInputRef.current.value.trim().toLowerCase();
-        const customer_direction = dirInputRef.current.value.trim().toLowerCase();
-
-        // Preguntas de seguridad quemadas (modifica según tus necesidades)
-
-
-        // Construye un objeto con los datos que se enviarán al servidor
-        const userData = {
-            user_ci: '17510',
-            customer_name: 'Jhon Doe',
-            customer_personal_email: 'dfhsdh',
-            customer_espe_email: 'gdfsgdf',
-            customer_phone: '222345',
-            customer_direction: 'sf',
-            security_questions: [
-                { question_id: 1, user_answer: 'Respuesta 1' },
-                { question_id: 2, user_answer: 'Respuesta 2' },
-
-            ],
-        };
-
-        // Realiza una solicitud POST al servidor para crear un nuevo usuario con cliente
-        axios.post('http://localhost:3000/api/createUser', userData)
-            .then((response) => {
-                console.log('Usuario creado con éxito');
-                setIsModalUserConfirmOpen(true);
-                // Puedes realizar acciones adicionales después de la creación del usuario, como redirigir o mostrar un mensaje de éxito.
-            })
-            .catch((error) => {
-                console.error('Error al crear el usuario', error);
-            });
-
-
-    }
+    
     const handleCloseUserConfirm = () => {
         setIsModalUserConfirmOpen(false);
     };
@@ -393,6 +349,7 @@ function Register() {
                                             width: '100%',
                                             color: iconIdColor
                                         }} >Cédula</Typography>}
+                                        type="number"
                                         inputRef={idInputRef}
                                         name={'user_ci'}
                                         value={formData.user_ci}
