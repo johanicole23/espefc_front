@@ -42,16 +42,6 @@ function Login() {
         },
     });
 
-    const securityQuestions = [
-
-        {
-            questionLabel: "¿Cuál es su cantante favorito?",
-        },
-        {
-            questionLabel: "¿Cómo se llamó su primera mascota?",
-        }
-    ]
-
     const [isModalCodeConfirmOpen, setIsModalCodeConfirmOpen] = useState(false);
     const [isModalForgetPasswordOpen, setIsModalForgetPasswordOpen] = useState(false);
     const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
@@ -67,51 +57,39 @@ function Login() {
     const [isAlertCheckEmailWrongOpen, setIsAlertCheckEmailWrongOpen] = useState(false);
     const [questionsRecuperation, setQuestionsRecuperation] = useState([]);
     const [userCiRecuperation, setUserCiRecuperation] = useState('');
-    const [iconNumberColor, setIconNumberColor] = useState('action.active');
-
-    const [inputValue, setInputValue] = useState('');
-    const [usuario, setUsuario] = useState('');
-    const [contrasena, setContrasena] = useState('');
+    const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+    const [iconNumberColor, setIconNumberColor] = useState('action.active'); 
+    const [iconIdColor, setIconIdColor] = useState('action.active');
 
     const idInputRef = useRef(null);
-    const idRecuperationInputRef = useRef(null);
-
-    const [iconIdColor, setIconIdColor] = useState('action.active');
+    const idRecuperationInputRef = useRef(null);    
 
     const [formData, setFormData] = useState({
         user_ci: "",
         user_password: ""
     })
 
+    const [userData, setUserData] = useState({
+        user_ci: "",
+        user_answers_body: [
+            {
+                question_id: 1,
+                user_answer: ""
+            },
+            {
+                question_id: 2,
+                user_answer: ""
+            }
+        ]
+    });
+    
     function numberToArray(number) {
-
-        // Convierte el número en una cadena
         const numberString = number.toString();
-
-        // Divide la cadena en un arreglo de caracteres y luego convierte cada carácter de nuevo en número
         const digitArray = numberString.split('').map(Number);
-
         return digitArray;
     }
-    const handleOpenCodeConfirm = (event) => {
-        if (true) {
-            setIsAlertCredentialsOpen(true);
-        }
-        else {
-            setIsAlertCredentialsOpen(false);
-            event.preventDefault();
-            setIsModalCodeConfirmOpen(true);
-        }
-
-
-    }
-
-
-    const handleCloseCodeConfirm = () => {
-        //setIsModalCodeConfirmOpen(false);
-    };
-
-
+    
+    // Función para manejar el cambio de los campos en el codigo de verificación
     const handleChange = (index, event) => {
         const newValue = event.target.value;
         if (/^[0-9]*$/.test(newValue)) {
@@ -126,8 +104,7 @@ function Login() {
         }
     };
 
-
-
+    //Comparar el código ingresado con el código enviado por correo
     const handleSubmit = () => {
         const emptyVerificationCode = ['', '', '', '', '', ''];
         setVerificationCode(emptyVerificationCode);
@@ -156,14 +133,7 @@ function Login() {
     };
 
 
-    const handleCodeAgain = () => {
-        const emptyVerificationCode = ['', '', '', '', '', ''];
-        setVerificationCode(emptyVerificationCode);
-        setIsAlertEmptyCodeOpen(false);
-    };
-
-
-
+    //Conexión con el backend para el inicio de sesión
     const handleLogin = async () => {
 
         const emptyVerificationCode = ['', '', '', '', '', ''];
@@ -211,47 +181,32 @@ function Login() {
             setIsAlertCredentialsOpen(true);
         }
 
-
-
     };
-
+    
+    //Función para abrir el modal de recuperación de contraseña
     const handlePasswordForget = () => {
         setIsModalForgetPasswordOpen(true);
 
     };
 
+    //Función para cerrar el modal de recuperación de contraseña
     const handleClosePasswordForget = () => {
         setIsModalForgetPasswordOpen(false);
-    };
-
-
-    // Cuando se hace clic en el TextField de Cedula (Modal Forget Password) establece el valor en una cadena vacía  abre el modal de cedula inválida
-    const handleTextFieldClick = () => {
-        setInputValue('');
-        setIsAlertIdOpen(false);
-    };
-
-    // función para mensaje de revisar el correo con nueva contraseña 
-    const handleCheckEmailSuccessOpen = (event) => {
-        if (true) {
-            setIsAlertCheckEmailWrongOpen(true);
-            //setIsAlertCheckEmailOpen(true);
-        }
-
-        /*else  (true) {
-             setIsAlertIdOpen(true);
-         }*/
-    }
-
+    };  
+   
+    //Función para manejar el cambio de los campos de usuario y contraseña
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+
+    //Función para manejar el cambio del campo de cédula en el Login y comprobar si es válida
     const handleChangeIdLogin = (event) => {
         const id = idInputRef.current.value.trim().toLowerCase();
         setIsAlertIdLoginOpen(!validarCedulaEcuatoriana(id));
     }
 
+    //Función para manejar el cambio del campo de cédula en la recuperación de contraseña
     const handleUserCiChange = (event) => {
         const id = idRecuperationInputRef.current.value.trim().toLowerCase();
         setUserCiRecuperation(event.target.value);
@@ -266,64 +221,45 @@ function Login() {
 
     };
 
-
-
+    //Conexión con el backend para comprobar que el id exista en la BD y obtener las preguntas de seguridad
     const handleIdOpen = async () => {
         try {
             // Hacer la solicitud POST para obtener las preguntas del usuario
             const responsePost = await axios.post('http://localhost:3000/api/userQuestions', { user_ci: userCiRecuperation });
 
-            // Extraer las preguntas de la respuesta POST
             const questions = responsePost.data;
-
-            // Si todo sale bien en la solicitud POST, realizar una solicitud GET adicional
+           
             const responseGet = await axios.get('http://localhost:3000/api/questions');
+
             const data = responseGet.data;
 
             if (Array.isArray(data)) {
+
                 setQuestionsRecuperation(data);
             } else {
+
                 console.error('La respuesta del servidor no es un array:', data);
             }
-            // Manejar la respuesta de la solicitud GET según tus necesidades
-            console.log('Respuesta GET:', responseGet.data);
-
-            // Realizar otras acciones después de obtener las preguntas y la respuesta GET
+           
+            console.log('Respuesta GET:', responseGet.data);            
             setIsAlertIdOpen(false);
             setIsAlertIdSuccessOpen(false);
+
         } catch (error) {
             console.error('Error al obtener las preguntas', error);
             setIsAlertIdOpen(true);
         }
     };
 
-
-
-
-
-    const [userData, setUserData] = useState({
-        user_ci: "",
-        user_answers_body: [
-            {
-                question_id: 1,
-                user_answer: ""
-            },
-            {
-                question_id: 2,
-                user_answer: ""
-            }
-        ]
-    });
-
+    //Función para manejar el cambio de las respuestas de seguridad
     const handleUserAnswerChange = (e, index) => {
         const { value } = e.target;
         const updatedUserData = { ...userData };
         updatedUserData.user_answers_body[index].user_answer = value;
         setUserData(updatedUserData);
     };
-
-    const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
-
+       
+    //Conexión con el backend para enviar las respuestas de seguridad y obtener la nueva contraseña
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         userData.user_ci = userCiRecuperation;
@@ -339,7 +275,6 @@ function Login() {
                 setIsAlertCheckEmailWrongOpen(true);
                 setIsAlertCheckEmailOpen(false);
             }
-
             // Manejar la respuesta del servidor según tus necesidades
             console.log(response.data);
         } catch (error) {
@@ -389,7 +324,7 @@ function Login() {
                                         onChange={(event) => {
                                             handleInputChange(event);
                                             handleChangeIdLogin(event); // Llama a la primera función
-                                            setUsuario(event.target.value)
+                                           
 
                                         }}
                                         variant="standard" fullWidth margin="normal" />
@@ -565,8 +500,7 @@ function Login() {
                                 <Stack sx={{ width: '100%' }} spacing={2}>
                                     {isAlertCredentialsOpen && (
                                         <Alert
-                                            open={isAlertCredentialsOpen}
-                                            onClose={handleCodeAgain}
+                                            open={isAlertCredentialsOpen}                                          
                                             severity="error"
                                             sx={{
                                                 fontFamily: 'Cairo',
@@ -588,8 +522,7 @@ function Login() {
                                         Ingresar
                                     </Button>
                                     <Modal
-                                        open={isModalCodeConfirmOpen}
-                                        onClose={handleCloseCodeConfirm}
+                                        open={isModalCodeConfirmOpen}                                        
                                         aria-labelledby="modal-modal-title"
                                         aria-describedby="modal-modal-description"
                                     >
@@ -621,8 +554,7 @@ function Login() {
                                             <Stack sx={{ width: '100%' }} spacing={2}>
                                                 {isAlertEmptyCodeOpen && (
                                                     <Alert
-                                                        open={isAlertEmptyCodeOpen}
-                                                        onClose={handleCodeAgain}
+                                                        open={isAlertEmptyCodeOpen}                                                        
                                                         severity="error"
                                                         sx={{
                                                             fontFamily: 'Cairo',
