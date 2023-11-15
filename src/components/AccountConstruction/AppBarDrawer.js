@@ -23,9 +23,6 @@ import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import MailIcon from '@mui/icons-material/Mail';
 import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-import GroupIcon from '@mui/icons-material/Group';
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import EditNoteIcon from '@mui/icons-material/EditNote';
 import { styled, useTheme } from '@mui/material/styles';
 import logo from '../../assets/logoFC.png';
 import home from '../../styles/pages/home';
@@ -63,7 +60,7 @@ const AppBar = styled(MuiAppBar, {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
     }),
-    background: '#005f8f',
+    background: 'white',
     ...(open && {
         width: `calc(100% - ${drawerWidth}px)`,
         transition: theme.transitions.create(['margin', 'width'], {
@@ -81,7 +78,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     ...theme.mixins.toolbar,
     justifyContent: 'flex-start',
     height: '6rem',
-   
 }));
 function AppBarDrawer() {
     const theme = useTheme();
@@ -107,24 +103,16 @@ function AppBarDrawer() {
                         <Box sx={appbar.appBarTitleFormat}>
                             <img src={logo} className="App-logo" alt="logo" />
                             <Box display="flex" flexDirection="column" marginLeft={'1%'}>
-                                <Typography variant="h6" noWrap component="a" href="/admin-cuenta" sx={{...appbar.appBarTitleFc,color:'white' }}>FONDO DE CESANTÍA</Typography>
-                                <Typography variant="h8" noWrap component="a" href="/admin-cuenta" sx={appbar.appBarTitleEspe}>UNIVERSIDAD DE LAS FUERZAS ARMADAS</Typography>
+                                <Typography variant="h6" noWrap component="a" href="/cuenta" sx={appbar.appBarTitleFc}>FONDO DE CESANTÍA</Typography>
+                                <Typography variant="h8" noWrap component="a" href="/cuenta" sx={appbar.appBarTitleEspe}>UNIVERSIDAD DE LAS FUERZAS ARMADAS</Typography>
                             </Box>
                         </Box>
                     </Box>
-                    <IconButton
-                         style={{ color: 'white' }}
-                        aria-label="open drawer"
-                        edge="end"
-                        onClick={handleDrawerOpen}
-                        sx={{ ...(open && { display: 'none' }), marginRight: '200px' }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    
                 </Toolbar>
             </AppBar>
             <Main open={open}>
-                <DrawerHeader></DrawerHeader>
+                
 
             </Main>
             <Drawer
@@ -156,12 +144,41 @@ function AppBarDrawer() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-
+                    <Accordion sx={accordionStyles}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            <ListItemIcon sx={{ color: '#005f8f' }}>
+                                <InboxIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={
+                                <Typography variant="body1" sx={home.homeTextH4Left} color="textPrimary">
+                                    Formularios
+                                </Typography>
+                            } />
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <List sx={{ background: 'none' }}>
+                                {[
+                                    { text: 'Préstamos Quirografarios', icon: <InboxIcon />, link: '/cuenta/proceso-quirografario/formulario-quirografario' },
+                                    { text: 'Préstamos Prendarios', icon: <MailIcon />, link: '/cuenta/proceso-prendario/formulario-prendario' },
+                                ].map((item, index) => (
+                                    <ListItem href={item.link} disablePadding sx={{ color: 'gray' }}>
+                                        <ListItemButton onClick={() => window.location.href = item.link}> 
+                                            <ListItemText  primary={
+                                                <Typography variant="body1" sx={home.homeTextH4Left} color="textPrimary">
+                                                    {item.text}
+                                                </Typography>
+                                            
+                                            } />
+                                        </ListItemButton>
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </AccordionDetails>
+                    </Accordion>
                     {[                        
-                        { text: 'Préstamos ', icon: <CurrencyBitcoinIcon/>, link: '/admin-cuenta/prestamos' },
-                        { text: 'Clientes Aprobados ', icon: <GroupIcon />, link: '/admin-cuenta/clientes' },
-                        { text: 'Clientes Pendientes', icon: <PeopleOutlineIcon />, link: '/admin-cuenta/clientes-pendientes' },
-                        { text: 'Edición de Accesos', icon: <EditNoteIcon/>, link: '/cuenta/variacion-aporte' },                      
+                        { text: 'Simulador de Préstamos', icon: <CurrencyBitcoinIcon/>, link: '/cuenta/simulador-personalizado' },
+                        { text: 'Liquidaciones', icon: <StackedLineChartIcon />, link: '/cuenta/liquidacion-cesantia' },
+                        { text: 'Variación de Aporte', icon: <AddchartIcon/>, link: '/cuenta/variacion-aporte' },                      
                     ].map((item, index) => (
                         <ListItem key={item.text} disablePadding>
                             <ListItemButton onClick={() => window.location.href = item.link}>
@@ -180,7 +197,7 @@ function AppBarDrawer() {
                 <Divider /> 
                 <List>
                     {[
-                        { text: 'Configuración Cuenta', icon: <PermDataSettingIcon />, link: '/admin-cuenta/configuracion' },
+                        { text: 'Configuración Cuenta', icon: <PermDataSettingIcon />, link: '/cuenta/configuracion' },
                         { text: 'Ayuda', icon: <HelpIcon />, link: '/simulador' },
                     ].map((item, index) => (
                         <ListItem key={item.text} disablePadding>

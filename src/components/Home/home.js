@@ -17,7 +17,7 @@ import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
 import MyAppBar from '../MyComponents/myAppBar';
 import MyFooter from '../MyComponents/myFooter';
-import { images, imagesCel, cardLoan, cards, imagesNews, carImages, loanCards, style } from './homeConstants';
+import { images, imagesCel, cardLoan, cards, imagesNews, newImages, carImages, loanCards, style } from './homeConstants';
 
 function Home() {
   const theme = createTheme({
@@ -123,16 +123,64 @@ function Home() {
         <Typography variant="body2" sx={home.homeTextH1}>Revisa las novedades y descuentos disponibles.</Typography>
       </Box>
 
+      
       <Carousel
         next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
-        prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)} sx={{ height: '400px', flex: '0 0 100%', maxWidth: '100%', marginTop: 5, zIndex: 0, }}
-        animation="slide">
-        {imagesNews.map((item) => (
-          <div style={{ position: 'relative' }}>
+        prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
+        sx={home.homeCarruselNews}
+        animation="fade"
+        timeout={5000} // Ajusta el valor del timeout a tu preferencia (en milisegundos)
+        transitionDuration={50000} // Ajusta el valor del transitionDuration a tu preferencia (en milisegundos)
+      >
+        {newImages.map((item) => (
+          <Box
+            key={item.titulo}
+            sx={{
+              position: 'relative',
+              textAlign: 'center', // Para centrar el contenido dentro de Box
+            }}
+          >
             <img src={item.src} alt={item.alt} />
-          </div>
+
+            <Box
+              margin='0 20%' // Margen igual a ambos lados
+              flexDirection={'column'}
+              alignContent={'center'}
+              justifyContent={'center'}
+              sx={{
+                position: 'absolute',
+                top: '150px',
+                '@media screen and (max-width: 600px)': {
+                  position: 'absolute',
+                  top: '100px',
+                  marginLeft: '1%',
+                },
+              }}
+            >
+              <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>
+                {item.titulo}
+              </Typography>
+              <Box alignItems='center' justifyContent={'center'} sx={{ mt: '5%' }}>
+                <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>
+                Executing (default): SELECT `customer_id`, `customer_name`, `customer_personal_email`, `customer_espe_email`, `customer_phone`, `customer_direction`, `createdAt`, `updatedAt` FROM `customers` AS `customers` WHERE `customers`.`customer_id` IN (NULL);
+                </Typography>
+              </Box>
+              <Box sx={{ mt: '5%' }}>
+                <Button
+                  href={item.href}
+                  onClick={() => handleButtonClick(item.href)}
+                  variant="contained"
+                  color="secondary"
+                  sx={buttons.appBarButtonText}
+                >
+                  {item.boton}
+                </Button>
+              </Box>
+            </Box>
+          </Box>
         ))}
       </Carousel>
+
 
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ marginTop: '5rem ' }}>
         <Typography variant="body2" sx={home.homeTextH1}>Conoce los convenios disponibles con diferentes marcas las novedades y descuentos disponibles.</Typography>

@@ -18,6 +18,7 @@ import CardMedia from '@mui/material/CardMedia';
 import fondo from '../../assets/account/fondoAccount.png';
 import { Link } from 'react-router-dom';
 import { flexbox } from '@mui/system';
+import variacion from '../../assets/account/variation.png';
 
 
 const theme = createTheme({
@@ -84,6 +85,27 @@ function App() {
                                 <CardContent >
                                     <Box display="flex" flexDirection={'column'} >
                                         <Typography variant="subtitle1" sx={home.homeTextH3}>Liquidación de Cesantía</Typography>
+                                        <Typography variant="body2" sx={home.homeTextH4}>Obtén aquí el formulario de solicitud</Typography>
+                                    </Box>
+                                </CardContent>
+                            </CardActionArea>
+                            <CardActions >
+                                <Box margin={'0 18%'} >
+                                    <Button variant="contained" color="terciary" sx={buttons.accountLiquidationButton}
+                                        onClick={() => handleClickDownloadDocuments('/files/liquidacion_cesantia.pdf', "liquidacion_cesantia.pdf")}>
+                                        Descargar archivo
+                                    </Button>
+                                </Box>
+                            </CardActions>
+
+                        </Card>
+                        <Card sx={account.formularyFormatCardLoan}  >
+                            <CardActionArea>
+                                <CardMedia
+                                    sx={account.formularyCardLoanLogo} image={variacion} alt="Descripción de la imagen" />
+                                <CardContent >
+                                    <Box display="flex" flexDirection={'column'} >
+                                        <Typography variant="subtitle1" sx={home.homeTextH3}>Solicitud de Rendimiento</Typography>
                                         <Typography variant="body2" sx={home.homeTextH4}>Obtén aquí el formulario de solicitud</Typography>
                                     </Box>
                                 </CardContent>

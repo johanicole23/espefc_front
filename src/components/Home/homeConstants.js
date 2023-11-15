@@ -112,6 +112,35 @@ export const imagesNews = [
 
 ];
 
+export const newImages = [
+    {
+        src: new1,
+        alt: 'Descripción de la imagen 3',
+        titulo: '¿Quiénes Somos? ',
+        subtitulo: 'Conocenos y conoce nuestra historia',
+        boton: 'Leer Ahora',
+        href: '/historia'
+    },
+    {
+        src: new2,
+        alt: 'Descripción de la imagen 1',
+        titulo: 'Horarios de Atención',
+        subtitulo: 'Revisa los horarios para visitar nuestra agencia',
+        boton: 'Revisar Horarios',
+        href:'/historia#horarios'
+    },
+    {
+        src: new3,
+        alt: 'Descripción de la imagen 2',
+        titulo: 'Accede a un préstamo cuando desees',
+        subtitulo: 'Completa los formularios disponibles',
+        boton: 'Comenzar una cuenta',
+        href:'/login'
+    },
+
+    
+];
+
 
 export const carImages = [
     { image: mazda, description: "Conoce nuestros autos. Elige tu favorito y cotízalo." },

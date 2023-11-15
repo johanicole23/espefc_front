@@ -14,9 +14,11 @@ import Simulator from './components/LoanSimulator/simulator';
 import News from './components/News/news';
 import Login from './components/Login/login';
 import Register from './components/Register/register';
+
+import AccountConstruction from './components/AccountConstruction/accountHome';
+
 import Account from './components/Account/accountHome';
 import PasswordChange from './components/Account/Configuration/passwordChange';
-
 import AccountSimulator from './components/Account/AccountSimulator/simulator';
 import Liquidations from './components/Account/Liquidation';
 import Variation from './components/Account/AportVariation';
@@ -47,6 +49,7 @@ function App() {
         <Route exact path="/login" Component={Login} />
         <Route exact path="/registro" Component={Register} />
         <Route exact path="/cuenta" Component={Account} />
+        <Route exact path="/cuenta-en-construccion" Component={AccountConstruction} />
         <Route exact path="/cuenta/configuracion/contrasena" Component={PasswordChange} />
         <Route exact path="/cuenta/configuracion" Component={Configuration} />
         <Route exact path="/cuenta/simulador-personalizado" Component={AccountSimulator} />

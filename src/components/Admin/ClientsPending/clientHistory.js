@@ -66,19 +66,19 @@ function LoanHistory() {
     },
     {
       index: 3,
-      id: '1751040716',
+      id: '1851040716',
       name: 'Johanna Nicole Molina Pinto',
       color: '#b0d626',
     },
     {
       index: 4,
-      id: '1751040716',
+      id: '1751040717',
       name: 'Johanna Nicole Rivera Pinto',
       color: '#005f8f',
     },
     {
       index: 5,
-      id: '1751040716',
+      id: '1851040716',
       name: 'Ezequiel Mateo Castillo Hidalgo',
       color: '#b0d626',
     },
@@ -101,8 +101,8 @@ function LoanHistory() {
     },
   });
   const [searchValue, setSearchValue] = useState('');
-  const filteredClients = loanHistory.filter(item =>
-    item.name.toLowerCase().includes(searchValue.toLowerCase())
+  const filteredClients = pendingUsers.filter(item =>
+    item.customer_name.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   const handleSearchChange = (event) => {
@@ -110,24 +110,51 @@ function LoanHistory() {
   };
 
   useEffect(() => {
+    // Función para obtener usuarios pendientes desde el servidor
     const fetchPendingUsers = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/pendingUsers');
-
-        // Verificar si la solicitud fue exitosa antes de actualizar el estado
-        if (response.data.success) {
-          setPendingUsers(response.data);
-        } else {
-          console.error('Error al cargar los usuarios pendientes:', response.data.message);
-        }
+        setPendingUsers(response.data);
       } catch (error) {
-        console.error('Error de red:', error.message);
+        console.error('Error al obtener usuarios pendientes:', error);
       }
     };
 
-    // Llamar a la función para obtener los usuarios pendientes al montar el componente
+    // Llamada a la función al montar el componente (puedes ajustar según tus necesidades)
     fetchPendingUsers();
-  }, []); // El array vacío indica que este efecto se ejecutará solo una vez al montar el componente
+  }, []);
+
+  const handleSwitchChange = async (event, index) => {
+    try {
+      
+      // Realiza la solicitud al servidor
+      console.log('El id del usuario es:', index);
+
+      if (event.target.checked) {
+        console.log('El interruptor está activado');
+        const response = await axios.post('http://localhost:3000/api/avalibleUser', {
+          user_id: index,
+        });
+        if (response.data.success) {
+          console.log('Usuario habilitado con éxito');
+          // Puedes realizar otras acciones después de habilitar al usuario
+        } else {
+          console.error('Error al habilitar el usuario:', response.data.message);
+        }
+
+      } else {
+        console.log('El interruptor está desactivado');
+
+      }    
+
+      
+    } catch (error) {
+      console.error('Error al realizar la solicitud al servidor:', error);
+    }
+
+    // Acciones que deseas realizar cuando se activa o desactiva el interruptor
+
+  };
 
   return (
     <Box>
@@ -148,6 +175,8 @@ function LoanHistory() {
           />
           <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', my: 2 }}>
 
+
+
             <Box display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} marginTop={'2rem'} >
 
               {filteredClients.map((item, index) => (
@@ -156,16 +185,19 @@ function LoanHistory() {
                   <Paper sx={{ height: '2.2rem' }}>
                     <Box margin={'0 2rem'} display="flex" alignItems="center" justifyContent="space-between" flexDirection={'row'} >
                       <Typography marginRight={'5px'} sx={home.homeTextH14Light}>Nombre del Usuario </Typography>
-                      <Chip marginLeft={'5px'} style={{ background: item.color }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '210px' }}>{item.name}</Typography>} variant="outlined" />
-                      <Chip style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '100px' }}>{item.id} </Typography>} />
-                      <Typography marginLeft={'5px'} sx={home.homeTextH14Light}>Aceptar</Typography><Switch color='terciary'  {...label} defaultChecked />
-                      <Typography sx={home.homeTextH14Light}>Eliminar</Typography><Switch color='secondary'  {...label} defaultChecked />
+                      <Chip marginLeft={'5px'} style={{ background: '#005f8f' }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '210px' }}>{item.customer_name}</Typography>} variant="outlined" />
+                      <Typography marginLeft={'15px'} marginRight={'15px'} sx={home.homeTextH14Light}>Fecha de creación </Typography>
+                      <Chip style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '100px' }}>{item.createdAt.slice(0, 10)} </Typography>} />
+                      <Typography marginLeft={'15px'} sx={home.homeTextH14Light}>Aprobar</Typography> <Switch color='terciary' onClick={(event) => handleSwitchChange(event, item.customer_id)}/>
+
                     </Box>
                   </Paper>
                 </Box>
 
               ))}
             </Box>
+
+
           </Box>
 
         </Box>

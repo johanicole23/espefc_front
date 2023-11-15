@@ -29,6 +29,18 @@ const home = {
             display: 'none',
         },
     },
+
+    homeCarruselNews: {
+        height: '430px',
+        flex: '0 0 100%',
+        maxWidth: '100%',
+        marginTop: 12.5,
+        zIndex: 0,
+        '@media screen and (max-width: 600px)': {
+            height: '400px',
+            display: 'none',
+        },
+    },
     homeCarruselPrincipalPetit: {
         height: '300px',
         flex: '0 0 100%',
@@ -50,6 +62,15 @@ const home = {
         fontSize: "24px",
 
     },
+
+    homeTextH1Secondary: {
+        fontFamily: 'Cairo',
+        color: myTheme.palette.common.customSecondary,
+        textAlign: 'center',
+        fontSize: "24px",
+
+    },
+
 
     homeTextH3: {
         fontFamily: 'Cairo',
@@ -117,6 +138,15 @@ const home = {
         color: myTheme.palette.common.customDarker,
         fontSize: "20px",
         fontWeight: 600,
+
+    },
+    
+    homeTextH2LeftLightBigger: {
+        fontFamily: 'Cairo',
+        color: myTheme.palette.common.customPrimary,
+        fontSize: "20px",
+        fontWeight: 600,
+        textAlign: 'center',
 
     },
 
