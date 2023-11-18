@@ -11,7 +11,7 @@ import filesCollateral from './components/Account/Collateral/uploadFilesCollater
 import HomeCollateral from './components/Account/Collateral/homeCollateral';
 import History from './components/History/history';
 import Simulator from './components/LoanSimulator/simulator';
-import News from './components/News/news';
+import Cars from './components/Cars/cars';
 import Login from './components/Login/login';
 import Register from './components/Register/register';
 
@@ -45,7 +45,7 @@ function App() {
         <Route exact path="/cuenta/proceso-quirografario" Component={HomeChirographic} />
         <Route exact path="/historia" Component={History} />
         <Route exact path="/simulador" Component={Simulator} />
-        <Route exact path="/noticias" Component={News} />
+        <Route exact path="/vehiculos" Component={Cars} />
         <Route exact path="/login" Component={Login} />
         <Route exact path="/registro" Component={Register} />
         <Route exact path="/cuenta" Component={Account} />

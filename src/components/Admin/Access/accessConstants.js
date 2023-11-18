@@ -8,6 +8,8 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import TitleIcon from '@mui/icons-material/Title';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import NotesIcon from '@mui/icons-material/Notes';
+import AddLinkIcon from '@mui/icons-material/AddLink';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 export const theme = createTheme({
     palette: {
@@ -57,6 +59,32 @@ export const textFieldNews = [
         iconColor: '#005f8f',
         textLabel: "Contenido de la noticia",
         key: 'new_phrase',
+    },
+
+];
+
+export const textFieldEducation = [
+
+    {
+        icon: AddLinkIcon,
+        iconColor: '#005f8f',
+        textLabel: "Enlace final del video",
+        key: 'education_videoId',
+        disabled: false,
+    },
+    {
+        icon: TitleIcon,
+        iconColor: '#005f8f',
+        textLabel: "Título del botón para descargar el pdf",
+        key: 'education_titlePdf',
+        disabled: false,
+    },
+    {
+        icon: PictureAsPdfIcon,
+        iconColor: '#005f8f',
+        textLabel: "Pdf a descargar",
+        key: 'education_pdf',
+        disabled: true,
     },
 
 ];

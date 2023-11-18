@@ -73,11 +73,20 @@ const buttons = {
         width:'35%'
         
     },
+
     accountLoanChirographicImage: {
         fontFamily: "Cairo",
         textTransform: 'none',
         fontSize: "16px",
         color: 'white',
+    },
+
+    adminUploadPdf: {
+        fontFamily: "Cairo",
+        textTransform: 'none',
+        fontSize: "16px",
+        width:'55%'
+        
     },
 }
 

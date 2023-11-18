@@ -83,10 +83,10 @@ function Principal() {
               <Typography
                 variant="caption"
                 component={Link}
-                to="/noticias"
+                to="/vehiculos"
                 sx={appbar.appBarSubtitle}
               >
-                Noticias
+                Vehículos
               </Typography>
             </Box>
           </Box>

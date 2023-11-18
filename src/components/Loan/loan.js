@@ -11,6 +11,7 @@ import Grow from '@mui/material/Grow';
 import { Grid } from '@material-ui/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import YouTube from 'react-youtube';
 
 import home from '../../styles/pages/home';
 import loan from '../../styles/pages/loan';
@@ -29,6 +30,7 @@ import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import IconButton from '@mui/material/IconButton';
+import DownloadIcon from '@mui/icons-material/Download';
 import education from '../../assets/loans/finance.png';
 
 function Loans() {
@@ -57,16 +59,26 @@ function Loans() {
         setIsModalEducationOpen(false);
     };
 
-    const videoIds = [
-        'dQw4w9WgXcQ', // Rick Astley - Never Gonna Give You Up (Rickroll)
-        'KMU0tzLwhbE', // Alan Walker - Faded
-        '9bZkp7q19f0', // PSY - Gangnam Style
-        'JGwWNGJdvx8', // Luis Fonsi - Despacito ft. Daddy Yankee
+    const educationData = [
+        {
+            education_id: '1',
+            education_videoId: 'dQw4w9WgXcQ',
+            education_titlePdf: '¿Qué es el Fondo de Cesantía?',
+            education_pdf: 'https://www.google.com',
+        },
+        {
+            education_id: '2',
+            education_videoId: '9bZkp7q19f0',
+            education_titlePdf: 'Educación Financiera: Modulo 1',
+            education_pdf: 'https://www.google.com',
+        },
+
+
     ];
 
     // Opciones comunes para todos los reproductores de YouTube
     const commonOpts = {
-        height: '100',
+        height: 'auto',
         width: '100%',
         playerVars: {
             autoplay: 0,
@@ -135,18 +147,15 @@ function Loans() {
                         <Typography marginBottom={'2rem'} id="modal-modal-title" sx={home.homeTextH4Left}>
                             Empodérate con conocimientos sólidos sobre manejo de dinero, inversiones y planificación financiera. Explora nuestros recursos educativos, desde videos instructivos hasta artículos detallados, diseñados para guiarte hacia un futuro financiero sólido y próspero.
                         </Typography>
-                        {videoIds.map((videoId, index) => (
-                            <Box key={index} marginBottom="1rem">
-                                <Typography variant="subtitle1" component="div">
-                                    Video #{index + 1}
-                                </Typography>
-                                <YouTube videoId={videoId} opts={commonOpts} />
+                        {educationData.map((item, index) => (
+                            <Box key={index} marginBottom="3rem">
+                                <YouTube videoId={item.education_videoId} opts={commonOpts} />
+                                <Button size="medium" variant="contained" color="secondary" sx={buttons.registerButton}  endIcon={<DownloadIcon />}>
+                                    {item.education_titlePdf}
+                                </Button>
                             </Box>
                         ))}
 
-                        <Button size="medium" variant="contained" color="secondary" sx={buttons.registerButton} href="/login">
-                            Llenar documentos online
-                        </Button>
                     </div>
                 </Box>
             </Modal >
@@ -154,9 +163,7 @@ function Loans() {
 
             <Grow in={checked} {...(checked ? { timeout: 1000 } : {})}>
 
-
                 <Grid container spacing={2}>
-
                     {cardLoan.map((item, index) => (
 
                         <Grid item xs={6}>
