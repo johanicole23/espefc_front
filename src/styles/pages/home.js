@@ -168,7 +168,7 @@ const home = {
     //Logo
     homeLogoTrademark: {
         display: 'flex',
-        height: '105px',
+        height: '200px',
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
@@ -189,7 +189,23 @@ const home = {
     //Card
 
     homeFormatCardLoan: {
-        maxWidth: 350,
+        maxWidth: '100%',
+        width:'350px',
+        height:'250px',
+        marginTop: 5,
+        zIndex: 1,
+        transition: 'transform .2s',
+        boxShadow: '0px 0px 10px 5px rgba(0, 0, 0, 0.1)',
+        '&:hover': {
+            transform: 'scale(1.1)',
+        },
+
+    },
+
+    homeFormatCardCars: {
+        maxWidth: '100%',
+        width:'700px',
+        height:'250px',
         marginTop: 5,
         zIndex: 1,
         transition: 'transform .2s',

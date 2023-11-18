@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme, } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import PasswordIcon from '@mui/icons-material/Password';
@@ -58,11 +59,13 @@ function Login() {
     const [questionsRecuperation, setQuestionsRecuperation] = useState([]);
     const [userCiRecuperation, setUserCiRecuperation] = useState('');
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
-    const [iconNumberColor, setIconNumberColor] = useState('action.active'); 
+    const [iconNumberColor, setIconNumberColor] = useState('action.active');
     const [iconIdColor, setIconIdColor] = useState('action.active');
+    const [password, setPassword] = useState('');
+    const passwordInputRef = useRef(null);
 
     const idInputRef = useRef(null);
-    const idRecuperationInputRef = useRef(null);    
+    const idRecuperationInputRef = useRef(null);
 
     const [formData, setFormData] = useState({
         user_ci: "",
@@ -82,13 +85,13 @@ function Login() {
             }
         ]
     });
-    
+
     function numberToArray(number) {
         const numberString = number.toString();
         const digitArray = numberString.split('').map(Number);
         return digitArray;
     }
-    
+
     // Función para manejar el cambio de los campos en el codigo de verificación
     const handleChange = (index, event) => {
         const newValue = event.target.value;
@@ -161,7 +164,7 @@ function Login() {
                     setIsAlertCredentialsOpen(false);
                     setIsModalCodeConfirmOpen(true);
                     //console.log('Usuario:', formData.user_ci);
-                   // console.log('Contraseña:', formData.user_password);
+                    // console.log('Contraseña:', formData.user_password);
                 } else {
                     // La solicitud no fue exitosa
                     setIsAlertCredentialsOpen(true);
@@ -182,7 +185,7 @@ function Login() {
         }
 
     };
-    
+
     //Función para abrir el modal de recuperación de contraseña
     const handlePasswordForget = () => {
         setIsModalForgetPasswordOpen(true);
@@ -192,8 +195,8 @@ function Login() {
     //Función para cerrar el modal de recuperación de contraseña
     const handleClosePasswordForget = () => {
         setIsModalForgetPasswordOpen(false);
-    };  
-   
+    };
+
     //Función para manejar el cambio de los campos de usuario y contraseña
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -228,7 +231,7 @@ function Login() {
             const responsePost = await axios.post('http://localhost:3000/api/userQuestions', { user_ci: userCiRecuperation });
 
             const questions = responsePost.data;
-           
+
             const responseGet = await axios.get('http://localhost:3000/api/questions');
 
             const data = responseGet.data;
@@ -240,8 +243,8 @@ function Login() {
 
                 console.error('La respuesta del servidor no es un array:', data);
             }
-           
-            console.log('Respuesta GET:', responseGet.data);            
+
+            console.log('Respuesta GET:', responseGet.data);
             setIsAlertIdOpen(false);
             setIsAlertIdSuccessOpen(false);
 
@@ -258,7 +261,7 @@ function Login() {
         updatedUserData.user_answers_body[index].user_answer = value;
         setUserData(updatedUserData);
     };
-       
+
     //Conexión con el backend para enviar las respuestas de seguridad y obtener la nueva contraseña
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -283,6 +286,16 @@ function Login() {
             setIsAlertCheckEmailOpen(false);
         }
     };
+
+    const handleShowPassword = (field) => {
+        setShowPasswords({
+            ...showPasswords,
+            [field]: !showPasswords[field],
+        });
+    };
+    const [showPasswords, setShowPasswords] = useState({
+        password: false,       
+    });
 
     return (
         <ThemeProvider theme={theme} >
@@ -324,7 +337,7 @@ function Login() {
                                         onChange={(event) => {
                                             handleInputChange(event);
                                             handleChangeIdLogin(event); // Llama a la primera función
-                                           
+
 
                                         }}
                                         variant="standard" fullWidth margin="normal" />
@@ -347,17 +360,44 @@ function Login() {
                                     )}
                                 </Stack>
 
-                                <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', my: 2 }}>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', my: 2}}>
                                     <PasswordIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                                    <TextField type="password" sx={login.textoContrasena} id="user_password" label={<Typography sx={login.textoInput} >Contraseña</Typography>}
-                                        variant="standard"
-                                        name={'user_password'}
-                                        value={formData.user_password}
-                                        onChange={(event) => {
-                                            handleInputChange(event);
 
+                                    <TextField
+                                        type={showPasswords.password ? 'text' : 'password'}
+                                        sx={login.textoContrasena}
+                                        id="user_password"
+                                        label={<Typography sx={login.textoInput} >Contraseña</Typography>}
+                                        variant="standard"
+                                        size="large"
+                                        inputRef={passwordInputRef}
+                                        value={formData.user_password}
+                                        name={'user_password'}
+                                        
+                                        onChange={(e) => {
+                                            setPassword(e.target.value);
+                                            handleInputChange(e);
+                                        }}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <div
+                                                    style={{ display: 'flex', alignItems: 'center' }}
+                                                    onClick={() => handleShowPassword('password')}
+                                                >
+                                                    {showPasswords.password ? (
+                                                        <VisibilityIcon
+                                                            sx={{ fontSize: '20px', cursor: 'pointer', color: '#005f8f' }}
+                                                        />
+                                                    ) : (
+                                                        <VisibilityIcon
+                                                            sx={{ fontSize: '20px', cursor: 'pointer', color: 'action.active' }}
+                                                        />
+                                                    )}
+                                                </div>
+                                            ),
                                         }}
                                     />
+
 
                                 </Box>
                                 <Typography variant="subtitle1" onClick={handlePasswordForget} sx={login.textoPregunta}>¿Olvidaste tu contraseña?</Typography>
@@ -367,7 +407,7 @@ function Login() {
                                     aria-labelledby="modal-modal-title"
                                     aria-describedby="modal-modal-description"
                                 >
-                                    
+
                                     <Box sx={login.loginModalSuccess}>
                                         <Typography id="modal-modal-title" sx={home.homeTextH4Left}>
                                             Ingrese su número de cédula:
@@ -456,7 +496,7 @@ function Login() {
 
                                         <Button size="medium" variant="contained" color="secondary"
                                             onClick={handleFormSubmit}
-                                            sx={buttons.registerButton} 
+                                            sx={buttons.registerButton}
                                             disabled={isSubmitDisabled}>
                                             Continuar
                                         </Button>
@@ -500,7 +540,7 @@ function Login() {
                                 <Stack sx={{ width: '100%' }} spacing={2}>
                                     {isAlertCredentialsOpen && (
                                         <Alert
-                                            open={isAlertCredentialsOpen}                                          
+                                            open={isAlertCredentialsOpen}
                                             severity="error"
                                             sx={{
                                                 fontFamily: 'Cairo',
@@ -522,7 +562,7 @@ function Login() {
                                         Ingresar
                                     </Button>
                                     <Modal
-                                        open={isModalCodeConfirmOpen}                                        
+                                        open={isModalCodeConfirmOpen}
                                         aria-labelledby="modal-modal-title"
                                         aria-describedby="modal-modal-description"
                                     >
@@ -554,7 +594,7 @@ function Login() {
                                             <Stack sx={{ width: '100%' }} spacing={2}>
                                                 {isAlertEmptyCodeOpen && (
                                                     <Alert
-                                                        open={isAlertEmptyCodeOpen}                                                        
+                                                        open={isAlertEmptyCodeOpen}
                                                         severity="error"
                                                         sx={{
                                                             fontFamily: 'Cairo',

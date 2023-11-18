@@ -114,32 +114,25 @@ export const imagesNews = [
 
 export const newImages = [
     {
-        src: new1,
-        alt: 'Descripción de la imagen 3',
-        titulo: '¿Quiénes Somos? ',
-        subtitulo: 'Conocenos y conoce nuestra historia',
-        boton: 'Leer Ahora',
-        href: '/historia'
+      key: '1',
+      src: new1,
+      alt: 'Descripción de la imagen 1',
+      href: ''
     },
     {
+      key: '2',
+      src: new2,
+      alt: 'Descripción de la imagen 2',
+      href: ''
+    },
+    {
+        key: '3',
         src: new2,
-        alt: 'Descripción de la imagen 1',
-        titulo: 'Horarios de Atención',
-        subtitulo: 'Revisa los horarios para visitar nuestra agencia',
-        boton: 'Revisar Horarios',
-        href:'/historia#horarios'
-    },
-    {
-        src: new3,
         alt: 'Descripción de la imagen 2',
-        titulo: 'Accede a un préstamo cuando desees',
-        subtitulo: 'Completa los formularios disponibles',
-        boton: 'Comenzar una cuenta',
-        href:'/login'
-    },
-
-    
-];
+        href: ''
+      },
+ 
+  ];
 
 
 export const carImages = [
@@ -154,7 +147,6 @@ export const loanCards = [
     { image: diamante, title: "Préstamos Prendarios", description: "Prenda tus joyas de oro con las mejores ventajas competitivas: 180 días plazo, 2 opciones de renovación con la menor tasa de interés del mercado." }
 ];
 export const style = {
-    width: '80%',
-
+  
     bgcolor: 'background.paper',
   };

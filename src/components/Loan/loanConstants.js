@@ -14,7 +14,7 @@ export const theme = createTheme({
             main: '#005F8F'
         },
         terciary: {
-            main: '#005F8F'
+            main: '#b0d626'
 
         },
     },

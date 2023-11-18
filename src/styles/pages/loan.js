@@ -23,8 +23,20 @@ const loan ={
         transition: 'transform .2s',
         boxShadow: '0px 0px 10px 5px rgba(0, 0, 0, 0.1)',
         '&:hover': {
-            transform: 'scale(1.1)',
+            transform: 'scale(1.05)',
         },
+
+    },
+
+    loanFormatCardEducationFinance: {
+         
+        zIndex: 1,
+        transition: 'transform .2s',
+        boxShadow: '0px 0px 10px 5px rgba(0, 0, 0, 0.1)',
+        '&:hover': {
+            transform: 'scale(1.05)',
+        },
+        display : 'flex',
 
     },
     cardLoan: {

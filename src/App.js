@@ -31,7 +31,7 @@ import ConfigurationAdmin from './components/Admin/Configuration/configuration';
 import LoanAdmin from './components/Admin/Loan/loanManagment';
 import ClientAdmin from './components/Admin/ClientsAccepted/clientManagment';
 import ClientPendingAdmin from './components/Admin/ClientsPending/clientManagment';
-import AccessAdmin from './components/Admin/Liquidation';
+import AccessAdmin from './components/Admin/Access/accessManagment';
 //import Account from './pages/account/accountHome';
 function App() {
   return (

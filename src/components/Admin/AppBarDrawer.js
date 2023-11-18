@@ -161,7 +161,7 @@ function AppBarDrawer() {
                         { text: 'Préstamos ', icon: <CurrencyBitcoinIcon/>, link: '/admin-cuenta/prestamos' },
                         { text: 'Clientes Aprobados ', icon: <GroupIcon />, link: '/admin-cuenta/clientes' },
                         { text: 'Clientes Pendientes', icon: <PeopleOutlineIcon />, link: '/admin-cuenta/clientes-pendientes' },
-                        { text: 'Edición de Accesos', icon: <EditNoteIcon/>, link: '/cuenta/variacion-aporte' },                      
+                        { text: 'Edición de Accesos', icon: <EditNoteIcon/>, link: '/admin-cuenta/accesos' },                      
                     ].map((item, index) => (
                         <ListItem key={item.text} disablePadding>
                             <ListItemButton onClick={() => window.location.href = item.link}>

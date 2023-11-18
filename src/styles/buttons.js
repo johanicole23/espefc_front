@@ -20,6 +20,17 @@ const buttons = {
         color: 'white',
         width: '45%'
     },
+
+    loanButtonFinance: {
+        fontFamily: "Cairo",
+        textTransform: 'none',
+        fontSize: "16px",
+        color: 'white',
+        width: '60%'
+    },
+
+
+    
     accountLiquidationButton: {
         fontFamily: "Cairo",
         textTransform: 'none',

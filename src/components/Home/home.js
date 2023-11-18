@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -18,6 +18,7 @@ import { Grid } from '@mui/material';
 import MyAppBar from '../MyComponents/myAppBar';
 import MyFooter from '../MyComponents/myFooter';
 import { images, imagesCel, cardLoan, cards, imagesNews, newImages, carImages, loanCards, style } from './homeConstants';
+import { Link } from 'react-router-dom';
 
 function Home() {
   const theme = createTheme({
@@ -35,6 +36,29 @@ function Home() {
       },
     },
   });
+
+  const [newData, setNewData] = useState([
+    {
+      new_id: '1',
+      new_title: 'Límite de pagos en efectivo',
+      new_content: 'Recuerda que el límite de pagos en efectivo es de $10.000,00. Si deseas realizar un pago mayor a este monto, puedes hacerlo a través de transferencia bancaria o cheque de gerencia. No olvides que puedes realizar tus formularios en línea a través de nuestra página web.',
+      new_phrase: 'Acércate a nuestras oficinas',
+    },
+
+    {
+      new_id: '2',
+      new_title: 'Brigada de salud visual',
+      new_content: 'Invitamos al personal docente, adminsitrativo y civil de la ESPE a participar los dias 5,16 y 17 de Novimebre de 08:00 a 17:00 horas en el edificio académico.Disponemos lentes de lectura, distancia, bifocales, progresivos, filtro azul, antireflejo y transición. EXAMEN VISUAL GRATIS',
+      new_phrase: 'Adquiere tus lentes por 5 centavos diarios',
+
+    },
+    {
+      new_id: '3',
+      new_title: 'Educación financiera',
+      new_content: 'Edúcate en nuestro nuevo módulo de educación financiera. Aprende a manejar tus finanzas personales y a realizar tus formularios en línea. Además, conoce los beneficios de nuestros préstamos y los requisitos para acceder a ellos.',
+      new_phrase: 'En la sección de préstamos',
+    },
+  ]);
 
   const handleButtonClick = (href) => {
     // Redirigir a la página deseada con el fragmento de URL
@@ -123,7 +147,7 @@ function Home() {
         <Typography variant="body2" sx={home.homeTextH1}>Revisa las novedades y descuentos disponibles.</Typography>
       </Box>
 
-      
+
       <Carousel
         next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
         prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
@@ -132,53 +156,57 @@ function Home() {
         timeout={5000} // Ajusta el valor del timeout a tu preferencia (en milisegundos)
         transitionDuration={50000} // Ajusta el valor del transitionDuration a tu preferencia (en milisegundos)
       >
-        {newImages.map((item) => (
-          <Box
-            key={item.titulo}
-            sx={{
-              position: 'relative',
-              textAlign: 'center', // Para centrar el contenido dentro de Box
-            }}
-          >
-            <img src={item.src} alt={item.alt} />
 
+        {newImages.map((item, index) => {
+          const newDataItem = newData.find(data => data.new_id === item.key);
+          return (
             <Box
-              margin='0 20%' // Margen igual a ambos lados
-              flexDirection={'column'}
-              alignContent={'center'}
-              justifyContent={'center'}
+              key={index}
               sx={{
-                position: 'absolute',
-                top: '150px',
-                '@media screen and (max-width: 600px)': {
-                  position: 'absolute',
-                  top: '100px',
-                  marginLeft: '1%',
-                },
+                position: 'relative',
+                textAlign: 'center', // Para centrar el contenido dentro de Box
               }}
             >
-              <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>
-                {item.titulo}
-              </Typography>
-              <Box alignItems='center' justifyContent={'center'} sx={{ mt: '5%' }}>
-                <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>
-                Executing (default): SELECT `customer_id`, `customer_name`, `customer_personal_email`, `customer_espe_email`, `customer_phone`, `customer_direction`, `createdAt`, `updatedAt` FROM `customers` AS `customers` WHERE `customers`.`customer_id` IN (NULL);
+              <img src={item.src} alt={item.alt} />
+
+              <Box
+                margin='0 20%' // Margen igual a ambos lados
+                flexDirection={'column'}
+                alignContent={'center'}
+                justifyContent={'center'}
+                sx={{
+                  position: 'absolute',
+                  top: '150px',
+                  '@media screen and (max-width: 600px)': {
+                    position: 'absolute',
+                    top: '100px',
+                    marginLeft: '1%',
+                  },
+                }}
+              >
+                <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>
+                {newDataItem ? newDataItem.new_title : ''}
                 </Typography>
-              </Box>
-              <Box sx={{ mt: '5%' }}>
-                <Button
-                  href={item.href}
-                  onClick={() => handleButtonClick(item.href)}
-                  variant="contained"
-                  color="secondary"
-                  sx={buttons.appBarButtonText}
-                >
-                  {item.boton}
-                </Button>
+                <Box alignItems='center' justifyContent={'center'} sx={{ mt: '5%' }}>
+                  <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>
+                  {newDataItem ? newDataItem.new_content: ''}
+                  </Typography>
+                </Box>
+                <Box sx={{ mt: '5%' }}>
+                  <Button
+                    href={item.href}
+                    onClick={() => handleButtonClick(item.href)}
+                    variant="contained"
+                    color="secondary"
+                    sx={buttons.appBarButtonText}
+                  >
+                    {newDataItem ? newDataItem.new_phrase : ''}
+                  </Button>
+                </Box>
               </Box>
             </Box>
-          </Box>
-        ))}
+          );
+        })}
       </Carousel>
 
 
@@ -186,47 +214,61 @@ function Home() {
         <Typography variant="body2" sx={home.homeTextH1}>Conoce los convenios disponibles con diferentes marcas las novedades y descuentos disponibles.</Typography>
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 1 }}>
-        <Box sx={{ flex: '0 0 30%', marginLeft: '10%' }}>
-          <Carousel
-            next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
-            prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)} slidesToShow={2} slidesToScroll={1}
-            sx={{ height: '300px', maxWidth: '100%' }}>
-            {
-              cards.map((item) =>
-                <Box display="flex" alignItems="center" sx={{ paddingLeft: 10 }}>
-                  <Card sx={home.homeFormatCardLoan}>
-                    <CardMedia
-                      sx={home.homeLogoTrademark} image={item.image} alt="Descripción de la imagen" />
-                    <CardContent >
-                      <Box display="flex" >
-                        <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Box>)
-            }
-          </Carousel>
-        </Box>
-        <Box sx={{ flex: '0 0 60%', alignItems: 'center' }}>
-          <List sx={style} component="nav" aria-label="mailbox folders">
-            <ListItem button>
+      <Box sx={{ justifyContent: 'space-between', alignItems: 'center', padding: 1 }}>
+
+        <Carousel
+          next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
+          prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)} slidesToShow={2} slidesToScroll={1}
+          sx={{ ...home.homeCarruselNews, margin: '0 25%' }}>
+
+          {
+            cards.map((item) =>
+              <Box display="flex" alignItems="center" >
+                <Card sx={home.homeFormatCardCars}>
+                  <CardMedia
+                    sx={home.homeLogoTrademark} image={item.image} alt="Descripción de la imagen" />
+                  <CardContent >
+                    <Box display="flex" >
+                      <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Box>)
+          }
+        </Carousel>
+
+      </Box>
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ margin: '1rem 0 2rem 0' }}>
+        <Typography variant="body2" sx={home.homeTextH4}>Funcionalidades disponibles</Typography>
+        <Typography variant="body2" sx={home.homeTextH1}>Prueba las funcionalidades a las que tienes acceso</Typography>
+      </Box>
+
+
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 20%' }}>
+
+        <List sx={style} component="nav" aria-label="mailbox folders">
+          <ListItem button >
+            <Link to="/simulador" style={{ textDecoration: 'none' }}>
               <ListItemText
-                primary="Tus depósitos están protegidos"
-                secondary="Conoce el monto de cobertura del Seguro de Depósitos de tu banco."
+                primary="Simulador de Préstamos"
+                secondary="Prueba nuestro simulador de préstamos para conocer el valor de tus cuotas."
                 primaryTypographyProps={home.homeTextH2Left}
                 secondaryTypographyProps={home.homeTextH4Left} />
-            </ListItem>
-            <Divider />
-            <ListItem button divider>
+            </Link>
+          </ListItem>
+
+          <Divider />
+          <ListItem button divider>
+            <Link to="/prestamos" style={{ textDecoration: 'none' }}>
               <ListItemText
-                primary="Plataforma Edúcate"
-                secondary="Encuentra material educativo en la plataforma virtual de aprendizaje de la COSEDE."
+                primary="Sección de Educación Financiera"
+                secondary="Nos preocupamos por tu aprendizaje financiero, por eso te ofrecemos nuestros conocimientos."
                 primaryTypographyProps={home.homeTextH2Left}
                 secondaryTypographyProps={home.homeTextH4Left} />
-            </ListItem>
-          </List>
-        </Box>
+            </Link>
+          </ListItem>
+        </List>
+
       </Box>
 
       <div><MyFooter title="Pie de página" /></div>

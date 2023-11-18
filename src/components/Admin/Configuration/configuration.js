@@ -5,19 +5,14 @@ import {
     Stack, Typography, Box, Button, Paper, Popover, Modal
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import PasswordIcon from '@mui/icons-material/Password';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import BadgeIcon from '@mui/icons-material/Badge';
 import HomeIcon from '@mui/icons-material/Home';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import EmailIcon from '@mui/icons-material/Email';
 import home from '../../../styles/pages/home';
-import login from '../../../styles/pages/login';
 import buttons from '../../../styles/buttons';
-import registerStyle from '../../../styles/pages/register';
-import account from '../../../styles/pages/account';
-import { validarCedulaEcuatoriana } from '../../Register/registerConstants';
+import axios from 'axios';
 const theme = createTheme({
     palette: {
         primary: {
@@ -35,10 +30,9 @@ const theme = createTheme({
 });
 
 function App() {
-    const [isModalSucessOpen, setIsModalSucessOpen] = useState(false);
-    const [isModalUserConfirmOpen, setIsModalUserConfirmOpen] = useState(false);
-    const [isAlertOpen, setIsAlertOpen] = useState(false);
-    const [isAlertUserOpen, setIsAlertUserOpen] = useState(false);
+   
+    const [isAlertSuccessOpen, setIsAlertSuccessOpen] = useState(false);
+    const [isAlertErrorOpen, setIsAlertErrorOpen] = useState(false);
 
     const [iconNameColor, setIconNameColor] = useState('action.active');
     const [iconIdColor, setIconIdColor] = useState('action.active');
@@ -63,8 +57,9 @@ function App() {
             textLabel: "Nombres y Apellidos",
             textError: " * Solo letras",
             inputRef: nameInputRef,
-            default: 'Johanna Molina',
+           
             isDisabled: true,
+            key: 'customer_name',
 
         },
         {
@@ -73,8 +68,9 @@ function App() {
             textLabel: "Cédula de ciudadanía",
             textError: " *Cédula Inválida",
             inputRef: idInputRef,
-            default: '1751040716',
+            
             isDisabled: true,
+            key: 'user_ci',
 
         },
         {
@@ -83,8 +79,9 @@ function App() {
             textLabel: "Correo Electrónico de la ESPE",
             textError: " *Correo Inválido",
             inputRef: emailInputRef,
-            default: 'jnmolinaa.espe.edu.ec',
+            
             isDisabled: true,
+            key: 'customer_espe_email',
 
         },
         {
@@ -93,8 +90,9 @@ function App() {
             textLabel: "Correo Electrónico Personal",
             textError: " *Correo Inválido",
             inputRef: emailPersonalInputRef,
-            default: 'johaniky12hotmail.com',
+           
             isDisabled: false,
+            key: 'customer_personal_email',
 
 
         },
@@ -104,8 +102,9 @@ function App() {
             textLabel: "Teléfono Celular",
             textError: " * Solo números",
             inputRef: numberInputRef,
-            default: '0984132920',
+            
             isDisabled: false,
+            key: 'customer_phone',
 
 
         },
@@ -115,53 +114,66 @@ function App() {
             textLabel: "Dirección de domicilio",
             textError: "",
             inputRef: dirInputRef,
-            default: 'San Fernando N51-111',
+            
             isDisabled: false,
+            key: 'customer_direction',
 
 
         },
 
     ];
 
-    const securityQuestions = [
+    const [formData, setFormData] = useState({
+        customer_name: 'Johanna',
+        user_ci: '1751040716',
+        customer_espe_email: 'jnmolina@espe.edu.ec',
+        customer_personal_email: 'johaniky12@hotmail.com',
+        customer_phone: '0984132920',
+        customer_direction: 'Agustín Leon y Antonio Román N511-11',
+    })
 
-        {
-            questionLabel: "¿Cuál es su cantante favorito?",
-        },
-        {
-            questionLabel: "¿Cómo se llamó su primera mascota?",
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post('http://localhost:3000/api/editUser', {
+                user_ci: formData.user_ci,
+                customer_personal_email: formData.customer_personal_email,
+                customer_phone: formData.customer_phone,
+                customer_direction: formData.customer_direction,
+            });
+
+            if (response.data.success) {
+                console.log('Usuario actualizado con éxito:', response.data.customer);
+                //setIsModalSucessOpen(true);
+                setIsAlertSuccessOpen(true);
+                setIsAlertErrorOpen(false);
+
+            } else {
+                console.error('Error al actualizar usuario:', response.data.message);
+                setIsAlertErrorOpen(true);
+                setIsAlertSuccessOpen(false);
+            }
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+            setIsAlertErrorOpen(true);
+            setIsAlertSuccessOpen(false);
         }
-    ]
-
-    const handleOpenQuestion = (event) => {
-        event.preventDefault(); // Detener la redirección predeterminada del botón
-        const nameValue = nameInputRef.current.value.trim().toLowerCase();
-        const idValue = idInputRef.current.value.trim().toLowerCase();
-        const numberValue = numberInputRef.current.value.trim().toLowerCase();
-        const emailValue = emailInputRef.current.value.trim().toLowerCase();
-        const emailPersonalValue = emailPersonalInputRef.current.value.trim().toLowerCase();
-        const dirValue = dirInputRef.current.value.trim().toLowerCase();
-        let flag1 = false;
-        let flag2 = false;
-        let flag3 = false;
-        let flag4 = false;
-        let flag5 = false;
-        setIsModalSucessOpen(true);
-
-
-
-    }
-
-
-
-    const [textFieldData, setTextFieldData] = useState(textFieldRegister.map((item) => item.default));
-
-    const handleInputChange = (event, index) => {
-        const updatedData = [...textFieldData];
-        updatedData[index] = event.target.value;
-        setTextFieldData(updatedData);
     };
 
+
+
+
+    const handleInputChange = (event, key) => {
+        const newValue = event.target.value;
+
+        // Crea una copia del objeto formData y actualiza el valor del campo específico
+        setFormData((prevData) => ({
+            ...prevData,
+            [key]: newValue,
+        }));
+    };
 
     return (
         <div>
@@ -184,54 +196,70 @@ function App() {
                         {textFieldRegister.map((item, index) => (
                             <Box sx={{ display: 'flex', alignItems: 'flex-end' }} key={index}>
                                 <item.icon sx={{ color: item.iconColor, mr: 1, my: 0.5 }} />
-                                <TextField id="input-with-sx" label={<Typography
-                                    sx={{
-                                        fontFamily: "Cairo",
-                                        textTransform: 'none',
-                                        fontSize: "16px",
-                                        width: '100%',
-                                        color: item.iconColor
-                                    }} >{item.textLabel}{item.iconColor === 'error.main' ? item.textError : ''} </Typography>}
-                                    inputRef={item.inputRef}
-                                    variant="standard" fullWidth margin="normal"
+                                <TextField
+                                    id="input-with-sx"
+                                    label={
+                                        <Typography
+                                            sx={{
+                                                fontFamily: "Cairo",
+                                                textTransform: 'none',
+                                                fontSize: "16px",
+                                                width: '100%',
+                                                color: item.iconColor
+                                            }}
+                                        >
+                                            {item.textLabel}{item.iconColor === 'error.main' ? item.textError : ''} </Typography>}
 
-                                    value={textFieldData[index]}
-                                    onChange={(event) => handleInputChange(event, index)}
-                                    disabled={item.isDisabled} />
+                                    inputRef={item.inputRef}
+                                    variant="standard"
+                                    fullWidth
+                                    margin="normal"
+                                    value={formData[item.key]} // Ajusta la clave según tu estructura de datos
+                                    onChange={(event) => handleInputChange(event, item.key)}
+                                    disabled={item.isDisabled}
+                                />
                             </Box>
                         ))}
 
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-evenly' }}>
 
-                            <Button size="medium" variant="contained" color="secondary" onClick={handleOpenQuestion} sx={buttons.registerButton} href="/login">
+                            <Button size="medium" variant="contained" color="secondary" onClick={handleFormSubmit} sx={buttons.registerButton} >
                                 Editar
-                            </Button>
-                            <Modal
-                                open={isModalSucessOpen}
-                                aria-labelledby="modal-modal-title"
-                                aria-describedby="modal-modal-description"
-                            >
+                            </Button>                         
 
-                                <Box sx={account.accountEditModalMessage}>
-
-                                    <Typography id="modal-modal-title" sx={home.homeTextH3Light}>
-                                        Has editado tu información de manera exitosa.
-                                    </Typography>
-
-                                    <Button size="medium" variant="contained" color="secondary"
-
-                                        href='/cuenta'
-                                        sx={buttons.registerButton} >
-                                        Continuar
-                                    </Button>
-                                </Box>
-
-
-
-
-                            </Modal>
                         </Box>
-
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertSuccessOpen && (
+                                <Alert
+                                    open={isAlertSuccessOpen}
+                                    severity="success"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Información actualizada con éxito
+                                </Alert>
+                            )}
+                        </Stack>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertErrorOpen && (
+                                <Alert
+                                    open={isAlertErrorOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Información no actualizada
+                                </Alert>
+                            )}
+                        </Stack>
                     </Paper>
 
                     <Paper elevation={5} sx={{ padding: '2% 4% ', width: '80%', marginBottom: '2rem' }}>
@@ -241,7 +269,7 @@ function App() {
                         <Typography
                             sx={home.homeTextH4Left}
                         >Si deseas cambiar la contraseña y aumentar la seguridad de la misma, ingresa aquí.</Typography>
-                        <Button fullWidth  variant="outlined" color="secondary" sx={buttons.appBarButtonText}
+                        <Button fullWidth variant="outlined" color="secondary" sx={buttons.appBarButtonText}
                             href='/admin-cuenta/configuracion/contrasena'>
                             Editar contraseña
                         </Button>
