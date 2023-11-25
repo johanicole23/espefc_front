@@ -9,6 +9,8 @@ import {
 import home from '../../../styles/pages/home';
 import AccessNews from './accessNews';
 import AccessEducation from './accessEducation';
+import AccessCars from './accessCars';
+import AccessCarsDiaps from './accessCarsDiaps';
 import {
   theme,
   checked,
@@ -40,6 +42,8 @@ function SimulatorLoan() {
 
               <AccessNews />
               <AccessEducation />
+              <AccessCars />
+              <AccessCarsDiaps />
 
             </Box>
           </Box>

@@ -15,143 +15,53 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
+import { Link } from 'react-router-dom';
+import Modal from '@mui/material/Modal';
+import YouTube from 'react-youtube';
 import MyAppBar from '../MyComponents/myAppBar';
 import MyFooter from '../MyComponents/myFooter';
-import { images, imagesCel, cardLoan, cards, imagesNews, newImages, carImages, loanCards, style } from './carsConstants';
-import { Link } from 'react-router-dom';
+import MyToolBar from '../MyComponents/myToolBar';
+import { theme, newImages, style } from './carsConstants';
+import CarsBrands from './carsBrands';
 
 function Home() {
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#FFFFFF'
-
-      },
-      secondary: {
-        main: '#005F8F'
-      },
-      terciary: {
-        main: '#005F8F'
-
-      },
-    },
-  });
 
   const [newData, setNewData] = useState([
     {
       new_id: '1',
-      new_title: 'Límite de pagos en efectivo',
-      new_content: 'Recuerda que el límite de pagos en efectivo es de $10.000,00. Si deseas realizar un pago mayor a este monto, puedes hacerlo a través de transferencia bancaria o cheque de gerencia. No olvides que puedes realizar tus formularios en línea a través de nuestra página web.',
-      new_phrase: 'Acércate a nuestras oficinas',
+      new_title: '¡Convierte tu auto en efectivo!',
+      new_content: 'Tu vehículo puede actuar como garantía o "prenda" para el préstamo. ¡El 80% del financiamiento a cargo de la concesionaria y el 20% a cargo de nosotros!',
+      new_phrase: 'Pide tu préstamo ahora',
     },
 
     {
       new_id: '2',
-      new_title: 'Brigada de salud visual',
-      new_content: 'Invitamos al personal docente, adminsitrativo y civil de la ESPE a participar los dias 5,16 y 17 de Novimebre de 08:00 a 17:00 horas en el edificio académico.Disponemos lentes de lectura, distancia, bifocales, progresivos, filtro azul, antireflejo y transición. EXAMEN VISUAL GRATIS',
-      new_phrase: 'Adquiere tus lentes por 5 centavos diarios',
+      new_title: 'Perfecciona tu suscripción',
+      new_content: ' Deja que tus sueños tomen el volante, mientras nosotros te guiamos hacia un futuro más próspero. Descubre el poder de conducir tus aspiraciones con confianza. ¡Bienvenido al camino del éxito financiero!',
+      new_phrase: 'Prueba nuestros préstamos prendarios',
 
     },
     {
       new_id: '3',
-      new_title: 'Educación financiera',
-      new_content: 'Edúcate en nuestro nuevo módulo de educación financiera. Aprende a manejar tus finanzas personales y a realizar tus formularios en línea. Además, conoce los beneficios de nuestros préstamos y los requisitos para acceder a ellos.',
-      new_phrase: 'En la sección de préstamos',
+      new_title: 'Préstamos Prendarios',
+      new_content: 'Conducimos tus sueños hacia la realidad. Nuestros préstamos prendarios te brindan el impulso económico que necesitas para avanzar. Con cada giro de llave, transformamos el valor de tu vehículo en una llave hacia nuevas oportunidades financieras. ',
+      new_phrase: '¡Transforma tu vehículo en seguridad financiera! ',
     },
   ]);
+
 
   const handleButtonClick = (href) => {
     // Redirigir a la página deseada con el fragmento de URL
     window.location.href = href;
   };
+
   return (
     <ThemeProvider theme={theme}>
       <div><MyAppBar title="AppBar Component" /></div>
       <Carousel
         next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
         prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
-        sx={home.homeCarruselPrincipal}
-
-        animation="fade"
-        timeout={5000} // Ajusta el valor del timeout a tu preferencia (en milisegundos)
-        transitionDuration={50000} // Ajusta el valor del transitionDuration a tu preferencia (en milisegundos)
-      >
-        {images.map((item) => (
-          < Box sx={{ position: 'relative' }}>
-            <img src={item.src} alt={item.alt} />
-
-            <Box sx={{
-              position: 'absolute', top: '100px', left: '20%', '@media screen and (max-width: 600px)': {
-                position: 'absolute', top: '100px', marginLeft: '1%',
-              },
-            }}>
-              <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>{item.titulo}</Typography>
-              <Box sx={{ mt: '2%' }}>
-                <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>{item.subtitulo}</Typography>
-              </Box>
-              <Box sx={{ mt: '5%' }}>
-                <Button href={item.href} onClick={() => handleButtonClick(item.href)} variant="contained" color="secondary" sx={buttons.appBarButtonText}>{item.boton} </Button>
-              </Box>
-
-            </Box>
-          </Box>
-        ))}
-      </Carousel>
-      <Carousel
-        next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
-        prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
-        sx={home.homeCarruselPrincipalPetit}
-        animation="slide">
-        {imagesCel.map((item) => (
-          <div style={{ position: 'relative' }}>
-            <img src={item.src} alt={item.alt} />
-
-          </div>
-        ))}
-      </Carousel>
-
-
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ padding: '1rem 0' }}>
-        <Typography variant="body2" sx={home.homeTextH4}>Soluciones desde donde tú quieras</Typography>
-        <Typography variant="body2" sx={home.homeTextH1}>Todo lo que necesitas sin salir de casa.</Typography>
-      </Box>
-
-
-      <Box display="flex" justifyContent="space-evenly" alignItems="center" sx={{ margin: '0 15%' }} >
-        {cardLoan.map((item) => (
-          <Card sx={home.homeFormatCardLoan}>
-            <CardActionArea>
-              <CardMedia
-                sx={home.homeCardLoanLogo} image={item.image} alt="Descripción de la imagen" />
-              <CardContent >
-                <Box display="flex" flexDirection={'column'} >
-                  <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
-                  <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
-                </Box>
-              </CardContent>
-            </CardActionArea>
-            <CardActions >
-              <Box marginLeft="90px" >
-                <Button size="small" variant="outlined" color="secondary" sx={buttons.appBarButtonText} href="/prestamos">
-                  Más Información
-                </Button>
-              </Box>
-            </CardActions>
-          </Card>
-        ))}
-      </Box>
-
-
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ marginTop: '5rem ' }}>
-        <Typography variant="body2" sx={home.homeTextH4}>Noticias</Typography>
-        <Typography variant="body2" sx={home.homeTextH1}>Revisa las novedades y descuentos disponibles.</Typography>
-      </Box>
-
-
-      <Carousel
-        next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
-        prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
-        sx={home.homeCarruselNews}
+        sx={home.carsCarruselPrincipal}
         animation="fade"
         timeout={5000} // Ajusta el valor del timeout a tu preferencia (en milisegundos)
         transitionDuration={50000} // Ajusta el valor del transitionDuration a tu preferencia (en milisegundos)
@@ -170,7 +80,7 @@ function Home() {
               <img src={item.src} alt={item.alt} />
 
               <Box
-                margin='0 20%' // Margen igual a ambos lados
+                margin='0 8% 0 60%' // Margen igual a ambos lados
                 flexDirection={'column'}
                 alignContent={'center'}
                 justifyContent={'center'}
@@ -185,11 +95,11 @@ function Home() {
                 }}
               >
                 <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>
-                {newDataItem ? newDataItem.new_title : ''}
+                  {newDataItem ? newDataItem.new_title : ''}
                 </Typography>
                 <Box alignItems='center' justifyContent={'center'} sx={{ mt: '5%' }}>
                   <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>
-                  {newDataItem ? newDataItem.new_content: ''}
+                    {newDataItem ? newDataItem.new_content : ''}
                   </Typography>
                 </Box>
                 <Box sx={{ mt: '5%' }}>
@@ -209,38 +119,16 @@ function Home() {
         })}
       </Carousel>
 
-
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ marginTop: '5rem ' }}>
-        <Typography variant="body2" sx={home.homeTextH1}>Conoce los convenios disponibles con diferentes marcas las novedades y descuentos disponibles.</Typography>
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ padding: '1rem 0' }}>
+        <Typography variant="body2" sx={home.homeTextH4}>Explora nuestros convenios con diferentes marcas</Typography>
+        <Typography variant="body2" sx={home.homeTextH1}>Toda la información que estabas buscando, aquí. </Typography>
       </Box>
 
-      <Box sx={{ justifyContent: 'space-between', alignItems: 'center', padding: 1 }}>
+      <CarsBrands />
 
-        <Carousel
-          next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
-          prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)} slidesToShow={2} slidesToScroll={1}
-          sx={{ ...home.homeCarruselNews, margin: '0 25%' }}>
-
-          {
-            cards.map((item) =>
-              <Box display="flex" alignItems="center" >
-                <Card sx={home.homeFormatCardCars}>
-                  <CardMedia
-                    sx={home.homeLogoTrademark} image={item.image} alt="Descripción de la imagen" />
-                  <CardContent >
-                    <Box display="flex" >
-                      <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Box>)
-          }
-        </Carousel>
-
-      </Box>
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ margin: '1rem 0 2rem 0' }}>
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ margin: '5rem 0 2rem 0' }}>
         <Typography variant="body2" sx={home.homeTextH4}>Funcionalidades disponibles</Typography>
-        <Typography variant="body2" sx={home.homeTextH1}>Prueba las funcionalidades a las que tienes acceso</Typography>
+        <Typography variant="body2" sx={home.homeTextH1}>Prueba las funcionalidades a las que tienes acceso para informarte más sobre nosotros</Typography>
       </Box>
 
 
@@ -251,7 +139,7 @@ function Home() {
             <Link to="/simulador" style={{ textDecoration: 'none' }}>
               <ListItemText
                 primary="Simulador de Préstamos"
-                secondary="Prueba nuestro simulador de préstamos para conocer el valor de tus cuotas."
+                secondary="Prueba nuestro simulador de préstamos prendarios para conocer el valor de tus cuotas."
                 primaryTypographyProps={home.homeTextH2Left}
                 secondaryTypographyProps={home.homeTextH4Left} />
             </Link>
@@ -262,7 +150,7 @@ function Home() {
             <Link to="/prestamos" style={{ textDecoration: 'none' }}>
               <ListItemText
                 primary="Sección de Educación Financiera"
-                secondary="Nos preocupamos por tu aprendizaje financiero, por eso te ofrecemos nuestros conocimientos."
+                secondary="¿Tienes dudas? Nos preocupamos por tu aprendizaje financiero, por eso te ofrecemos nuestros conocimientos."
                 primaryTypographyProps={home.homeTextH2Left}
                 secondaryTypographyProps={home.homeTextH4Left} />
             </Link>

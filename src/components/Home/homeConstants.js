@@ -127,7 +127,7 @@ export const newImages = [
     },
     {
         key: '3',
-        src: new2,
+        src: new3,
         alt: 'Descripción de la imagen 2',
         href: ''
       },

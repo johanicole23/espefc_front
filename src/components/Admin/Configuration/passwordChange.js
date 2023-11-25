@@ -9,6 +9,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import home from '../../../styles/pages/home';
 import login from '../../../styles/pages/login';
 import buttons from '../../../styles/buttons';
+import axios from 'axios';
 const theme = createTheme({
     palette: {
         primary: {
@@ -129,13 +130,23 @@ function App() {
             setIsAlertPasswordAgainOpen(true);
         }
     }
-    const handleChangePassword = () => {
-        if (password === passwordAgain) {
-            //&& passwordNow is correct
+    const handleChangePassword = async (e) => {
+
+        e.preventDefault();
+        console.log(passwordNow, password);
+        try {
+            const response = await axios.post('http://localhost:3000/api/changePassword',
+                {
+                    user_ci: '1751040716',
+                    user_password: passwordNow,
+                    user_new_password: password,
+                });
+            console.log(response.data);
             setIsAlertChangeOk(true);
-        }
-        else {
+            setIsAlertChangeNot(false);
+        } catch (error) {
             setIsAlertChangeNot(true);
+            setIsAlertChangeOk(false);
         }
 
     };

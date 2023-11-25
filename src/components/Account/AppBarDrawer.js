@@ -31,6 +31,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary'; // Agrega esta línea
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Agrega esta línea
+import DownloadIcon from '@mui/icons-material/Download';
 
 
 
@@ -170,12 +171,12 @@ function AppBarDrawer() {
                                     { text: 'Préstamos Prendarios', icon: <MailIcon />, link: '/cuenta/proceso-prendario/formulario-prendario' },
                                 ].map((item, index) => (
                                     <ListItem href={item.link} disablePadding sx={{ color: 'gray' }}>
-                                        <ListItemButton onClick={() => window.location.href = item.link}> 
-                                            <ListItemText  primary={
+                                        <ListItemButton onClick={() => window.location.href = item.link}>
+                                            <ListItemText primary={
                                                 <Typography variant="body1" sx={home.homeTextH4Left} color="textPrimary">
                                                     {item.text}
                                                 </Typography>
-                                            
+
                                             } />
                                         </ListItemButton>
                                     </ListItem>
@@ -183,10 +184,11 @@ function AppBarDrawer() {
                             </List>
                         </AccordionDetails>
                     </Accordion>
-                    {[                        
-                        { text: 'Simulador de Préstamos', icon: <CurrencyBitcoinIcon/>, link: '/cuenta/simulador-personalizado' },
+                    {[
+                        { text: 'Simulador de Préstamos', icon: <CurrencyBitcoinIcon />, link: '/cuenta/simulador-personalizado' },
                         { text: 'Liquidaciones', icon: <StackedLineChartIcon />, link: '/cuenta/liquidacion-cesantia' },
-                        { text: 'Variación de Aporte', icon: <AddchartIcon/>, link: '/cuenta/variacion-aporte' },                      
+                        { text: 'Variación de Aporte', icon: <AddchartIcon />, link: '/cuenta/variacion-aporte' },
+                        { text: 'Documentos', icon: <DownloadIcon />, link: '/cuenta/documentos' },
                     ].map((item, index) => (
                         <ListItem key={item.text} disablePadding>
                             <ListItemButton onClick={() => window.location.href = item.link}>
@@ -201,8 +203,9 @@ function AppBarDrawer() {
                             </ListItemButton>
                         </ListItem>
                     ))}
+
                 </List>
-                <Divider /> 
+                <Divider />
                 <List>
                     {[
                         { text: 'Configuración Cuenta', icon: <PermDataSettingIcon />, link: '/cuenta/configuracion' },

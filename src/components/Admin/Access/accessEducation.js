@@ -9,6 +9,7 @@ import buttons from '../../../styles/buttons';
 import login from '../../../styles/pages/login';
 import MenuItem from '@mui/material/MenuItem';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import EditIcon from '@mui/icons-material/Edit';
 import styled from '@emotion/styled';
 
 import axios from 'axios';
@@ -35,15 +36,39 @@ function AccessEducation() {
     const [educationData, setEducationData] = useState([
         {
             education_id: '1',
-            education_videoId: 'dQw4w9WgXcQ',
-            education_titlePdf: '¿Qué es el Fondo de Cesantía?',
-            education_pdf: 'Documento_1_Fondo_Concepto',
+            education_videoId: '9sCVcWD1Svs',
+
         },
         {
             education_id: '2',
-            education_videoId: '9bZkp7q19f0',
-            education_titlePdf: 'Educación Financiera: Modulo 1',
-            education_pdf: 'Educacion_financiera_1',
+            education_videoId: 'HMC0Dz9mnbI',
+        },
+        {
+            education_id: '3',
+            education_videoId: '9sCVcWD1Svs',
+
+        },
+        {
+            education_id: '4',
+            education_videoId: 'HMC0Dz9mnbI',
+        },
+        {
+            education_id: '5',
+            education_videoId: '9sCVcWD1Svs',
+
+        },
+        {
+            education_id: '6',
+            education_videoId: 'HMC0Dz9mnbI',
+        },
+        {
+            education_id: '7',
+            education_videoId: '9sCVcWD1Svs',
+
+        },
+        {
+            education_id: '8',
+            education_videoId: 'HMC0Dz9mnbI',
         },
 
 
@@ -100,10 +125,10 @@ function AccessEducation() {
         if (fileData.name !== '') {
             setIsAlertErrorPDFOpen(false);
             setIsAlertSuccessPDFOpen(true);
-          } else {
+        } else {
             setIsAlertErrorPDFOpen(true);
             setIsAlertSuccessPDFOpen(false);
-          }
+        }
         /*try {
             const response = await axios.post('http://localhost:3000/api/editEducation', {
                 education_id: selectedId,
@@ -176,7 +201,7 @@ function AccessEducation() {
             [index]: file,
             name: file.name,
         }));
-        
+
     };
 
 
@@ -199,7 +224,7 @@ function AccessEducation() {
 
                     {educationData.map((option) => (
                         <MenuItem key={option.education_id} value={option.education_id}>
-                            Video Educacional #{option.education_id}
+                            <Typography marginLeft={'20px'} sx={login.textoInput} > Video Educacional #{option.education_id} </Typography>
                         </MenuItem>
                     ))}
 
@@ -225,7 +250,7 @@ function AccessEducation() {
                                             {item.textLabel}
                                         </Typography>
                                     }
-                                    multiline={index === 1}
+
                                     variant="standard"
                                     fullWidth
                                     disabled={item.disabled}
@@ -240,24 +265,7 @@ function AccessEducation() {
                         <Typography sx={home.homeTextH4Left} margin={'1rem 0'}
                         >Por favor, selecciona una opción para cargar los datos.</Typography>
                     )}
-                    {selectedId !== undefined && (
-                        <div>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
-                                <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    fullWidth
-                                    sx={buttons.adminUploadPdf}
-                                    component="label"
-                                    startIcon={<CloudUploadIcon />}>
-                                    Cargar un pdf diferente
-                                    <VisuallyHiddenInput type="file" onChange={(event) => handleFileChange(event, selectedId)} />
-                                </Button>
-                                <div><Typography sx={home.homeTextH4}
-                                >Archivo seleccionado: {fileData.name}</Typography> </div>
-                            </Box>
-                        </div>
-                    )}
+
                 </div>
 
 
@@ -265,13 +273,9 @@ function AccessEducation() {
 
                     <Button size="medium" variant="contained" color="secondary"
                         onClick={() => handleFormSubmitInfo(selectedId)}
-                        sx={buttons.appBarButtonLogin} >
-                        Editar información
-                    </Button>
-                    <Button size="medium" variant="contained" color="terciary"
-                        onClick={() => handleFormSubmitPDF(selectedId)}
-                        sx={buttons.appBarButtonRegister} >
-                        Editar PDF
+                        sx={buttons.registerButton}
+                        endIcon={<EditIcon />}  >
+                        Editar información del video
                     </Button>
 
                 </Box>
@@ -320,7 +324,7 @@ function AccessEducation() {
                                 fontWeight: 600,
                             }}
                         >
-                           PDF actualizado con éxito
+                            PDF actualizado con éxito
                         </Alert>
                     )}
                 </Stack>

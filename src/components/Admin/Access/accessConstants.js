@@ -10,6 +10,9 @@ import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import NotesIcon from '@mui/icons-material/Notes';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import EditRoadIcon from '@mui/icons-material/EditRoad';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 export const theme = createTheme({
     palette: {
@@ -72,19 +75,70 @@ export const textFieldEducation = [
         key: 'education_videoId',
         disabled: false,
     },
+    
+
+];
+
+
+export const carsBrands = [
+    'Chevrolet',
+    'Citroen',
+    'Fiat',
+    'Ford',
+    'Hyundai',
+    'Jeep',
+    'Kia',
+    'Mazda',
+    'Nissan',
+    'Peugeot',
+    'Renault',
+    'Toyota',
+  ];
+  
+  export const textFieldCars = [
+
+    {
+        icon: AddLinkIcon,
+        iconColor: '#005f8f',
+        textLabel: "Enlace del video promocional",
+        key: 'car_videoId',
+        disabled: false,
+    },
     {
         icon: TitleIcon,
         iconColor: '#005f8f',
-        textLabel: "Título del botón para descargar el pdf",
-        key: 'education_titlePdf',
+        textLabel: "Nombre del vehículo",
+        key: 'car_name',
+        disabled: true,
+    },
+    {
+        icon: EditCalendarIcon,
+        iconColor: '#005f8f',
+        textLabel: "Año del vehículo",
+        key: 'car_year',
+        disabled: false,
+    },
+    {
+        icon: EditRoadIcon,
+        iconColor: '#005f8f',
+        textLabel: "Kilómetros del vehículo",
+        key: 'car_km',
+        disabled: false,
+    },
+    {
+        icon: AttachMoneyIcon,
+        iconColor: '#005f8f',
+        textLabel: "Costo del vehículo",
+        key: 'car_price',
         disabled: false,
     },
     {
         icon: PictureAsPdfIcon,
         iconColor: '#005f8f',
-        textLabel: "Pdf a descargar",
-        key: 'education_pdf',
-        disabled: true,
+        textLabel: "Enlace a la página oficial del vehículo",
+        key: 'car_href',
+        disabled: false,
     },
 
 ];
+

@@ -62,15 +62,39 @@ function Loans() {
     const educationData = [
         {
             education_id: '1',
-            education_videoId: 'dQw4w9WgXcQ',
-            education_titlePdf: '¿Qué es el Fondo de Cesantía?',
-            education_pdf: 'https://www.google.com',
+            education_videoId: '9sCVcWD1Svs',
+            
         },
         {
             education_id: '2',
-            education_videoId: '9bZkp7q19f0',
-            education_titlePdf: 'Educación Financiera: Modulo 1',
-            education_pdf: 'https://www.google.com',
+            education_videoId: 'HMC0Dz9mnbI',           
+        },
+        {
+            education_id: '3',
+            education_videoId: '9sCVcWD1Svs',
+            
+        },
+        {
+            education_id: '4',
+            education_videoId: 'HMC0Dz9mnbI',           
+        },
+        {
+            education_id: '5',
+            education_videoId: '9sCVcWD1Svs',
+            
+        },
+        {
+            education_id: '6',
+            education_videoId: 'HMC0Dz9mnbI',           
+        },
+        {
+            education_id: '7',
+            education_videoId: '9sCVcWD1Svs',
+            
+        },
+        {
+            education_id: '8',
+            education_videoId: 'HMC0Dz9mnbI',           
         },
 
 
@@ -84,6 +108,17 @@ function Loans() {
             autoplay: 0,
         },
     };
+
+    function handleClickDownloadDocuments() {
+        const url = '/files/educacion_financiera.pdf'; // Reemplaza con la ruta correcta de tu documento
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'EducaciónFinanciera.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
     return (
         <ThemeProvider theme={theme} >
 
@@ -150,11 +185,14 @@ function Loans() {
                         {educationData.map((item, index) => (
                             <Box key={index} marginBottom="3rem">
                                 <YouTube videoId={item.education_videoId} opts={commonOpts} />
-                                <Button size="medium" variant="contained" color="secondary" sx={buttons.registerButton}  endIcon={<DownloadIcon />}>
-                                    {item.education_titlePdf}
-                                </Button>
+
                             </Box>
                         ))}
+                        <Button size="medium" variant="contained" color="secondary"
+                            sx={buttons.registerButton} endIcon={<DownloadIcon />}
+                            onClick={handleClickDownloadDocuments} >
+                            Todo lo que necesitas saber sobre Educación Financiera
+                        </Button>
 
                     </div>
                 </Box>

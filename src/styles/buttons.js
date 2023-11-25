@@ -5,7 +5,13 @@ const buttons = {
         fontFamily: "Cairo",
         textTransform: 'none',
         fontSize: "16px",
+    },
 
+    carsFileTechButton: {
+        fontFamily: "Cairo",
+        textTransform: 'none',
+        fontSize: "16px",
+        width: '100%'
     },
     appBarButtonLogin: {
         fontFamily: "Cairo",

@@ -19,6 +19,7 @@ import MyAppBar from '../MyComponents/myAppBar';
 import MyFooter from '../MyComponents/myFooter';
 import { images, imagesCel, cardLoan, cards, imagesNews, newImages, carImages, loanCards, style } from './homeConstants';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function Home() {
   const theme = createTheme({
@@ -37,28 +38,26 @@ function Home() {
     },
   });
 
-  const [newData, setNewData] = useState([
-    {
-      new_id: '1',
-      new_title: 'Límite de pagos en efectivo',
-      new_content: 'Recuerda que el límite de pagos en efectivo es de $10.000,00. Si deseas realizar un pago mayor a este monto, puedes hacerlo a través de transferencia bancaria o cheque de gerencia. No olvides que puedes realizar tus formularios en línea a través de nuestra página web.',
-      new_phrase: 'Acércate a nuestras oficinas',
-    },
+  const [newData, setNewData] = useState([]);
+  const newDataRef = useRef();
 
-    {
-      new_id: '2',
-      new_title: 'Brigada de salud visual',
-      new_content: 'Invitamos al personal docente, adminsitrativo y civil de la ESPE a participar los dias 5,16 y 17 de Novimebre de 08:00 a 17:00 horas en el edificio académico.Disponemos lentes de lectura, distancia, bifocales, progresivos, filtro azul, antireflejo y transición. EXAMEN VISUAL GRATIS',
-      new_phrase: 'Adquiere tus lentes por 5 centavos diarios',
+  useEffect(() => {
+    const obtenerNoticias = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/getNews');
+        setNewData(response.data.news);
+        newDataRef.current = response.data.news; // Guardar en la ref
 
-    },
-    {
-      new_id: '3',
-      new_title: 'Educación financiera',
-      new_content: 'Edúcate en nuestro nuevo módulo de educación financiera. Aprende a manejar tus finanzas personales y a realizar tus formularios en línea. Además, conoce los beneficios de nuestros préstamos y los requisitos para acceder a ellos.',
-      new_phrase: 'En la sección de préstamos',
-    },
-  ]);
+      } catch (error) {
+        console.error('Error al obtener las noticias', error);
+      }
+    };
+
+    obtenerNoticias();
+  }, []);
+
+
+
 
   const handleButtonClick = (href) => {
     // Redirigir a la página deseada con el fragmento de URL
@@ -158,7 +157,8 @@ function Home() {
       >
 
         {newImages.map((item, index) => {
-          const newDataItem = newData.find(data => data.new_id === item.key);
+          const newDataItem = newDataRef.current && newDataRef.current[index];
+
           return (
             <Box
               key={index}
@@ -185,11 +185,11 @@ function Home() {
                 }}
               >
                 <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>
-                {newDataItem ? newDataItem.new_title : ''}
+                  {newDataItem ? newDataItem.new_title : ''}
                 </Typography>
                 <Box alignItems='center' justifyContent={'center'} sx={{ mt: '5%' }}>
                   <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>
-                  {newDataItem ? newDataItem.new_content: ''}
+                    {newDataItem ? newDataItem.new_content : ''}
                   </Typography>
                 </Box>
                 <Box sx={{ mt: '5%' }}>
@@ -207,6 +207,7 @@ function Home() {
             </Box>
           );
         })}
+
       </Carousel>
 
 

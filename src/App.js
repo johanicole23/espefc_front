@@ -23,7 +23,7 @@ import AccountSimulator from './components/Account/AccountSimulator/simulator';
 import Liquidations from './components/Account/Liquidation';
 import Variation from './components/Account/AportVariation';
 import Configuration from './components/Account/Configuration/configuration';
-
+import Documents from './components/Account/Documents';
 
 import Admin from './components/Admin/accountHome';
 import PasswordChangeAdmin from './components/Admin/Configuration/passwordChange';
@@ -54,7 +54,8 @@ function App() {
         <Route exact path="/cuenta/configuracion" Component={Configuration} />
         <Route exact path="/cuenta/simulador-personalizado" Component={AccountSimulator} />
         <Route exact path="/cuenta/liquidacion-cesantia" Component={Liquidations} />
-        <Route exact path="/cuenta/variacion-aporte" Component={Variation} />        
+        <Route exact path="/cuenta/variacion-aporte" Component={Variation} />       
+        <Route exact path="/cuenta/documentos" Component={Documents} />  
         <Route exact path="/cuenta/proceso-prendario/formulario-prendario" Component={formCollateral} />
         <Route exact path="/cuenta/proceso-prendario/archivos-prendario" Component={filesCollateral} />
         <Route exact path="/cuenta/proceso-prendario" Component={HomeCollateral} />

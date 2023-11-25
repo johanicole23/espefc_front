@@ -41,6 +41,18 @@ const home = {
             display: 'none',
         },
     },
+
+    carsCarruselPrincipal: {
+        height: '450px',
+        flex: '0 0 100%',
+        maxWidth: '100%',
+        marginTop: 12.5,
+        zIndex: 0,
+        '@media screen and (max-width: 600px)': {
+            height: '400px',
+            display: 'none',
+        },
+    },
     homeCarruselPrincipalPetit: {
         height: '300px',
         flex: '0 0 100%',
@@ -101,6 +113,22 @@ const home = {
         textAlign: 'center',
         fontSize: "16px",
     },
+
+    homeTextH4W700: {
+        fontFamily: 'Cairo',
+        color: myTheme.palette.common.customDark,
+        textAlign: 'left',
+        fontWeight: 700,
+        fontSize: "18px",
+    },
+    homeTextH4W600: {
+        fontFamily: 'Cairo',
+        color: myTheme.palette.common.customDark,
+        textAlign: 'left',
+        fontWeight: 600,
+        fontSize: "16px",
+    },
+
 
     homeTextH5Light: {
         fontFamily: 'Cairo',
@@ -186,12 +214,38 @@ const home = {
 
     },
 
+    carsCardLogo: {
+        display: 'flex',
+        height: '200px',
+        width: '200px',
+        alignItems: 'center',
+        justifyContent: 'center',
+       marginLeft: "10px",
+        paddingTop: 0
+
+    },
+
+
     //Card
 
     homeFormatCardLoan: {
         maxWidth: '100%',
         width:'350px',
         height:'250px',
+        marginTop: 5,
+        zIndex: 1,
+        transition: 'transform .2s',
+        boxShadow: '0px 0px 10px 5px rgba(0, 0, 0, 0.1)',
+        '&:hover': {
+            transform: 'scale(1.1)',
+        },
+
+    },
+
+    carsFormatCardLoan: {
+        maxWidth: '100%',
+        width:'220px',
+        height:'220px',
         marginTop: 5,
         zIndex: 1,
         transition: 'transform .2s',
