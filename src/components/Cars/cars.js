@@ -23,32 +23,31 @@ import MyFooter from '../MyComponents/myFooter';
 import MyToolBar from '../MyComponents/myToolBar';
 import { theme, newImages, style } from './carsConstants';
 import CarsBrands from './carsBrands';
+import axios from 'axios';
 
 function Home() {
 
-  const [newData, setNewData] = useState([
-    {
-      new_id: '1',
-      new_title: '¡Convierte tu auto en efectivo!',
-      new_content: 'Tu vehículo puede actuar como garantía o "prenda" para el préstamo. ¡El 80% del financiamiento a cargo de la concesionaria y el 20% a cargo de nosotros!',
-      new_phrase: 'Pide tu préstamo ahora',
-    },
+  const [newData, setNewData] = useState([]);
+  const newDataRef = useRef();
 
-    {
-      new_id: '2',
-      new_title: 'Perfecciona tu suscripción',
-      new_content: ' Deja que tus sueños tomen el volante, mientras nosotros te guiamos hacia un futuro más próspero. Descubre el poder de conducir tus aspiraciones con confianza. ¡Bienvenido al camino del éxito financiero!',
-      new_phrase: 'Prueba nuestros préstamos prendarios',
+  useEffect(() => {
+    const interval = setInterval(() => {
+      obtenerNoticias();
+      setNewData(newDataRef.current);
+    }, 1000);
+  }, []);
 
-    },
-    {
-      new_id: '3',
-      new_title: 'Préstamos Prendarios',
-      new_content: 'Conducimos tus sueños hacia la realidad. Nuestros préstamos prendarios te brindan el impulso económico que necesitas para avanzar. Con cada giro de llave, transformamos el valor de tu vehículo en una llave hacia nuevas oportunidades financieras. ',
-      new_phrase: '¡Transforma tu vehículo en seguridad financiera! ',
-    },
-  ]);
+  const obtenerNoticias = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/getCars');
 
+      newDataRef.current = response.data.cars;
+      console.log(newDataRef.current[0]);
+
+    } catch (error) {
+      console.error('Error al obtener las noticias', error);
+    }
+  };
 
   const handleButtonClick = (href) => {
     // Redirigir a la página deseada con el fragmento de URL
@@ -68,7 +67,8 @@ function Home() {
       >
 
         {newImages.map((item, index) => {
-          const newDataItem = newData.find(data => data.new_id === item.key);
+          const newDataItem = newDataRef.current && newDataRef.current[index];
+
           return (
             <Box
               key={index}
@@ -95,11 +95,11 @@ function Home() {
                 }}
               >
                 <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>
-                  {newDataItem ? newDataItem.new_title : ''}
+                  {newDataItem ? newDataItem.car_title : ''}
                 </Typography>
                 <Box alignItems='center' justifyContent={'center'} sx={{ mt: '5%' }}>
                   <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>
-                    {newDataItem ? newDataItem.new_content : ''}
+                    {newDataItem ? newDataItem.car_content : ''}
                   </Typography>
                 </Box>
                 <Box sx={{ mt: '5%' }}>
@@ -110,7 +110,7 @@ function Home() {
                     color="secondary"
                     sx={buttons.appBarButtonText}
                   >
-                    {newDataItem ? newDataItem.new_phrase : ''}
+                    {newDataItem ? newDataItem.car_phrase : ''}
                   </Button>
                 </Box>
               </Box>

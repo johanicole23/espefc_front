@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import {
     theme,
-    textFieldNews,
+    textFieldCarsDiaps,
 } from './accessConstants';
 
 
@@ -26,92 +26,112 @@ function AccessCarsDiaps() {
     const [selectedData, setSelectedData] = useState({}); // Nuevo estado para almacenar los datos seleccionados
 
 
-    const [newData, setNewData] = useState([
-        {
-            new_id: '1',
-            new_title: '¡Convierte tu auto en efectivo!',
-            new_content: 'Tu vehículo puede actuar como garantía o "prenda" para el préstamo. ¡El 80% del financiamiento a cargo de la concesionaria y el 20% a cargo de nosotros!',
-            new_phrase: 'Pide tu préstamo ahora',
-          },
-      
-          {
-            new_id: '2',
-            new_title: 'Perfecciona tu suscripción',
-            new_content: ' Deja que tus sueños tomen el volante, mientras nosotros te guiamos hacia un futuro más próspero. Descubre el poder de conducir tus aspiraciones con confianza. ¡Bienvenido al camino del éxito financiero!',
-            new_phrase: 'Prueba nuestros préstamos prendarios',
-      
-          },
-          {
-            new_id: '3',
-            new_title: 'Préstamos Prendarios',
-            new_content: 'Conducimos tus sueños hacia la realidad. Nuestros préstamos prendarios te brindan el impulso económico que necesitas para avanzar. Con cada giro de llave, transformamos el valor de tu vehículo en una llave hacia nuevas oportunidades financieras. ',
-            new_phrase: '¡Transforma tu vehículo en seguridad financiera! ',
-          },
-    ]);
+    const [newData, setNewData] = useState([]);
+    const newDataRef = useRef([]);
+    const [dataChanged, setDataChanged] = useState(false);
+
+    const [updatedData, setUpdatedData] = useState({
+        car_id: 1,
+        car_title: '',
+        car_content: '',
+        car_phrase: '',
+    });
 
     //Función que actualiza el estado del selectId
     const handleChange = (event) => {
         const selectedValue = event.target.value;
         setSelectedId(selectedValue);
         console.log('ID seleccionado:', selectedValue);
+        // Verifica que newDataRef.current esté definido y tenga elementos
+        if (newDataRef.current && newDataRef.current.length > 0) {
+            // Encuentra el objeto correspondiente al nuevo ID seleccionado
+            const selectedData = newDataRef.current.find((item) => item.car_id === selectedValue);
+
+            // Actualiza el estado de updatedData con los nuevos valores
+            setUpdatedData({
+                car_id: selectedData.car_id,
+                car_title: selectedData.car_title,
+                car_content: selectedData.car_content,
+                car_phrase: selectedData.car_phrase,
+            });
+        }
     };
 
 
     // Actualiza el estado de selectedData cuando se selecciona un nuevo ID 
     useEffect(() => {
         if (selectedId !== undefined) {
-            const newDataForSelectedId = newData.find(item => item.new_id === selectedId);
+            const newDataForSelectedId = newDataRef.current.find(item => item.car_id === selectedId);
             setSelectedData(newDataForSelectedId || {});
         }
-    }, [selectedId, newData]);
+    }, [selectedId, newDataRef.current]);
 
-    // Función que envía los datos de noticia editados al backend
-    const handleFormSubmitNews = async (selectedId) => {
-        //e.preventDefault();
+  
 
+
+    // Función que actualiza el estado de los campos de texto
+    function handleTextFieldChange(event, key, newId) {
+        const newValue = event.target.value;
+
+        // Encuentra el índice del objeto en newDataRef.current con el car_id correspondiente
+        const dataIndex = newDataRef.current.findIndex(item => item.car_id === newId);
+
+        // Actualiza solo la propiedad específica en newDataRef.current
+        newDataRef.current[dataIndex] = {
+            ...newDataRef.current[dataIndex],
+            [key]: newValue,
+        };
+
+        // Actualiza el estado de selectedData si el ID actual es igual al seleccionado
+        if (newId === selectedId) {
+            setSelectedData(newDataRef.current[dataIndex]);
+        }
+
+        // Marca que los datos han cambiado
+        setDataChanged(true);
+
+        setUpdatedData(prevData => ({
+            ...prevData,
+            [key]: newValue,
+        }));
+    }
+
+
+    useEffect(() => {
+        const obtenerNoticias = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/getCars');
+                setNewData(response.data.cars);
+                newDataRef.current = response.data.cars; // Guardar en la ref
+
+            } catch (error) {
+                console.error('Error al obtener las noticias', error);
+            }
+        };
+
+        obtenerNoticias();
+    }, []);
+    async function updateNewsOnServer() {
         try {
-            const response = await axios.post('http://localhost:3000/api/editDiapCar', {
-                new_id: selectedId,
-                new_title: newData[selectedId].new_title,
-                new_content: newData[selectedId].new_content,
-                new_phrase: newData[selectedId].new_phrase,
-            });
+            const response = await axios.post('http://localhost:3000/api/updateCar', updatedData);
 
+            console.log(newDataRef.current[selectedId].car_title, selectedId);
             if (response.data.success) {
-                console.log('Noticia actualizada con éxito:', response.data.customer);
+                console.log('Diapositiva actualizada con éxito:', response.data.customer);
                 setIsAlertSuccessNewOpen(true);
                 setIsAlertErrorNewOpen(false);
 
             } else {
-                console.error('Error al actualizar noticia:', response.data.message);
+                console.error('Error al actualizar diapositiva:', response.data.message);
                 setIsAlertErrorNewOpen(true);
                 setIsAlertSuccessNewOpen(false);
-            }
+            }// Puedes manejar la respuesta según tus necesidades
         } catch (error) {
+            console.error('Error al actualizar la noticia', error);
             console.error('Error en la noticia:', error);
             setIsAlertErrorNewOpen(true);
             setIsAlertSuccessNewOpen(false);
         }
-    };
-
-
-    //Función que actualiza el estado de los campos de texto
-    function handleTextFieldChange(event, key, newId) {
-
-        const newValue = event.target.value;
-
-        // Encuentra el índice del objeto en newData con el new_id correspondiente
-        const dataIndex = newData.findIndex(item => item.new_id === newId);
-
-        // Actualiza solo la propiedad específica en newData
-        setNewData(prevData => {
-            const updatedData = [...prevData];
-            updatedData[dataIndex] = {
-                ...updatedData[dataIndex],
-                [key]: newValue,
-            };
-            return updatedData;
-        });
     }
 
     return (
@@ -131,17 +151,20 @@ function AccessCarsDiaps() {
                     onChange={handleChange}
                 >
 
-                    {newData.map((option) => (
-                        <MenuItem key={option.new_id} value={option.new_id}>
-                           <Typography marginLeft={'20px'}  sx={login.textoInput} > Diapositiva #{option.new_id} </Typography> 
+                    
+
+                    {newDataRef.current && newDataRef.current.map((option) => (
+                        <MenuItem key={option.car_id} value={option.car_id}>
+                            <Typography marginLeft={'20px'} sx={login.textoInput} > Diapositiva #{option.car_id} </Typography>
                         </MenuItem>
                     ))}
+
 
                 </TextField>
 
                 <div>
                     {selectedId !== undefined ? (
-                        textFieldNews.map((item, index) => (
+                        textFieldCarsDiaps.map((item, index) => (
                             <Box sx={{ display: 'flex', alignItems: 'flex-end' }} key={index}>
                                 <item.icon sx={{ color: item.iconColor, mr: 1, my: 0.5 }} />
                                 <TextField
@@ -178,9 +201,9 @@ function AccessCarsDiaps() {
                 <Box sx={{ margin: '1rem 0 ', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-evenly' }}>
 
                     <Button size="medium" variant="contained" color="secondary"
-                        onClick={() => handleFormSubmitNews(selectedId)}
+                         onClick={() => updateNewsOnServer()}
                         sx={buttons.registerButton} >
-                        Editar Noticia
+                        Editar Diapositiva
                     </Button>
 
                 </Box>

@@ -42,21 +42,24 @@ function Home() {
   const newDataRef = useRef();
 
   useEffect(() => {
-    const obtenerNoticias = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/api/getNews');
-        setNewData(response.data.news);
-        newDataRef.current = response.data.news; // Guardar en la ref
-
-      } catch (error) {
-        console.error('Error al obtener las noticias', error);
-      }
-    };
-
-    obtenerNoticias();
+    
+    const interval = setInterval(() => {
+      obtenerNoticias();
+      setNewData(newDataRef.current);
+    }, 1000);
+    
   }, []);
 
+  const obtenerNoticias = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/getNews');
+      setNewData(response.data.news);
+      newDataRef.current = response.data.news; // Guardar en la ref
 
+    } catch (error) {
+      console.error('Error al obtener las noticias', error);
+    }
+  };
 
 
   const handleButtonClick = (href) => {

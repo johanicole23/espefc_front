@@ -82,18 +82,12 @@ function AccessNews() {
         }
     }, [selectedId, newDataRef.current]);
 
-    // Función que envía los datos de noticia editados al backend
-    const handleFormSubmitNews = async (selectedId) => {
-        //e.preventDefault();
 
+    async function updateNewsOnServer() {
         try {
-            const response = await axios.post('http://localhost:3000/api/editNew', {
-                new_id: selectedId,
-                new_title: newDataRef.current[selectedId].new_title,
-                new_content: newDataRef.current[selectedId].new_content,
-                new_phrase: newDataRef.current[selectedId].new_phrase,
-            });
+            const response = await axios.post('http://localhost:3000/api/updateNew', updatedData);
 
+            console.log(newDataRef.current[selectedId].new_title, selectedId);
             if (response.data.success) {
                 console.log('Noticia actualizada con éxito:', response.data.customer);
                 setIsAlertSuccessNewOpen(true);
@@ -103,22 +97,12 @@ function AccessNews() {
                 console.error('Error al actualizar noticia:', response.data.message);
                 setIsAlertErrorNewOpen(true);
                 setIsAlertSuccessNewOpen(false);
-            }
+            }// Puedes manejar la respuesta según tus necesidades
         } catch (error) {
+            console.error('Error al actualizar la noticia', error);
             console.error('Error en la noticia:', error);
             setIsAlertErrorNewOpen(true);
             setIsAlertSuccessNewOpen(false);
-        }
-    };
-
-
-    async function updateNewsOnServer() {
-        try {
-            const response = await axios.post('http://localhost:3000/api/updateNew', updatedData);
-
-            console.log(newDataRef.current[selectedId].new_title, selectedId); // Puedes manejar la respuesta según tus necesidades
-        } catch (error) {
-            console.error('Error al actualizar la noticia', error);
         }
     }
 

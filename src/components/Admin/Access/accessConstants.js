@@ -66,6 +66,32 @@ export const textFieldNews = [
 
 ];
 
+export const textFieldCarsDiaps = [
+
+    {
+        icon: TitleIcon,
+        iconColor: '#005f8f',
+        textLabel: "Título de la noticia",
+        key: 'car_title',
+    },
+    {
+        icon: NotesIcon,
+        iconColor: '#005f8f',
+        textLabel: "Contenido de la noticia",
+        key: 'car_content',
+    },
+    {
+        icon: FormatColorTextIcon,
+        iconColor: '#005f8f',
+        textLabel: "Contenido de la noticia",
+        key: 'car_phrase',
+    },
+
+];
+
+
+
+
 export const textFieldEducation = [
 
     {
