@@ -26,8 +26,8 @@ function AccessCars() {
 
     const [isAlertSuccessNewOpen, setIsAlertSuccessNewOpen] = useState(false);
     const [isAlertErrorNewOpen, setIsAlertErrorNewOpen] = useState(false);
-    const [isAlertSuccessPDFOpen, setIsAlertSuccessPDFOpen] = useState(false);
-    const [isAlertErrorPDFOpen, setIsAlertErrorPDFOpen] = useState(false);
+    const [isAlertSuccessAddOpen, setIsAlertSuccessAddOpen] = useState(false);
+    const [isAlertErrorAddOpen, setIsAlertErrorAddOpen] = useState(false);
     const [isModalAddCarOpen, setIsModalAddCarOpen] = useState(false);
 
     const [selectedId, setSelectedId] = useState(undefined);
@@ -39,173 +39,21 @@ function AccessCars() {
     const [selectedDataAddCar, setSelectedDataAddCar] = useState({
 
         car_videoId: '',
-        car_name: '',
-        car_year: '',
-        car_km: '',
-        car_price: '',
-        car_brand: selectedIdBrandAddCar,
-        car_pdf: '',
+        car_video_name: '',
+        car_video_year: '',
+        car_video_km: '',
+        car_video_price: '',
+        car_video_href: '',
+        car_video_brand: selectedIdBrandAddCar,
+
     });
 
 
-    const [carsData, setCarsData] = useState([
-     {   
-        car_id: '0',
-        car_videoId: 'ZwFeAVVISgY',
-        car_name: 'Mazda CX 30 ',
-        car_year: '2024',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Mazda',
-        car_href: 'https://www.mazda.com.ec/',
-    },
-    {
-        car_id: '1',
-        car_videoId: 'J8jJoGR2d88',
-        car_name: 'Chevrolet Trax',
-        car_year: '2024',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Chevrolet',
-        car_href: 'https://www.chevrolet.com.ec/',
-    },
-    {
-        car_id: '2',
-        car_videoId: '1ujmqroAqcM',
-        car_name: 'Hyundai Tucson XG ',
-        car_year: '2021',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Hyundai',
-        car_href: 'https://www.hyundai.com.ec/',
-    },
-    {
-        car_id: '3',
-        car_videoId: 'z0O-7fQJu6k',
-        car_name: 'Kia Sportage GT Line',
-        car_year: '2023',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Kia',
-        car_href: 'https://www.kia.com/ec/',
-    },
-    {
-        car_id: '4',
-        car_videoId: 'P4Pso6qlSLI',
-        car_name: 'Nissan X-Trail',
-        car_year: '2023',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Nissan',
-        car_href: 'https://www.nissan.com.ec/',
-    },
-    {
-        car_id: '5',
-        car_videoId: 'yqateYxDlkY',
-        car_name: 'Toyota Corolla Cross',
-        car_year: '2023',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Toyota',
-        car_href: 'https://www.casabaca.com/',
-    },
-    {
-        car_id: '6',
-        car_videoId: 'NQ8qVo-kD8Y',
-        car_name: 'Renault Clio V6',
-        car_year: '2022',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Renault',
-        car_href: 'https://www.renault.ec/',
-    },
-    {
-        car_id: '7',
-        car_videoId: 'ozgO45QUGuo',
-        car_name: 'Fiat Fastback',
-        car_year: '2023',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Fiat',
-        car_href: 'https://www.fiat.ec/',
-    },
-    {
-        car_id: '8',
-        car_videoId: 'xPaj80omXgc',
-        car_name: 'Jeep Renegade',
-        car_year: '2023',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Jeep',
-        car_href: 'https://www.jeep.com/ec/',
-    },
-    {
-        car_id: '9',
-        car_videoId: '0y4Wki7JL1g',
-        car_name: 'Peugeot LANDTREK',
-        car_year: '2023',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Peugeot',
-        car_href: 'https://www.peugeot.com.ec/',
-    },
-    {
-        car_id: '10',
-        car_videoId: 'hPxg4dnjJzQ',
-        car_name: 'CITROËN C3',
-        car_year: '2022',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Citroen',
-        car_href: 'https://www.citroen.com.ec/',
-    },
-    {
-        car_id: '11',
-        car_videoId: 'Eo3-KZVXW3A',
-        car_name: 'Ford Expedition Platinum',
-        car_year: '2022',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Ford',
-        car_href: 'https://www.ford.com.ec/',
-    },
-    {
-        car_id: '12',
-        car_videoId: 'xt_ejR1U9rg',
-        car_name: 'Mazda CX-5',
-        car_year: '2024',
-        car_km: '50 000',
-        car_price: '1.000.000',
-        car_brand: 'Mazda',
-        car_href: 'https://www.mazda.com.ec/',
-    },
-    {
-        car_id: '13',
-        car_videoId: 'hupdciQGrtY',
-        car_name: 'Hyundai New Accent',
-        car_year: '2023',
-        car_km: '10 000',
-        car_price: '1.000.000',
-        car_brand: 'Hyundai',
-        car_href: 'https://www.hyundai.com.ec/',
-    },
-    {
-        car_id: '14',
-        car_videoId: '3kHmQTQgA1M',
-        car_name: 'Hyundai Accent HB20S',
-        car_year: '2024',
-        car_km: '0',
-        car_price: '1.000.000',
-        car_brand: 'Hyundai',
-        car_href: 'https://www.hyundai.com.ec/',
-    },
-
-    ]);
+    const [carsData, setCarsData] = useState([]);
 
     //Función que actualiza el estado del selectId
     const handleChange = (event) => {
         const selectedValue = event.target.value;
-        setFileData({ name: '', type: '', size: 0 });
         setSelectedId(selectedValue);
         console.log('ID seleccionado:', selectedValue);
     };
@@ -216,7 +64,7 @@ function AccessCars() {
         setSelectedIdBrand(selectedValue);
         console.log('ID de marca seleccionado:', selectedValue);
 
-        const filteredCars = carsData.filter(car => car.car_brand === selectedValue);
+        const filteredCars = carsData.filter(car => car.car_video_brand.trim().toLowerCase() === selectedValue.trim().toLowerCase());
         console.log('Objetos filtrados:', filteredCars);
         setFilteredCars(filteredCars)
     };
@@ -225,15 +73,54 @@ function AccessCars() {
     const handleBrandAddCar = (event) => {
         const selectedValue = event.target.value;
         setSelectedIdBrandAddCar(selectedValue);
+        console.log('ID de marca seleccionado:', selectedValue);
         const updatedSelectedDataAddCar = { ...selectedDataAddCar };
-        updatedSelectedDataAddCar.car_brand = selectedValue;
+        updatedSelectedDataAddCar.car_video_brand = selectedValue;
         setSelectedDataAddCar(updatedSelectedDataAddCar);
 
     };
 
+    
+    useEffect(() => {
+        const getCars = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/getCarVideos');
+                setCarsData(response.data.car_videos);
+                console.log(response.data.car_videos);// Guardar en la ref
+
+            } catch (error) {
+                console.error('Error al obtener vehículos', error);
+            }
+        };
+
+        getCars();
+    }, []);
+
     //Función del modal para agregar un nuevo vehículo
-    const handleButtonAddCar = (event) => {
-        console.log('Objeto creado:', selectedDataAddCar);
+    async function handleButtonAddCar() {
+
+        try {
+            // Datos del carro para enviar al servidor
+
+            // Realizar la solicitud al servidor
+            const response = await axios.post('http://localhost:3000/api/createCarVideo', selectedDataAddCar);
+
+            // Manejar la respuesta del servidor
+            console.log('Objeto creado.', response.data, selectedDataAddCar);
+            setIsAlertErrorAddOpen(false);
+            setIsAlertSuccessAddOpen(true);
+
+        } catch (error) {
+            console.error(error);
+            setIsAlertErrorAddOpen(true);
+            setIsAlertSuccessAddOpen(false);
+
+        }
+        setTimeout(() => {
+            // Realizar acciones después de esperar 5 segundos
+            setIsAlertErrorAddOpen(false);
+            setIsAlertSuccessAddOpen(false);
+        }, 5000);
     }
 
 
@@ -241,7 +128,7 @@ function AccessCars() {
     // Actualiza el estado de selectedData cuando se selecciona un nuevo ID 
     useEffect(() => {
         if (selectedId !== undefined) {
-            const carsDataForSelectedId = filteredCars.find(item => item.car_name === selectedId);
+            const carsDataForSelectedId = filteredCars.find(item => item.car_video_name === selectedId);
             setSelectedData(carsDataForSelectedId || {});
             console.log('Objeto selectedData:', selectedData);
         }
@@ -250,13 +137,19 @@ function AccessCars() {
     // Función que envía los datos de noticia editados al backend
     const handleFormSubmitInfo = async (selectedId) => {
         //e.preventDefault();
-
+       console.log('ID seleccionado:', selectedId);
+       console.log('selectedData videoId:', selectedData.car_videoId);
         try {
-            const response = await axios.post('http://localhost:3000/api/editEducation', {
-                education_id: selectedId,
-                education_videoId: carsData[selectedId].education_videoId,
-                education_titlePdf: carsData[selectedId].education_titlePdf,
-                education_pdf: carsData[selectedId].education_pdf,
+           const response = await axios.post('http://localhost:3000/api/updateCarVideo', {
+                car_video_id: selectedData.car_video_id,
+                car_videoId: selectedData.car_videoId,
+                car_video_name: selectedData.car_video_name,
+                car_video_year: selectedData.car_video_year,
+                car_video_km: selectedData.car_video_km,
+                car_video_price: selectedData.car_video_price,
+                car_video_href: selectedData.car_video_href,
+                car_video_brand: selectedData.car_video_brand,
+               
             });
 
             if (response.data.success) {
@@ -274,42 +167,15 @@ function AccessCars() {
             setIsAlertErrorNewOpen(true);
             setIsAlertSuccessNewOpen(false);
         }
-    };
-
-    const handleFormSubmitPDF = (selectedId) => {
-        //e.preventDefault();
-        if (fileData.name !== '') {
-            setIsAlertErrorPDFOpen(false);
-            setIsAlertSuccessPDFOpen(true);
-        } else {
-            setIsAlertErrorPDFOpen(true);
-            setIsAlertSuccessPDFOpen(false);
-        }
-        /*try {
-            const response = await axios.post('http://localhost:3000/api/editEducation', {
-                education_id: selectedId,
-                education_videoId: carsData[selectedId].education_videoId,
-                education_titlePdf: carsData[selectedId].education_titlePdf,
-                education_pdf: carsData[selectedId].education_pdf,
-            });
-
-            if (response.data.success) {
-                console.log('Noticia actualizada con éxito:', response.data.customer);
-                setIsAlertSuccessNewOpen(true);
-                setIsAlertErrorNewOpen(false);
-
-            } else {
-                console.error('Error al actualizar noticia:', response.data.message);
-                setIsAlertErrorNewOpen(true);
-                setIsAlertSuccessNewOpen(false);
-            }
-        } catch (error) {
-            console.error('Error en la noticia:', error);
-            setIsAlertErrorNewOpen(true);
+        //Esperar 5 segundos
+        setTimeout(() => {
+            // Realizar acciones después de esperar 5 segundos
+            setIsAlertErrorNewOpen(false);
             setIsAlertSuccessNewOpen(false);
-        }*/
-    };
+            setSelectedId (undefined);
+        }, 5000);
 
+    };
 
 
     //Función que actualiza el estado de los campos de texto
@@ -318,7 +184,7 @@ function AccessCars() {
         const newValue = event.target.value;
 
         // Encuentra el índice del objeto en newData con el new_id correspondiente
-        const dataIndex = filteredCars.findIndex(item => item.car_name === car_name);
+        const dataIndex = filteredCars.findIndex(item => item.car_video_name === car_name);
 
         // Actualiza solo la propiedad específica en filteredCars
         setFilteredCars(prevData => {
@@ -338,6 +204,9 @@ function AccessCars() {
         const updatedSelectedDataAddCar = { ...selectedDataAddCar };
         updatedSelectedDataAddCar[key] = newValue;
         setSelectedDataAddCar(updatedSelectedDataAddCar);
+        setIsAlertErrorAddOpen(false);
+        setIsAlertSuccessAddOpen(false);
+
     }
 
     const VisuallyHiddenInput = styled('input')({
@@ -352,22 +221,6 @@ function AccessCars() {
         width: 1,
     });
 
-    const [fileData, setFileData] = useState({
-        name: '', // Agrega más propiedades según sea necesario
-    });
-    const handleFileChange = (event, index) => {
-        const file = event.target.files[0];
-
-        // Hacer algo con el archivo, como enviarlo al servidor o almacenarlo en el estado
-
-        // Ejemplo: almacenar información sobre el archivo en el estado
-        setFileData((prevData) => ({
-            ...prevData,
-            [index]: file,
-            name: file.name,
-        }));
-
-    };
 
     const handleOpenAddCar = () => {
         setIsModalAddCarOpen(true);
@@ -422,8 +275,8 @@ function AccessCars() {
                         >
 
                             {filteredCars.map((car) => (
-                                <MenuItem key={car.car_id} value={car.car_name}>
-                                    <Typography marginLeft={'20px'} sx={login.textoInput} >{car.car_name} </Typography>
+                                <MenuItem key={car.car_video_id} value={car.car_video_name}>
+                                    <Typography marginLeft={'20px'} sx={login.textoInput} >{car.car_video_name} </Typography>
                                 </MenuItem>
                             ))}
 
@@ -459,7 +312,7 @@ function AccessCars() {
                                     fullWidth
                                     disabled={item.disabled}
                                     margin="normal"
-                                    value={selectedData[item.key] || ''} // Usar los datos de selectedData
+                                    value={selectedData[item.key] !== 0 ? selectedData[item.key] || '' : '0'}  // Usar los datos de selectedData
                                     onChange={(event) => handleTextFieldChangeCar(event, item.key, selectedId)}
                                 />
 
@@ -469,7 +322,7 @@ function AccessCars() {
                         <Typography sx={home.homeTextH4Left} margin={'1rem 0'}
                         ></Typography>
                     )}
-                    
+
                 </div>
 
                 <Box sx={{ margin: '1rem 0 ', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-evenly' }}>
@@ -479,7 +332,7 @@ function AccessCars() {
                         sx={buttons.registerButton}
                         endIcon={<EditIcon />} >
                         Editar información
-                    </Button>                   
+                    </Button>
 
                 </Box>
                 <Stack sx={{ width: '100%' }} spacing={2}>
@@ -515,7 +368,7 @@ function AccessCars() {
                     )}
                 </Stack>
 
-              
+
             </Paper>
             <Modal
                 open={isModalAddCarOpen}
@@ -559,7 +412,7 @@ function AccessCars() {
 
                         </TextField>
                         {textFieldCars.map((item, index) => (
-                             (
+                            (
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }} key={index}>
                                     <item.icon sx={{ color: item.iconColor, mr: 1, my: 0.5 }} />
                                     <TextField
@@ -588,8 +441,8 @@ function AccessCars() {
                                 </Box>
                             )
                         ))}
-                      
-                        <Box margin={'2rem 0'} display={'flex'} justifyContent={'center'} alignContent={'center'}>
+
+                        <Box marginTop={'2rem'} display={'flex'} justifyContent={'center'} alignContent={'center'}>
                             <Button size="medium" variant="contained" color="secondary"
                                 onClick={handleButtonAddCar}
                                 sx={buttons.appBarButtonLogin}
@@ -597,6 +450,39 @@ function AccessCars() {
                                 Agregar vehículo
                             </Button>
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertSuccessAddOpen && (
+                                <Alert
+                                    open={isAlertSuccessAddOpen}
+                                    severity="success"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Vehículo agregado con éxito
+                                </Alert>
+                            )}
+                        </Stack>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertErrorAddOpen && (
+                                <Alert
+                                    open={isAlertErrorAddOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    No se pudo agregar el vehículo.
+                                </Alert>
+                            )}
+                        </Stack>
+
 
 
 

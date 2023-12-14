@@ -16,8 +16,10 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
 import MyAppBar from '../MyComponents/myAppBar';
+import MyMobileAppBar from '../MyComponents/myMobileAppBar';
+import MyFooterMobile from '../MyComponents/myFooterMobile';
 import MyFooter from '../MyComponents/myFooter';
-import { images, imagesCel, cardLoan, cards, imagesNews, newImages, carImages, loanCards, style } from './homeConstants';
+import { images, imagesCel, cardLoan, cards, imagesNews, newImages, newImagesMobile, carImages, loanCards, style } from './homeConstants';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -42,12 +44,12 @@ function Home() {
   const newDataRef = useRef();
 
   useEffect(() => {
-    
+
     const interval = setInterval(() => {
       obtenerNoticias();
       setNewData(newDataRef.current);
     }, 1000);
-    
+
   }, []);
 
   const obtenerNoticias = async () => {
@@ -66,25 +68,41 @@ function Home() {
     // Redirigir a la página deseada con el fragmento de URL
     window.location.href = href;
   };
+
+  const screenWidth = window.innerWidth;
   return (
     <ThemeProvider theme={theme}>
-      <div><MyAppBar title="AppBar Component" /></div>
+
+      {window.innerWidth >= 600 && <div><MyAppBar title="AppBar Component" /></div>}
+      {window.innerWidth <= 600 && <div><MyMobileAppBar /></div>}
       <Carousel
         next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
         prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
-        sx={home.homeCarruselPrincipal}
-
+        sx={{
+          ...home.homeCarruselPrincipal,
+          '@media screen and (max-width: 500px)': {
+            '& img': {
+              width: '100%', // La imagen ocupa el 100% del ancho de su contenedor
+              height: 'auto',
+              // La altura se ajusta automáticamente para mantener la proporción
+            },
+          },
+        }}
         animation="fade"
         timeout={5000} // Ajusta el valor del timeout a tu preferencia (en milisegundos)
         transitionDuration={50000} // Ajusta el valor del transitionDuration a tu preferencia (en milisegundos)
       >
         {images.map((item) => (
-          < Box sx={{ position: 'relative' }}>
+          < Box sx={{
+            position: 'relative',
+
+          }}>
             <img src={item.src} alt={item.alt} />
 
             <Box sx={{
-              position: 'absolute', top: '100px', left: '20%', '@media screen and (max-width: 600px)': {
-                position: 'absolute', top: '100px', marginLeft: '1%',
+              position: 'absolute', top: '100px', left: '20%',
+              '@media screen and (max-width: 600px)': {
+                position: 'absolute', top: '140px', left: '10%', right: '10%'
               },
             }}>
               <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>{item.titulo}</Typography>
@@ -99,27 +117,35 @@ function Home() {
           </Box>
         ))}
       </Carousel>
-      <Carousel
-        next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
-        prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
-        sx={home.homeCarruselPrincipalPetit}
-        animation="slide">
-        {imagesCel.map((item) => (
-          <div style={{ position: 'relative' }}>
-            <img src={item.src} alt={item.alt} />
-
-          </div>
-        ))}
-      </Carousel>
 
 
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ padding: '1rem 0' }}>
+
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center"
+        sx={{
+          padding: '1rem 0',
+          '@media screen and (max-width: 600px)': {
+            padding: '0 10%',
+            marginTop: '2rem',
+          },
+        }}>
         <Typography variant="body2" sx={home.homeTextH4}>Soluciones desde donde tú quieras</Typography>
         <Typography variant="body2" sx={home.homeTextH1}>Todo lo que necesitas sin salir de casa.</Typography>
       </Box>
 
 
-      <Box display="flex" justifyContent="space-evenly" alignItems="center" sx={{ margin: '0 15%' }} >
+      <Box display="flex"
+        sx={{
+          margin: '0 15%',
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          '@media screen and (max-width: 600px)': {
+
+            flexDirection: "column",
+            justifyContent: "center",
+          },
+        }}
+
+      >
         {cardLoan.map((item) => (
           <Card sx={home.homeFormatCardLoan}>
             <CardActionArea>
@@ -133,7 +159,14 @@ function Home() {
               </CardContent>
             </CardActionArea>
             <CardActions >
-              <Box marginLeft="90px" >
+              <Box
+                sx={{
+                  marginLeft: "90px",
+                  '@media screen and (max-width: 600px)': {
+                    marginLeft: "60px",
+                  },
+                }}
+              >
                 <Button size="small" variant="outlined" color="secondary" sx={buttons.appBarButtonText} href="/prestamos">
                   Más Información
                 </Button>
@@ -153,7 +186,16 @@ function Home() {
       <Carousel
         next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
         prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
-        sx={home.homeCarruselNews}
+        sx={{
+          ...home.homeCarruselNews,
+          '@media screen and (max-width: 500px)': {
+            '& img': {
+              width: '100%', // La imagen ocupa el 100% del ancho de su contenedor
+              height: 'auto',
+              // La altura se ajusta automáticamente para mantener la proporción
+            },
+          },
+        }}
         animation="fade"
         timeout={5000} // Ajusta el valor del timeout a tu preferencia (en milisegundos)
         transitionDuration={50000} // Ajusta el valor del transitionDuration a tu preferencia (en milisegundos)
@@ -213,17 +255,84 @@ function Home() {
 
       </Carousel>
 
+      {screenWidth < 600 && (
+        <Carousel
+          next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
+          prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
+          sx={{
+            ...home.homeCarruselPrincipal,
+            '@media screen and (max-width: 500px)': {
+              '& img': {
+                width: '100%', // La imagen ocupa el 100% del ancho de su contenedor
+                height: 'auto',
+                // La altura se ajusta automáticamente para mantener la proporción
+              },
+            },
+          }}
+          animation="fade"
+          timeout={5000} // Ajusta el valor del timeout a tu preferencia (en milisegundos)
+          transitionDuration={50000} // Ajusta el valor del transitionDuration a tu preferencia (en milisegundos)
+        >
+          {newImagesMobile.map((item, index) => {
+            const newDataItem = newDataRef.current && newDataRef.current[index];
+            return (
+              < Box sx={{
+                position: 'relative',
+
+              }}>
+                <img sx={{
+                  width: '80%',
+                }} src={item.src} alt={item.alt} />
+
+                <Box
+                  sx={{
+                    position: 'absolute', top: '100px', left: '20%',
+                    '@media screen and (max-width: 600px)': {
+                      position: 'absolute', top: '10px', left: '15%', right: '10%'
+                    },
+                  }}>
+                  <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>
+                    {newDataItem ? newDataItem.new_title : ''}
+                  </Typography>
+                  <Box alignItems='center' justifyContent={'center'} sx={{ mt: '5%' }}>
+                    <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>
+                      {newDataItem ? newDataItem.new_content : ''}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ mt: '5%' }}>
+                    <Button
+                      href={item.href}
+                      onClick={() => handleButtonClick(item.href)}
+                      variant="contained"
+                      color="secondary"
+                      sx={buttons.appBarButtonText}
+                    >
+                      {newDataItem ? newDataItem.new_phrase : ''}
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
+            );
+          })}
+        </Carousel>
+      )}
 
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ marginTop: '5rem ' }}>
         <Typography variant="body2" sx={home.homeTextH1}>Conoce los convenios disponibles con diferentes marcas las novedades y descuentos disponibles.</Typography>
       </Box>
 
-      <Box sx={{ justifyContent: 'space-between', alignItems: 'center', padding: 1 }}>
+      <Box sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
 
         <Carousel
           next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
           prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)} slidesToShow={2} slidesToScroll={1}
-          sx={{ ...home.homeCarruselNews, margin: '0 25%' }}>
+          sx={{
+            ...home.homeCarruselCarsDiaps,
+            margin: '0 25%',
+            '@media screen and (max-width: 600px)': {
+              margin: '0',
+            },
+          }}>
 
           {
             cards.map((item) =>
@@ -242,7 +351,13 @@ function Home() {
         </Carousel>
 
       </Box>
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ margin: '1rem 0 2rem 0' }}>
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center"
+        sx={{
+          marginBottom: '2rem',
+          '@media screen and (max-width: 600px)': {
+
+          },
+        }}>
         <Typography variant="body2" sx={home.homeTextH4}>Funcionalidades disponibles</Typography>
         <Typography variant="body2" sx={home.homeTextH1}>Prueba las funcionalidades a las que tienes acceso</Typography>
       </Box>
@@ -274,8 +389,9 @@ function Home() {
         </List>
 
       </Box>
-
-      <div><MyFooter title="Pie de página" /></div>
+      {window.innerWidth >= 600 && <div><MyFooter title="Pie de página" /></div>}
+      {window.innerWidth <= 600 && <div><MyFooterMobile/></div>}
+   
 
     </ThemeProvider >
   );

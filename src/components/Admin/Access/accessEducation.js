@@ -29,50 +29,24 @@ function AccessEducation() {
 
     const [selectedId, setSelectedId] = useState(undefined);
     const [selectedData, setSelectedData] = useState({}); // Nuevo estado para almacenar los datos seleccionados
+    const [educationData, setEducationData] = useState([]);
 
-
-
-
-    const [educationData, setEducationData] = useState([
-        {
-            education_id: '1',
-            education_videoId: '9sCVcWD1Svs',
-
-        },
-        {
-            education_id: '2',
-            education_videoId: 'HMC0Dz9mnbI',
-        },
-        {
-            education_id: '3',
-            education_videoId: '9sCVcWD1Svs',
-
-        },
-        {
-            education_id: '4',
-            education_videoId: 'HMC0Dz9mnbI',
-        },
-        {
-            education_id: '5',
-            education_videoId: '9sCVcWD1Svs',
-
-        },
-        {
-            education_id: '6',
-            education_videoId: 'HMC0Dz9mnbI',
-        },
-        {
-            education_id: '7',
-            education_videoId: '9sCVcWD1Svs',
-
-        },
-        {
-            education_id: '8',
-            education_videoId: 'HMC0Dz9mnbI',
-        },
-
-
-    ]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/getEducations');
+                if (response.data.success) {
+                    setEducationData(response.data.educations);
+                    console.log('Datos traidos con éxito:', response.data.educations);
+                } else {
+                    console.error('Error trayendo los datos:', response.data.message);
+                }
+            } catch (error) {
+                console.error('Error trayendo los datos:', error);
+            }
+        };
+        fetchData();
+    },[]);
 
     //Función que actualiza el estado del selectId
     const handleChange = (event) => {
@@ -94,17 +68,15 @@ function AccessEducation() {
     // Función que envía los datos de noticia editados al backend
     const handleFormSubmitInfo = async (selectedId) => {
         //e.preventDefault();
-
+        console.log(educationData[selectedId].education_videoId);
         try {
-            const response = await axios.post('http://localhost:3000/api/editEducation', {
+            const response = await axios.post('http://localhost:3000/api/updateEducation', {
                 education_id: selectedId,
-                education_videoId: educationData[selectedId].education_videoId,
-                education_titlePdf: educationData[selectedId].education_titlePdf,
-                education_pdf: educationData[selectedId].education_pdf,
+                education_videoId: selectedData.education_videoId
             });
 
             if (response.data.success) {
-                console.log('Noticia actualizada con éxito:', response.data.customer);
+                console.log('Noticia actualizada con éxito:', response.data.message);
                 setIsAlertSuccessNewOpen(true);
                 setIsAlertErrorNewOpen(false);
 
@@ -118,40 +90,13 @@ function AccessEducation() {
             setIsAlertErrorNewOpen(true);
             setIsAlertSuccessNewOpen(false);
         }
-    };
-
-    const handleFormSubmitPDF = (selectedId) => {
-        //e.preventDefault();
-        if (fileData.name !== '') {
-            setIsAlertErrorPDFOpen(false);
-            setIsAlertSuccessPDFOpen(true);
-        } else {
-            setIsAlertErrorPDFOpen(true);
-            setIsAlertSuccessPDFOpen(false);
-        }
-        /*try {
-            const response = await axios.post('http://localhost:3000/api/editEducation', {
-                education_id: selectedId,
-                education_videoId: educationData[selectedId].education_videoId,
-                education_titlePdf: educationData[selectedId].education_titlePdf,
-                education_pdf: educationData[selectedId].education_pdf,
-            });
-
-            if (response.data.success) {
-                console.log('Noticia actualizada con éxito:', response.data.customer);
-                setIsAlertSuccessNewOpen(true);
-                setIsAlertErrorNewOpen(false);
-
-            } else {
-                console.error('Error al actualizar noticia:', response.data.message);
-                setIsAlertErrorNewOpen(true);
-                setIsAlertSuccessNewOpen(false);
-            }
-        } catch (error) {
-            console.error('Error en la noticia:', error);
-            setIsAlertErrorNewOpen(true);
+        //Esperar 5 segundos
+        setTimeout(() => {
+            // Realizar acciones después de esperar 5 segundos
+            setIsAlertErrorNewOpen(false);
             setIsAlertSuccessNewOpen(false);
-        }*/
+            setSelectedId (undefined);
+        }, 5000);
     };
 
 
@@ -171,6 +116,7 @@ function AccessEducation() {
                 ...updatedData[dataIndex],
                 [key]: newValue,
             };
+            console.log('Datos actualizados:', updatedData + ' ' + key + ' ' + newValue);
             return updatedData;
         });
     }

@@ -9,6 +9,7 @@ import LoanSimulator from './loanSimulator';
 import LoanHistory from './loanHistory';
 import AppBarDrawer from '../AppBarDrawer';
 import home from '../../../styles/pages/home';
+import { useEffect } from 'react';
 
 import {
   theme,
@@ -18,7 +19,12 @@ import {
 
 function SimulatorLoan() {
 
-
+  useEffect(() => {
+    const userAuth = JSON.parse(window.localStorage.getItem('user'));
+    if (!userAuth || userAuth.user_role !== 'usuario') {
+      window.location.href = '/prohibido';
+    }
+  }, []);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -26,14 +32,14 @@ function SimulatorLoan() {
 
   return (
     <ThemeProvider theme={theme} >
-       <AppBarDrawer />
+      <AppBarDrawer />
       <Fade in={checked} {...(checked ? { timeout: 2000 } : {})}>
         <Box>
           <Box display="flex" flexDirection="column"
             sx={{
               position: 'relative',
               maxWidth: '100%',
-            
+
             }} >
             <Typography variant="body2" sx={home.homeTextH4}>Todos los préstamos que hayas realizado se encuentran aquí </Typography>
 

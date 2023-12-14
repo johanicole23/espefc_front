@@ -17,6 +17,7 @@ import { cardLoan, cardLoanSimulator, cardLoanPassword } from './accountConstant
 import CardMedia from '@mui/material/CardMedia';
 import fondo from '../../assets/admin/fondoAdmin.png';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 
 const theme = createTheme({
@@ -36,6 +37,24 @@ const theme = createTheme({
 });
 
 function App() {
+
+    const [customerData, setCustomerData] = useState([]);
+
+    useEffect(() => {
+        const userAuth = JSON.parse(window.localStorage.getItem('user'));
+        if(!userAuth || userAuth.user_role !== 'admin'){
+            window.location.href = '/prohibido';
+        }
+    },[]); 
+    useEffect(() => {
+        const newCustomerData = window.localStorage.getItem('customer');
+        console.log(newCustomerData);
+        if (newCustomerData) {
+            setCustomerData(JSON.parse(newCustomerData));
+            console.log(newCustomerData);
+        }
+        
+    }, []);
     return (
         <div>
             <AppBarDrawer />

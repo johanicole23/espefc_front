@@ -5,8 +5,11 @@ import carruselP4 from '../../assets/CarruselPrincipal/CarruselP4.jpg';
 import carruselP5 from '../../assets/CarruselPrincipal/Carrusel5.jpg';
 import carruselP6 from '../../assets/CarruselPrincipal/Carrusel5.jpg';
 import new1 from '../../assets/CarruselNews/Noticia1.png';
+import new1Mobile from '../../assets/CarruselNews/Noticia1Mobile.png';
 import new2 from '../../assets/CarruselNews/Noticia2.png';
+import new2Mobile from '../../assets/CarruselNews/Noticia2Mobile.png';
 import new3 from '../../assets/CarruselNews/Noticia3.png';
+import new3Mobile from '../../assets/CarruselNews/Noticia3Mobile.png';
 import mazda from '../../assets/marcas/mazda.png';
 import kia from '../../assets/marcas/kia.png';
 import lg from '../../assets/marcas/lg.png';
@@ -133,6 +136,29 @@ export const newImages = [
       },
  
   ];
+
+  export const newImagesMobile = [
+    {
+      key: '1',
+      src: new1Mobile,
+      alt: 'Descripción de la imagen 1',
+      href: ''
+    },
+    {
+      key: '2',
+      src: new2Mobile,
+      alt: 'Descripción de la imagen 2',
+      href: ''
+    },
+    {
+        key: '3',
+        src: new3Mobile,
+        alt: 'Descripción de la imagen 2',
+        href: ''
+      },
+ 
+  ];
+
 
 
 export const carImages = [

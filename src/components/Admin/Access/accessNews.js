@@ -104,6 +104,14 @@ function AccessNews() {
             setIsAlertErrorNewOpen(true);
             setIsAlertSuccessNewOpen(false);
         }
+
+        //Esperar 5 segundos
+        setTimeout(() => {
+            // Realizar acciones después de esperar 5 segundos
+            setIsAlertErrorNewOpen(false);
+            setIsAlertSuccessNewOpen(false);
+            setSelectedId (undefined);
+        }, 5000);
     }
 
 

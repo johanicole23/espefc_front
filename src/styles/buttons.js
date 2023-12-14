@@ -7,6 +7,13 @@ const buttons = {
         fontSize: "16px",
     },
 
+    appBarMobileText: {
+        fontFamily: "Cairo",
+        textTransform: 'none',
+        fontSize: "16px",
+        color:  myTheme.palette.common.customPrimary,
+    },
+
     carsFileTechButton: {
         fontFamily: "Cairo",
         textTransform: 'none',

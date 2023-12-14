@@ -66,7 +66,7 @@ function AccessCarsDiaps() {
         }
     }, [selectedId, newDataRef.current]);
 
-  
+
 
 
     // Función que actualiza el estado de los campos de texto
@@ -94,6 +94,8 @@ function AccessCarsDiaps() {
             ...prevData,
             [key]: newValue,
         }));
+
+
     }
 
 
@@ -115,7 +117,7 @@ function AccessCarsDiaps() {
         try {
             const response = await axios.post('http://localhost:3000/api/updateCar', updatedData);
 
-            console.log(newDataRef.current[selectedId].car_title, selectedId);
+
             if (response.data.success) {
                 console.log('Diapositiva actualizada con éxito:', response.data.customer);
                 setIsAlertSuccessNewOpen(true);
@@ -132,8 +134,14 @@ function AccessCarsDiaps() {
             setIsAlertErrorNewOpen(true);
             setIsAlertSuccessNewOpen(false);
         }
+        //Esperar 5 segundos
+        setTimeout(() => {
+            // Realizar acciones después de esperar 5 segundos
+            setIsAlertErrorNewOpen(false);
+            setIsAlertSuccessNewOpen(false);
+            setSelectedId (undefined);
+        }, 5000);
     }
-
     return (
         <ThemeProvider theme={theme} >
 
@@ -151,7 +159,7 @@ function AccessCarsDiaps() {
                     onChange={handleChange}
                 >
 
-                    
+
 
                     {newDataRef.current && newDataRef.current.map((option) => (
                         <MenuItem key={option.car_id} value={option.car_id}>
@@ -201,7 +209,7 @@ function AccessCarsDiaps() {
                 <Box sx={{ margin: '1rem 0 ', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-evenly' }}>
 
                     <Button size="medium" variant="contained" color="secondary"
-                         onClick={() => updateNewsOnServer()}
+                        onClick={() => updateNewsOnServer()}
                         sx={buttons.registerButton} >
                         Editar Diapositiva
                     </Button>

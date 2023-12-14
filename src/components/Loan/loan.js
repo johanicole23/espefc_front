@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -9,15 +9,17 @@ import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea, CardActions } from '@mui/material';
 import Grow from '@mui/material/Grow';
 import { Grid } from '@material-ui/core';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import YouTube from 'react-youtube';
+import axios from 'axios';
 
 import home from '../../styles/pages/home';
 import loan from '../../styles/pages/loan';
 import buttons from '../../styles/buttons';
 import MyToolBar from '../MyComponents/myToolBar';
 import MyAppBar from '../MyComponents/myAppBar';
+import MyMobileAppBar from '../MyComponents/myMobileAppBar';
+import MyFooterMobile from '../MyComponents/myFooterMobile';
 import MyFooter from '../MyComponents/myFooter';
 import Modal from '@mui/material/Modal';
 import {
@@ -40,6 +42,7 @@ function Loans() {
     const navigate = useNavigate();
     const [selectedCard, setSelectedCard] = useState(null);
     const [selectedForm, setSelectedForm] = useState(null);
+    const [educationData, setEducationData] = useState([]);
 
     const handleOpen = (item, index) => {
         setSelectedCard(index);
@@ -59,46 +62,66 @@ function Loans() {
         setIsModalEducationOpen(false);
     };
 
-    const educationData = [
-        {
-            education_id: '1',
-            education_videoId: '9sCVcWD1Svs',
-            
-        },
-        {
-            education_id: '2',
-            education_videoId: 'HMC0Dz9mnbI',           
-        },
-        {
-            education_id: '3',
-            education_videoId: '9sCVcWD1Svs',
-            
-        },
-        {
-            education_id: '4',
-            education_videoId: 'HMC0Dz9mnbI',           
-        },
-        {
-            education_id: '5',
-            education_videoId: '9sCVcWD1Svs',
-            
-        },
-        {
-            education_id: '6',
-            education_videoId: 'HMC0Dz9mnbI',           
-        },
-        {
-            education_id: '7',
-            education_videoId: '9sCVcWD1Svs',
-            
-        },
-        {
-            education_id: '8',
-            education_videoId: 'HMC0Dz9mnbI',           
-        },
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/getEducations');
+                if (response.data.success) {
+                    setEducationData(response.data.educations);
+                    console.log('Datos traidos con éxito:', response.data.educations);
+                } else {
+                    console.error('Error trayendo los datos:', response.data.message);
+                }
+            } catch (error) {
+                console.error('Error trayendo los datos:', error);
+            }
+        };
 
+        const interval = setInterval(() => {
+            fetchData();
+        }, 1000);
+    }, []);
 
-    ];
+    //const educationData = [
+    //    {
+    //        education_id: '1',
+    //        education_videoId: '9sCVcWD1Svs',
+    //        
+    //    },
+    //    {
+    //        education_id: '2',
+    //        education_videoId: 'HMC0Dz9mnbI',           
+    //    },
+    //    {
+    //        education_id: '3',
+    //        education_videoId: '9sCVcWD1Svs',
+    //        
+    //    },
+    //    {
+    //        education_id: '4',
+    //        education_videoId: 'HMC0Dz9mnbI',           
+    //    },
+    //    {
+    //        education_id: '5',
+    //        education_videoId: '9sCVcWD1Svs',
+    //        
+    //    },
+    //    {
+    //        education_id: '6',
+    //        education_videoId: 'HMC0Dz9mnbI',           
+    //    },
+    //    {
+    //        education_id: '7',
+    //        education_videoId: '9sCVcWD1Svs',
+    //        
+    //    },
+    //    {
+    //        education_id: '8',
+    //        education_videoId: 'HMC0Dz9mnbI',           
+    //    },
+    //
+    //
+    //];
 
     // Opciones comunes para todos los reproductores de YouTube
     const commonOpts = {
@@ -122,7 +145,8 @@ function Loans() {
     return (
         <ThemeProvider theme={theme} >
 
-            <div><MyAppBar title="Mi aplicación" /></div>
+            {window.innerWidth >= 600 && <div><MyAppBar title="AppBar Component" /></div>}
+            {window.innerWidth <= 600 && <div><MyMobileAppBar /></div>}
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ padding: '1rem 0', marginTop: 12.5 }}>
                 <Typography variant="body2" sx={home.homeTextH1}>Servicios Financieros</Typography>
                 <Typography variant="body2" sx={home.homeTextH3Light}>¡Potencia tus proyectos y metas con nuestras opciones financieras diseñadas para tu bienestar!</Typography>
@@ -204,7 +228,7 @@ function Loans() {
                 <Grid container spacing={2}>
                     {cardLoan.map((item, index) => (
 
-                        <Grid item xs={6}>
+                        <Grid item xs={12} sm={6}>
                             <Box margin={'2rem 0'} display="flex" justifyContent="space-around" alignItems="center" sx={{ marginLeft: item.marginLeft, marginRight: item.marginRight }} >
 
                                 <Card key={index} sx={loan.loanFormatCardLoan}>
@@ -310,7 +334,8 @@ function Loans() {
 
 
 
-            <div><MyFooter title="Pie de página" /></div>
+            {window.innerWidth >= 600 && <div><MyFooter title="Pie de página" /></div>}
+            {window.innerWidth <= 600 && <div><MyFooterMobile /></div>}
 
 
 

@@ -42,7 +42,7 @@ function Home() {
       const response = await axios.get('http://localhost:3000/api/getCars');
 
       newDataRef.current = response.data.cars;
-      console.log(newDataRef.current[0]);
+      //console.log(newDataRef.current[0]);
 
     } catch (error) {
       console.error('Error al obtener las noticias', error);
@@ -58,8 +58,8 @@ function Home() {
     <ThemeProvider theme={theme}>
       <div><MyAppBar title="AppBar Component" /></div>
       <Carousel
-        next={(next, active) => console.log(`we left ${active}, and are now at ${next}`)}
-        prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
+       // next={(next, active) => /*console.log(`we left ${active}, and are now at ${next}`)*/}
+       // prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
         sx={home.carsCarruselPrincipal}
         animation="fade"
         timeout={5000} // Ajusta el valor del timeout a tu preferencia (en milisegundos)

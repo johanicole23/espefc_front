@@ -178,7 +178,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                     handleFieldChange('modelCar', event);
                                     fieldsFilled(event);
                                 }}
-                                helperText={<Typography sx={login.textoMensajeAbajoInput} >Institución correspondiente a la cuenta</Typography>} label={<Typography sx={login.textoInput} >Modelo del vehículo</Typography>} variant="standard" fullWidth margin="normal" />
+                                helperText={<Typography sx={login.textoMensajeAbajoInput} ></Typography>} label={<Typography sx={login.textoInput} >Modelo del vehículo</Typography>} variant="standard" fullWidth margin="normal" />
                         </Box>
 
 

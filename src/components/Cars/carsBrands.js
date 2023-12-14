@@ -20,6 +20,7 @@ import {
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import CallMissedOutgoingIcon from '@mui/icons-material/CallMissedOutgoing';
+import axios from 'axios';
 
 function Home() {
 
@@ -27,6 +28,7 @@ function Home() {
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedCar, setSelectedCar] = useState(null);
 
+    const [carsData, setCarsData] = useState([]);
 
     const [carData, setCarData] = useState([
         {
@@ -182,11 +184,40 @@ function Home() {
 
     ]);
 
+    useEffect(() => {
+        const getCarsbyBrand = async () => {
+            try {
+                const response = await axios.post('http://localhost:3000/api/getCarVideoByBrand',{
+                    car_video_brand: 'Mazda',
+                   
+                });
+                setCarsData(response.data.car_videos);
+                setSelectedCar(response.data.car_videos);
+                console.log(response.data.car_videos);// Guardar en la ref
 
-    const openModal = (carBrand) => {
-        setModalOpen(true);
-        const carsByBrand = carData.filter((car) => car.car_brand === carBrand);
-        setSelectedCar(carsByBrand);
+            } catch (error) {
+                console.error('Error al obtener vehículos', error);
+            }
+        };
+
+        getCarsbyBrand();
+    }, []);
+
+
+    const openModal = async (carBrand) => {
+        try {
+            const response = await axios.post('http://localhost:3000/api/getCarVideoByBrand',{
+                car_video_brand: carBrand,
+               
+            });
+            setCarsData(response.data.car_videos);
+            setSelectedCar(response.data.car_videos);
+            console.log(response.data.car_videos);// Guardar en la ref
+            setModalOpen(true);
+
+        } catch (error) {
+            console.error('Error al obtener vehículos', error);
+        }
     };
 
     const closeModal = () => {
@@ -267,12 +298,12 @@ function Home() {
                                             </CardMedia>
                                             <CardContent >
                                                 <Box display="flex" flexDirection={'column'} >
-                                                    <Typography marginBottom='0.5rem' variant="subtitle1" sx={home.homeTextH4W700}>{car.car_name}</Typography>
+                                                    <Typography marginBottom='0.5rem' variant="subtitle1" sx={home.homeTextH4W700}>{car.car_video_name}</Typography>
                                                     <Box display="flex" flexDirection={'row'}  >
-                                                        <Chip style={{ borderColor: '#005f8f', width: '80px' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14Light }}>{car.car_year}</Typography>} />
-                                                        <Typography marginLeft={'10px'} variant="body2" sx={home.homeTextH4}> {car.car_km} Kilómetros recorridos</Typography>
+                                                        <Chip style={{ borderColor: '#005f8f', width: '80px' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14Light }}>{car.car_video_year}</Typography>} />
+                                                        <Typography marginLeft={'10px'} variant="body2" sx={home.homeTextH4}> {car.car_video_km} Kilómetros recorridos</Typography>
                                                     </Box>
-                                                    <Typography marginTop='0.5rem' sx={home.homeTextH4W600}>$ {car.car_price}  <span style={{ ...home.homeTextH14Light, fontStyle: 'italic', marginLeft: '5px' }}>Negociable</span></Typography>
+                                                    <Typography marginTop='0.5rem' sx={home.homeTextH4W600}>$ {car.car_video_price}  <span style={{ ...home.homeTextH14Light, fontStyle: 'italic', marginLeft: '5px' }}>Negociable</span></Typography>
 
                                                 </Box>
                                             </CardContent>
@@ -281,7 +312,7 @@ function Home() {
                                             <Button size="medium" variant="contained" color="secondary" 
                                             sx={buttons.registerButton} 
                                             endIcon={<CallMissedOutgoingIcon />}
-                                            href={car.car_href}>
+                                            href={car.car_video_href}>
                                                 Ir al sitio oficial
                                             </Button>
 

@@ -17,7 +17,7 @@ import { cardLoan, cardLoanSimulator, cardLoanPassword } from './accountConstant
 import CardMedia from '@mui/material/CardMedia';
 import fondo from '../../assets/account/fondoAccount.png';
 import { Link } from 'react-router-dom';
-
+import { useState, useEffect } from 'react';
 
 const theme = createTheme({
     palette: {
@@ -36,6 +36,22 @@ const theme = createTheme({
 });
 
 function App() {
+    const [customerData, setCustomerData] = useState([]);
+
+    useEffect(() => {
+        const userAuth = JSON.parse(window.localStorage.getItem('user'));
+        if(!userAuth || userAuth.user_role !== 'usuario'){
+            window.location.href = '/prohibido';
+        }
+    },[]); 
+
+    useEffect(() => {
+        const newCustomerData = window.localStorage.getItem('customer');
+        if (newCustomerData) {
+            setCustomerData(JSON.parse(newCustomerData));
+        }
+        
+    }, []);
     return (
         <div>
             <AppBarDrawer />
@@ -54,7 +70,7 @@ function App() {
                         <Grid item xs={12} sm={5} md={2}></Grid>
                         <Grid item xs={12} sm={5} md={10}>
                             <Typography id="modal-modal-title" sx={home.homeTextH2LeftLight}>
-                                Bienvenida, Johanna Molina
+                                Bienvenid@, {customerData.customer_name}
                             </Typography>
                             <Typography id="modal-modal-description" sx={home.homeTextH4Left}>
                                 Descubre todas las facilidades a las que ahora eres capaz de acceder.

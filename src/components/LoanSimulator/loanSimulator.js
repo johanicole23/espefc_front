@@ -214,8 +214,10 @@ function LoanSimulator() {
     const handleOpen = () => {
         const tablaAmortizacion = calcularTabla();
         tablaAmortizacion.forEach(fila => {
+            console.log(fila);
         });
         setTable(tablaAmortizacion);
+   
         setOpen(true)
     };
 
@@ -362,14 +364,11 @@ function LoanSimulator() {
                                     <thead>
                                         <tr>
                                             <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Dividendo</Typography><hr /></th>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }}>Capital</Typography><hr /></th>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Interés</Typography><hr /></th>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '110px' }}>Desgravamen</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }}>Saldo</Typography><hr /></th>
                                             <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }} bgcolor={'#e2f0af'}>Cuota</Typography><hr /></th>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Tasa</Typography><hr /></th>
-
-
-
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Interés</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '110px' }}>Amortización</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '110px' }}>Desgravamen</Typography><hr /></th>
                                             <th><hr /><Typography id="modal-modal-title" sx={home.homeTextH3} >
                                                 Total</Typography><hr /></th>
                                         </tr>
@@ -378,13 +377,11 @@ function LoanSimulator() {
                                         {table.map((fila) => (
                                             <tr >
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.mes}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.pagoCapital}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.pagoInteres}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.desgravamen}</Typography></td>
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.saldoCuenta}</Typography></td>
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4} bgcolor={'#e2f0af'}> ${fila.pagoMensual}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.tasa}%</Typography></td>
-
-
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.pagoInteres}</Typography></td>
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.amortizacion}</Typography></td>
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.desgravamen}</Typography></td>
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.total}</Typography></td>
 
 

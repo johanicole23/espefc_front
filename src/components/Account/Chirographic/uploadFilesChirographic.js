@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBarDrawer from '../AppBarDrawer';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
@@ -78,6 +78,7 @@ import buttons from '../../../styles/buttons';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Modal from '@mui/material/Modal';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
+import axios from 'axios';
 
 const theme = createTheme({
     palette: {
@@ -95,6 +96,15 @@ const theme = createTheme({
 
 
 function App() {
+    const [isAlertSuccessNewOpen, setIsAlertSuccessNewOpen] = useState(false);
+    const [isAlertErrorNewOpen, setIsAlertErrorNewOpen] = useState(false);
+    const [isAlertErrorEmptyNewOpen, setIsAlertErrorEmptyNewOpen] = useState(false);
+    useEffect(() => {
+        const userAuth = JSON.parse(window.localStorage.getItem('user'));
+        if(!userAuth || userAuth.user_role !== 'usuario'){
+            window.location.href = '/prohibido';
+        }
+    },[]); 
     const uploadFilesData = [
         {
             index: 0,
@@ -102,30 +112,30 @@ function App() {
             image: formularioImagen,
             download: true,
             url: '/files/solicitud_credito_quirografario.pdf',
-            namePDF:"solicitud_credito_quirografario.pdf"
-           
+            namePDF: "solicitud_credito_quirografario.pdf"
+
         },
         {
             index: 1,
             title: "Cargar copia de cédula",
             image: cedula,
             download: false,
-            
-            
+
+
         },
         {
             index: 2,
             title: "Cargar último confidencial",
             image: confidencial,
             download: false,
-           
+
         },
         {
             index: 3,
             title: "Cargar libreta de la cuenta bancaria",
             image: libreta,
             download: false,
-          
+
         },
         {
             index: 4,
@@ -133,7 +143,7 @@ function App() {
             image: pagare,
             download: true,
             url: '/files/pagare.pdf',
-            namePDF:"Pagare.pdf",
+            namePDF: "Pagare.pdf",
         },
         {
             index: 5,
@@ -165,15 +175,48 @@ function App() {
     };
 
 
-    const handleFileUpload = () => {
+    const handleFileUpload = async () => {
         if (selectedFiles.every(file => file)) {
-            // Verifica que todos los archivos en el array no sean nulos
-            // Realiza alguna acción con los archivos, como enviarlos al servidor
-            // En este ejemplo, simplemente mostramos el nombre de los archivos seleccionados
-            const selectedFileNames = selectedFiles.map(file => file.name);
-            alert(`Archivos seleccionados: ${selectedFileNames.join(', ')}`);
+
+            const formData = new FormData();
+
+            // Agregar cada archivo al formData
+            for (let i = 0; i < selectedFiles.length; i++) {
+                formData.append(`pdfs`, selectedFiles[i]);
+            }
+
+            try {
+                // Enviar formData al servidor
+                await axios.post('http://localhost:3000/api/uploadPdf', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                setIsAlertSuccessNewOpen(true);
+                setIsAlertErrorNewOpen(false);
+                setIsAlertErrorEmptyNewOpen(false);
+            } catch (error) {
+                setIsAlertSuccessNewOpen(false);
+                setIsAlertErrorNewOpen(true);
+                setIsAlertErrorEmptyNewOpen(false);
+            }
+
+            setTimeout(() => {
+                // Realizar acciones después de esperar 5 segundos
+                setIsAlertErrorNewOpen(false);
+                setIsAlertSuccessNewOpen(false);
+                setIsAlertErrorEmptyNewOpen(false);
+            }, 5000);
+
         } else {
-            alert('Por favor, selecciona todos los archivos antes de subirlos.');
+            setIsAlertErrorEmptyNewOpen(true);
+            setIsAlertErrorNewOpen(false);
+            setIsAlertSuccessNewOpen(false);
+            setTimeout(() => {
+                setIsAlertErrorNewOpen(false);
+                setIsAlertSuccessNewOpen(false);
+                setIsAlertErrorEmptyNewOpen(false);
+            }, 5000);
         }
     };
 
@@ -239,7 +282,7 @@ function App() {
                             <Box display="flex" flexDirection={"row"} justifyContent={"space-between"}>
                                 {item.download && (
                                     <Button
-                                    onClick={() => handleClickDownloadDocuments(item.url, item.namePDF)}
+                                        onClick={() => handleClickDownloadDocuments(item.url, item.namePDF)}
                                         size="small" variant="outlined" color="secondary" sx={buttons.appBarButtonText} component="label" startIcon={<DownloadForOfflineIcon />}>
                                         Descargar
                                     </Button>
@@ -301,7 +344,60 @@ function App() {
                         </Modal >
                     </div>
                 ))}
+              
+                    <Stack sx={{  width: '46%',  margin:'0 27% 0 27%'  }} >
+                        {isAlertSuccessNewOpen && (
+                            <Alert
+                                open={isAlertSuccessNewOpen}
+                                severity="success"
+                                sx={{
+                                    fontFamily: 'Cairo',
+                                    textAlign: 'Right',
+                                    fontSize: "14px",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                Archivos enviados correctamente, espera la respuesta de nuestros trabajadores.
+                            </Alert>
+                        )}
+                    </Stack>
+                    <Stack sx={{  width: '30%',  margin:'0 35% 0 35%'  }} >
+                        {isAlertErrorNewOpen && (
+                            <Alert
+                                open={isAlertErrorNewOpen}
+                                severity="error"
+                                sx={{
+                                    fontFamily: 'Cairo',
+                                    textAlign: 'Right',
+                                    fontSize: "14px",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                Los archivos no pudieron ser enviados, intenta de nuevo.
+                            </Alert>
+                        )}
+                    </Stack>
+                    <Stack sx={{ width: '30%',  margin:'0 35% 0 35%' }} >
+                        {isAlertErrorEmptyNewOpen && (
+                            <Alert
+                                open={isAlertErrorNewOpen}
+                                severity="error"
+                                sx={{
+                                    fontFamily: 'Cairo',
+                                    textAlign: 'Right',
+                                    fontSize: "14px",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                Sube todos los archivos antes de subirlos.
+                            </Alert>
+                        )}
+                    </Stack>
+                  
+
+                
                 <Box display="flex" flexDirection={"row"} alignItems="center" justifyContent={"center"} margin={'0 0 50px 0 '}>
+                   
                     <Button
                         variant="contained"
                         color="secondary"
@@ -312,7 +408,9 @@ function App() {
                         Completar el proceso
 
                     </Button>
+
                 </Box>
+
 
             </ThemeProvider>
         </div >

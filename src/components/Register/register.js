@@ -70,11 +70,11 @@ function Register() {
         customer_direction: "",
         security_questions: [
             {
-                question_id: 1,
+                question_id: 0,
                 user_answer: ""
             },
             {
-                question_id: 2,
+                question_id: 1,
                 user_answer: ""
             }
         ]
@@ -141,7 +141,7 @@ function Register() {
         // Realiza una solicitud GET al servidor para obtener las preguntas
         axios.get('http://localhost:3000/api/questions')
             .then((response) => {
-                setQuestions(response.data);
+                setQuestions(response.data.questions);
             })
             .catch((error) => {
                 console.error('Error al obtener las preguntas', error);
@@ -242,7 +242,7 @@ function Register() {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/api/createUser', formData);
-
+            console.log(formData);
             if (response.status === 201) {
                 const data = response.data;
                 console.log('Usuario creado con éxito');
@@ -255,7 +255,7 @@ function Register() {
         } catch (error) {
             // Handle network or other errors
             console.error(error);
-            console.error('Error usuario ya existe');
+            console.error('Error en el servidor');
             setIsAlertUserOpen(true);
             setIsAlertOpen(false);
         }

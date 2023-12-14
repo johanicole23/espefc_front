@@ -19,7 +19,7 @@ import fondo from '../../assets/account/fondoAccount.png';
 import { Link } from 'react-router-dom';
 import { flexbox } from '@mui/system';
 import variacion from '../../assets/account/variation.png';
-
+import { useEffect } from 'react';
 
 const theme = createTheme({
     palette: {
@@ -46,7 +46,12 @@ function handleClickDownloadDocuments(url, name) {
     document.body.removeChild(link);
 }
 function App() {
-
+    useEffect(() => {
+        const userAuth = JSON.parse(window.localStorage.getItem('user'));
+        if(!userAuth || userAuth.user_role !== 'usuario'){
+            window.location.href = '/prohibido';
+        }
+    },[]); 
     return (
         <div>
             <AppBarDrawer />

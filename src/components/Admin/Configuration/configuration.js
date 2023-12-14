@@ -13,6 +13,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import home from '../../../styles/pages/home';
 import buttons from '../../../styles/buttons';
 import axios from 'axios';
+import { useEffect } from 'react';
 const theme = createTheme({
     palette: {
         primary: {
@@ -30,10 +31,17 @@ const theme = createTheme({
 });
 
 function App() {
-   
+
     const [isAlertSuccessOpen, setIsAlertSuccessOpen] = useState(false);
     const [isAlertErrorOpen, setIsAlertErrorOpen] = useState(false);
 
+    useEffect(() => {
+        const userAuth = JSON.parse(window.localStorage.getItem('user'));
+        if(!userAuth || userAuth.user_role !== 'admin'){
+            window.location.href = '/prohibido';
+        }
+    },[]);
+    
     const [iconNameColor, setIconNameColor] = useState('action.active');
     const [iconIdColor, setIconIdColor] = useState('action.active');
     const [iconNumberColor, setIconNumberColor] = useState('action.active');
@@ -57,7 +65,7 @@ function App() {
             textLabel: "Nombres y Apellidos",
             textError: " * Solo letras",
             inputRef: nameInputRef,
-           
+
             isDisabled: true,
             key: 'customer_name',
 
@@ -68,7 +76,7 @@ function App() {
             textLabel: "Cédula de ciudadanía",
             textError: " *Cédula Inválida",
             inputRef: idInputRef,
-            
+
             isDisabled: true,
             key: 'user_ci',
 
@@ -79,7 +87,7 @@ function App() {
             textLabel: "Correo Electrónico de la ESPE",
             textError: " *Correo Inválido",
             inputRef: emailInputRef,
-            
+
             isDisabled: true,
             key: 'customer_espe_email',
 
@@ -90,7 +98,7 @@ function App() {
             textLabel: "Correo Electrónico Personal",
             textError: " *Correo Inválido",
             inputRef: emailPersonalInputRef,
-           
+
             isDisabled: false,
             key: 'customer_personal_email',
 
@@ -102,7 +110,7 @@ function App() {
             textLabel: "Teléfono Celular",
             textError: " * Solo números",
             inputRef: numberInputRef,
-            
+
             isDisabled: false,
             key: 'customer_phone',
 
@@ -114,7 +122,7 @@ function App() {
             textLabel: "Dirección de domicilio",
             textError: "",
             inputRef: dirInputRef,
-            
+
             isDisabled: false,
             key: 'customer_direction',
 
@@ -124,13 +132,37 @@ function App() {
     ];
 
     const [formData, setFormData] = useState({
-        customer_name: 'Johanna',
-        user_ci: '1751040716',
-        customer_espe_email: 'jnmolina@espe.edu.ec',
-        customer_personal_email: 'johaniky12@hotmail.com',
-        customer_phone: '0984132920',
-        customer_direction: 'Agustín Leon y Antonio Román N511-11',
+        customer_name: '',
+        user_ci: '',
+        customer_espe_email: '',
+        customer_personal_email: '',
+        customer_phone: '',
+        customer_direction: '',
     })
+
+    const [customerData, setCustomerData] = useState([]);
+    const [userData, setUserData] = useState([]);
+    const [currentUser, setCurrentUser] = useState({});
+
+    useEffect(() => {
+        const newCustomerData = window.localStorage.getItem('customer');
+        const newUserData = window.localStorage.getItem('user');
+        console.log(newCustomerData);
+        if (newCustomerData && newUserData) {
+            setCustomerData(JSON.parse(newCustomerData));
+            setUserData(JSON.parse(newUserData));
+            setCurrentUser({
+                customer_name: JSON.parse(newCustomerData).customer_name,
+                user_ci: JSON.parse(newUserData).user_ci,
+                customer_espe_email: JSON.parse(newCustomerData).customer_espe_email,
+                customer_personal_email: JSON.parse(newCustomerData).customer_personal_email,
+                customer_phone: JSON.parse(newCustomerData).customer_phone,
+                customer_direction: JSON.parse(newCustomerData).customer_direction,
+            });
+            console.log(newCustomerData, newUserData);
+        }
+
+    }, []);
 
 
     const handleFormSubmit = async (e) => {
@@ -138,15 +170,16 @@ function App() {
 
         try {
             const response = await axios.post('http://localhost:3000/api/editUser', {
-                user_ci: formData.user_ci,
-                customer_personal_email: formData.customer_personal_email,
-                customer_phone: formData.customer_phone,
-                customer_direction: formData.customer_direction,
+                user_ci: currentUser.user_ci,
+                customer_personal_email: currentUser.customer_personal_email,
+                customer_phone: currentUser.customer_phone,
+                customer_direction: currentUser.customer_direction,
             });
 
             if (response.data.success) {
                 console.log('Usuario actualizado con éxito:', response.data.customer);
                 //setIsModalSucessOpen(true);
+                window.localStorage.setItem('customer', JSON.stringify(currentUser));
                 setIsAlertSuccessOpen(true);
                 setIsAlertErrorOpen(false);
 
@@ -167,9 +200,8 @@ function App() {
 
     const handleInputChange = (event, key) => {
         const newValue = event.target.value;
-
         // Crea una copia del objeto formData y actualiza el valor del campo específico
-        setFormData((prevData) => ({
+        setCurrentUser((prevData) => ({
             ...prevData,
             [key]: newValue,
         }));
@@ -186,7 +218,7 @@ function App() {
                         </Typography>
                         <Typography
                             sx={home.homeTextH4Left}
-                        >Si deseas editar algún campo correspondiente a tu infromación personal, hazlo aquí.</Typography>
+                        >Si deseas editar algún campo correspondiente a tu información personal, hazlo aquí.</Typography>
                     </Paper>
 
 
@@ -210,11 +242,10 @@ function App() {
                                         >
                                             {item.textLabel}{item.iconColor === 'error.main' ? item.textError : ''} </Typography>}
 
-                                    inputRef={item.inputRef}
                                     variant="standard"
                                     fullWidth
                                     margin="normal"
-                                    value={formData[item.key]} // Ajusta la clave según tu estructura de datos
+                                    value={currentUser[item.key] || ''}// Ajusta la clave según tu estructura de datos
                                     onChange={(event) => handleInputChange(event, item.key)}
                                     disabled={item.isDisabled}
                                 />
@@ -225,7 +256,7 @@ function App() {
 
                             <Button size="medium" variant="contained" color="secondary" onClick={handleFormSubmit} sx={buttons.registerButton} >
                                 Editar
-                            </Button>                         
+                            </Button>
 
                         </Box>
                         <Stack sx={{ width: '100%' }} spacing={2}>

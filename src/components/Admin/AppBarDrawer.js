@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar from '@mui/material/AppBar';
@@ -26,6 +26,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import GroupIcon from '@mui/icons-material/Group';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { styled, useTheme } from '@mui/material/styles';
 import logo from '../../assets/logoFC.png';
 import home from '../../styles/pages/home';
@@ -83,6 +84,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     height: '6rem',
    
 }));
+
+
 function AppBarDrawer() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -98,6 +101,23 @@ function AppBarDrawer() {
         background: 'none',
         boxShadow: 'none',
     };
+
+    const handleItemClick = (link, index) => {
+        if (index === 1) {
+          window.localStorage.clear();
+          // O utiliza window.location.replace(link) si quieres reemplazar la entrada del historial
+          // window.location.replace(link);
+        } window.location.href = link;
+      };
+      const [customerData, setCustomerData] = useState([]);
+    useEffect(() => {
+        const newCustomerData = window.localStorage.getItem('customer');
+        if (newCustomerData) {
+            setCustomerData(JSON.parse(newCustomerData));
+        }
+
+    }, []);
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -151,7 +171,7 @@ function AppBarDrawer() {
                         }}></AccountCircleIcon>
                     <Box sx={{ marginX: 1 }}></Box>
                     <Typography variant="body1" sx={home.homeTextH4Left} color="textPrimary">
-                        Johanna Molina
+                        {customerData.customer_name}
                     </Typography>
                 </DrawerHeader>
                 <Divider />
@@ -181,10 +201,10 @@ function AppBarDrawer() {
                 <List>
                     {[
                         { text: 'Configuración Cuenta', icon: <PermDataSettingIcon />, link: '/admin-cuenta/configuracion' },
-                        { text: 'Ayuda', icon: <HelpIcon />, link: '/simulador' },
+                        { text: 'Cerrar sesión', icon: <LogoutIcon />, link: '/login' },
                     ].map((item, index) => (
                         <ListItem key={item.text} disablePadding>
-                            <ListItemButton onClick={() => window.location.href = item.link}>
+                            <ListItemButton onClick={() => handleItemClick(item.link, index)}>
                                 <ListItemIcon sx={{ color: '#005f8f' }}>
                                     {item.icon}
                                 </ListItemIcon>

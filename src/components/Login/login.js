@@ -14,6 +14,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import PasswordIcon from '@mui/icons-material/Password';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Modal from '@mui/material/Modal';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
@@ -63,6 +64,8 @@ function Login() {
     const [iconIdColor, setIconIdColor] = useState('action.active');
     const [password, setPassword] = useState('');
     const passwordInputRef = useRef(null);
+    const [customer, setCustomer] = useState({});
+    const [user, setUser] = useState({});
 
     const idInputRef = useRef(null);
     const idRecuperationInputRef = useRef(null);
@@ -76,11 +79,11 @@ function Login() {
         user_ci: "",
         user_answers_body: [
             {
-                question_id: 1,
+                question_id: 0,
                 user_answer: ""
             },
             {
-                question_id: 2,
+                question_id: 1,
                 user_answer: ""
             }
         ]
@@ -120,7 +123,17 @@ function Login() {
             const digitArray = numberToArray(codeJSON)
             if (verificationCode.join() === digitArray.join()) {
                 console.log("Código coincide:");
-                window.location.href = '/cuenta';
+                window.localStorage.setItem('user', JSON.stringify(user));
+                window.localStorage.setItem('customer', JSON.stringify(customer));
+                if(user.user_role === 'admin'){
+                    window.location.href = '/admin-cuenta';
+                }
+                if(user.user_role === 'usuario' && user.user_state === true){
+                    window.location.href = '/cuenta';
+                }
+                if(user.user_role === 'usuario' && user.user_state === false){
+                    window.location.href = '/cuenta-en-construccion';
+                }
             }
             else {
                 console.log("Código no coincide:");
@@ -135,6 +148,7 @@ function Login() {
         }
     };
 
+    
 
     //Conexión con el backend para el inicio de sesión
     const handleLogin = async () => {
@@ -152,21 +166,16 @@ function Login() {
             else {
                 const response = await axios.post('http://localhost:3000/api/loginUser', formData);
 
-                const { success, customer, token, code, message } = response.data;
+                const { success, user, customer, code, message } = response.data;
 
                 if (response.data.success) {
                     console.log('Inicio de sesión exitoso');
-                    //console.log('Datos del cliente:', customer);
-                    console.log('Token:', token);
-                    //console.log('Código de verificación:', code);
                     setcodeJSON(code);
-                    //console.log(response.data.message);
+                    setCustomer(customer);
+                    setUser(user);
                     setIsAlertCredentialsOpen(false);
                     setIsModalCodeConfirmOpen(true);
-                    //console.log('Usuario:', formData.user_ci);
-                    // console.log('Contraseña:', formData.user_password);
                 } else {
-                    // La solicitud no fue exitosa
                     setIsAlertCredentialsOpen(true);
                     if (response.data.error === 'Contraseña inválida') {
                         console.error('Contraseña inválida:', response.data.message);
@@ -183,6 +192,10 @@ function Login() {
             console.error('Error de red:', error.message);
             setIsAlertCredentialsOpen(true);
         }
+        setTimeout(() => {
+            // Realizar acciones después de esperar 5 segundos
+            setIsAlertCredentialsOpen(false);
+        }, 5000);
 
     };
 
@@ -234,7 +247,7 @@ function Login() {
 
             const responseGet = await axios.get('http://localhost:3000/api/questions');
 
-            const data = responseGet.data;
+            const data = responseGet.data.questions;
 
             if (Array.isArray(data)) {
 

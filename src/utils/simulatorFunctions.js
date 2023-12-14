@@ -1,31 +1,109 @@
-function calcularTablaAmortizacionAleman(montoPrestamo, tasaInteres, duracionMeses, saldoCuenta) {
+
+
+
+function calcularTablaAmortizacionAleman(fechaPrestamo, montoPrestamo, tasaInteres, duracionMeses, saldoCuenta, deductibles) {
   const tasaInteresMensual = tasaInteres / 100 / 12;
   const porcentajeDesgravamen = 0.00046;
-  const pagoMensual = montoPrestamo * (tasaInteresMensual / (1 - Math.pow(1 + tasaInteresMensual, -duracionMeses)));
 
+
+  var saldoTemporal = saldoCuenta;
   let saldoPendiente = montoPrestamo;
   const tablaAmortizacion = [];
   let total = 0;
+  let desgravamenObjIndex = 0;
+
+  let fecha = new Date(fechaPrestamo);
+  fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
+  console.log("deductibles:", deductibles);
+
+  let past = { deductible_number: 0 };
+  let currentDeductibleObj = {};
+  let nextDeductibleObj = {};
+  let deductible = {};
 
   for (let mes = 1; mes <= duracionMeses; mes++) {
-    const interes = saldoPendiente * tasaInteresMensual;
-    const pagoCapital = pagoMensual - interes;
-    saldoPendiente -= pagoCapital;
-    saldoCuenta -= pagoMensual;
-    const desgravamen = saldoPendiente * porcentajeDesgravamen;
-    const pMensual = desgravamen + pagoCapital + interes;
+    
+    currentDeductibleObj = deductibles[desgravamenObjIndex];//id 1    
+    if (mes !== 1) {      
+      fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 2, 0)
+      
+    }
+
+    if (mes === 1) {           
+      while (fecha.getTime() > new Date(currentDeductibleObj.createdAt).getTime()){
+        desgravamenObjIndex++;
+        currentDeductibleObj = deductibles[desgravamenObjIndex];//id 1  
+        past=  deductibles[desgravamenObjIndex-1];//id 1  
+      }
+    }
+
+    
+
+    const interesTemporal = ((saldoTemporal * (tasaInteres / 100) * 30) / 360);
+
+    
+    console.log("////////////////////////////////////////////", mes, "///////////////////////////");
+    currentDeductibleObj = deductibles[desgravamenObjIndex];
+    console.log("el current :", currentDeductibleObj)
+
+    if (deductibles[desgravamenObjIndex + 1]) {//si
+      nextDeductibleObj = deductibles[desgravamenObjIndex + 1];// id 2
+      console.log("SI NEXT: el next :", nextDeductibleObj)
+    }
+    else {
+      nextDeductibleObj = currentDeductibleObj;
+    }
+
+
+    if (fecha.getTime() < new Date(currentDeductibleObj.createdAt).getTime()) {
+
+      deductible = past;
+      console.log(fecha.getTime(), " la fecha es menor que el createdAt  :", new Date(currentDeductibleObj.createdAt).getTime());
+    }
+    else {//no
+      console.log(fecha.getTime(), "la fecha es mayor que el createdAt  :", new Date(currentDeductibleObj.createdAt).getTime());
+      deductible = currentDeductibleObj;//id 1
+
+
+
+      if (deductibles[desgravamenObjIndex + 1]) {
+        desgravamenObjIndex++;//1
+        past = currentDeductibleObj;//past es id0
+        currentDeductibleObj = nextDeductibleObj;// current id1
+      }
+
+
+    }
+    const desgravamen = deductible.deductible_number;
+
+    console.log("desgravamen:", desgravamen);
+
+    //const desgravamen = saldoPendiente * porcentajeDesgravamen;
+    const pMensual = (((saldoCuenta) * (tasaInteresMensual) * Math.pow((1 + tasaInteresMensual), duracionMeses)) / (Math.pow((1 + tasaInteresMensual), duracionMeses) - 1));
+    const amortizacion = pMensual - interesTemporal;
+
+    if (mes !== 1) {
+      saldoTemporal = saldoTemporal.toFixed(2);
+     
+    }
     total += pMensual;
+
+
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    const fechaFormateada = fecha.toLocaleDateString('es-ES', options);
+
     const filaTabla = {
       mes,
-      saldoCuenta: saldoCuenta.toFixed(2),
+      fecha: fechaFormateada,
+      saldoCuenta: saldoTemporal,
       pagoMensual: pMensual.toFixed(2),
-      total: total.toFixed(2),
-      pagoInteres: interes.toFixed(2),
-      pagoCapital: pagoCapital.toFixed(2),
+      pagoInteres: interesTemporal.toFixed(2),
+      amortizacion: amortizacion.toFixed(2),
       desgravamen: desgravamen.toFixed(2),
-      tasa: tasaInteres.toFixed(2),
+      total: total.toFixed(2),
     };
 
+    saldoTemporal = saldoTemporal - amortizacion;
     tablaAmortizacion.push(filaTabla);
   }
 

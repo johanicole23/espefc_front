@@ -9,6 +9,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import home from '../../../styles/pages/home';
 import login from '../../../styles/pages/login';
 import buttons from '../../../styles/buttons';
+import axios from 'axios';
+import { useEffect } from 'react';
 const theme = createTheme({
     palette: {
         primary: {
@@ -27,6 +29,12 @@ const theme = createTheme({
 
 function App() {
 
+    useEffect(() => {
+        const userAuth = JSON.parse(window.localStorage.getItem('user'));
+        if(!userAuth || userAuth.user_role !== 'usuario'){
+            window.location.href = '/prohibido';
+        }
+    },[]); 
     const [password, setPassword] = useState('');
     const [passwordAgain, setPasswordAgain] = useState('');
     const [passwordNow, setPasswordNow] = useState('');
@@ -86,6 +94,20 @@ function App() {
         }
 
     ]
+    const [customerData, setCustomerData] = useState([]);
+    const [userData, setUserData] = useState([]);
+
+    useEffect(() => {
+        const newCustomerData = window.localStorage.getItem('customer');
+        const newUserData = window.localStorage.getItem('user');
+        console.log(newCustomerData);
+        if (newCustomerData&&newUserData) {
+            setCustomerData(JSON.parse(newCustomerData));
+            setUserData(JSON.parse(newUserData));
+            console.log(newCustomerData,newUserData);
+        }
+        
+    }, []);
 
     const getPasswordStrength = () => {
         const password = passwordInputRef.current.value.trim().toLowerCase();
@@ -129,13 +151,23 @@ function App() {
             setIsAlertPasswordAgainOpen(true);
         }
     }
-    const handleChangePassword = () => {
-        if (password === passwordAgain) {
-            //&& passwordNow is correct
+    const handleChangePassword = async (e) => {
+
+        e.preventDefault();
+        console.log(passwordNow, password);
+        try {
+            const response = await axios.post('http://localhost:3000/api/changePassword',
+                {
+                    user_ci: userData.user_ci,
+                    user_password: passwordNow,
+                    user_new_password: password,
+                });
+            console.log(response.data);
             setIsAlertChangeOk(true);
-        }
-        else {
+            setIsAlertChangeNot(false);
+        } catch (error) {
             setIsAlertChangeNot(true);
+            setIsAlertChangeOk(false);
         }
 
     };

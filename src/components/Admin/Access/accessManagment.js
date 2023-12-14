@@ -11,6 +11,7 @@ import AccessNews from './accessNews';
 import AccessEducation from './accessEducation';
 import AccessCars from './accessCars';
 import AccessCarsDiaps from './accessCarsDiaps';
+import AccesUpload from './accessUpload';
 import {
   theme,
   checked,
@@ -19,6 +20,12 @@ import {
 
 function SimulatorLoan() {
 
+  useEffect(() => {
+    const userAuth = JSON.parse(window.localStorage.getItem('user'));
+    if(!userAuth || userAuth.user_role !== 'admin'){
+        window.location.href = '/prohibido';
+    }
+},[]);
   return (
     <ThemeProvider theme={theme} >
       <AppBarDrawer />
@@ -44,6 +51,8 @@ function SimulatorLoan() {
               <AccessEducation />
               <AccessCars />
               <AccessCarsDiaps />
+              <AccesUpload/>
+
 
             </Box>
           </Box>

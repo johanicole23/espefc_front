@@ -1,5 +1,5 @@
 // Importaciones de bibliotecas y componentes
-import React from 'react';
+import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Fade } from '@mui/material';
@@ -12,6 +12,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import MessageIcon from '@mui/icons-material/Message';
 
+import axios from 'axios';
 // Importaciones de recursos
 import home from '../../styles/pages/home';
 import history from '../../styles/pages/history';
@@ -33,7 +34,30 @@ import {
 import TextField from '@mui/material/TextField';
 
 function History() {
+  const [suggestion, setSuggestion] = useState({
+    name: '',
+    mail: '',
+    cellphone: '',
+    message: '',
+  });
 
+  const handleInputChange = (field) => (event) => {
+    setSuggestion({
+      ...suggestion,
+      [field]: event.target.value,
+    });
+  };
+
+  const enviarSugerencia = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/sendSuggestion', { suggestion });
+      console.log(response.data);
+      // Manejar la respuesta del servidor según tus necesidades en el cliente
+    } catch (error) {
+      console.error('Error al enviar la sugerencia:', error);
+      // Manejar el error según tus necesidades en el cliente
+    }
+  };
   return (
     <ThemeProvider theme={theme} >
 
@@ -163,16 +187,74 @@ function History() {
                   <Typography variant="body2" sx={home.homeTextH3}>Formulario de Contacto</Typography>
                   <Box sx={{ display: 'flex', alignItems: 'flex-end', pb: '1%' }}>
                     <Grid container spacing={2}>
-                      <Grid item xs={12} md={1}><BadgeIcon sx={{ color: 'action.active', mt: 5 }} /> </Grid>
-                      <Grid item xs={12} md={11}><TextField id="input-with-sx" sx={{ color: 'action.active' }} label={<Typography sx={login.textoInput} >Nombre y Apellido</Typography>} variant="standard" fullWidth margin="normal" /> </Grid>
-                      <Grid item xs={12} md={1}><EmailIcon sx={{ color: 'action.active', mt: 5 }} /> </Grid>
-                      <Grid item xs={12} md={11}><TextField id="input-with-sx" sx={{ color: 'action.active' }} label={<Typography sx={login.textoInput} >Correo Electrónico</Typography>} variant="standard" fullWidth margin="normal" /> </Grid>
-                      <Grid item xs={12} md={1}><LocalPhoneIcon sx={{ color: 'action.active', mt: 5 }} /> </Grid>
-                      <Grid item xs={12} md={11}><TextField id="input-with-sx" sx={{ color: 'action.active' }} label={<Typography sx={login.textoInput} >Teléfono Celular</Typography>} variant="standard" fullWidth margin="normal" /> </Grid>
-                      <Grid item xs={12} md={1}><MessageIcon sx={{ color: 'action.active', mt: 5 }} /> </Grid>
-                      <Grid item xs={12} md={11}><TextField id="input-with-sx" sx={{ color: 'action.active' }} label={<Typography sx={login.textoInput} >Mensaje/Sugerencia</Typography>} variant="standard" fullWidth margin="normal" /> </Grid>
-
-                      <Grid item xs={12} md={12}> <Button variant="contained" alignItems='center' color="secondary" component={Link} to="/login" sx={buttons.appBarButtonLogin}>Enviar</Button> </Grid>
+                      <Grid item xs={12} md={1}>
+                        <BadgeIcon sx={{ color: 'action.active', mt: 5 }} />
+                      </Grid>
+                      <Grid item xs={12} md={11}>
+                        <TextField
+                          id="nombre"
+                          sx={{ color: 'action.active' }}
+                          label={<Typography sx={login.textoInput}>Nombre y Apellido</Typography>}
+                          variant="standard"
+                          fullWidth
+                          margin="normal"
+                          onChange={handleInputChange('name')}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={1}>
+                        <EmailIcon sx={{ color: 'action.active', mt: 5 }} />
+                      </Grid>
+                      <Grid item xs={12} md={11}>
+                        <TextField
+                          id="correo"
+                          sx={{ color: 'action.active' }}
+                          label={<Typography sx={login.textoInput}>Correo Electrónico</Typography>}
+                          variant="standard"
+                          fullWidth
+                          margin="normal"
+                          onChange={handleInputChange('mail')}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={1}>
+                        <LocalPhoneIcon sx={{ color: 'action.active', mt: 5 }} />
+                      </Grid>
+                      <Grid item xs={12} md={11}>
+                        <TextField
+                          id="telefono"
+                          sx={{ color: 'action.active' }}
+                          label={<Typography sx={login.textoInput}>Teléfono Celular</Typography>}
+                          variant="standard"
+                          fullWidth
+                          margin="normal"
+                          onChange={handleInputChange('cellphone')}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={1}>
+                        <MessageIcon sx={{ color: 'action.active', mt: 5 }} />
+                      </Grid>
+                      <Grid item xs={12} md={11}>
+                        <TextField
+                          id="mensaje"
+                          sx={{ color: 'action.active' }}
+                          label={<Typography sx={login.textoInput}>Mensaje/Sugerencia</Typography>}
+                          variant="standard"
+                          fullWidth
+                          margin="normal"
+                          onChange={handleInputChange('message')}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={12}>
+                        <Button
+                          variant="contained"
+                          alignItems="center"
+                          color="secondary"
+                          component={Link}                          
+                          sx={buttons.appBarButtonLogin}
+                          onClick={enviarSugerencia}
+                        >
+                          Enviar
+                        </Button>
+                      </Grid>
                     </Grid>
                   </Box>
 

@@ -5,6 +5,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import MyFooter from '../../MyComponents/myFooter';
 import MyAppBar from '../../MyComponents/myAppBar';
 import { Fade } from '@mui/material';
+import { useEffect } from 'react';
 
 import LoanHistory from './loanHistory';
 import AppBarDrawer from '../AppBarDrawer';
@@ -17,7 +18,12 @@ import {
 
 
 function SimulatorLoan() {
-
+  useEffect(() => {
+    const userAuth = JSON.parse(window.localStorage.getItem('user'));
+    if(!userAuth || userAuth.user_role !== 'admin'){
+        window.location.href = '/prohibido';
+    }
+},[]);
 
 
   const [open, setOpen] = React.useState(false);

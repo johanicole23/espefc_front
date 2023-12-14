@@ -1,4 +1,4 @@
-import React, {useEffect, useState}from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar from '@mui/material/AppBar';
@@ -32,7 +32,6 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary'; // Agrega esta línea
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Agrega esta línea
-import DownloadIcon from '@mui/icons-material/Download';
 
 
 
@@ -97,22 +96,9 @@ function AppBarDrawer() {
         boxShadow: 'none',
     };
 
-    const handleItemClick = (link, index) => {
-        if (index === 1) {
-            window.localStorage.clear();
-            // O utiliza window.location.replace(link) si quieres reemplazar la entrada del historial
-            // window.location.replace(link);
-        } window.location.href = link;
-    };
-
-    const [customerData, setCustomerData] = useState([]);
-    useEffect(() => {
-        const newCustomerData = window.localStorage.getItem('customer');
-        if (newCustomerData) {
-            setCustomerData(JSON.parse(newCustomerData));
-        }
-
-    }, []);
+    const handleItemClick = () => {        
+          window.localStorage.clear();         
+      };
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -131,15 +117,16 @@ function AppBarDrawer() {
                         color="#005f8f"
                         aria-label="open drawer"
                         edge="end"
-                        onClick={handleDrawerOpen}
-                        sx={{ ...(open && { display: 'none' }), marginRight: '200px' }}
+                        onClick={handleItemClick}                       
+                        href="/login"
                     >
-                        <MenuIcon />
+                        <LogoutIcon />
                     </IconButton>
+                    
                 </Toolbar>
             </AppBar>
             <Main open={open}>
-                <DrawerHeader></DrawerHeader>
+                
 
             </Main>
             <Drawer
@@ -166,7 +153,7 @@ function AppBarDrawer() {
                         }}></AccountCircleIcon>
                     <Box sx={{ marginX: 1 }}></Box>
                     <Typography variant="body1" sx={home.homeTextH4Left} color="textPrimary">
-                        {customerData.customer_name}
+                        Johanna Molina
                     </Typography>
                 </DrawerHeader>
                 <Divider />
@@ -189,12 +176,12 @@ function AppBarDrawer() {
                                     { text: 'Préstamos Prendarios', icon: <MailIcon />, link: '/cuenta/proceso-prendario/formulario-prendario' },
                                 ].map((item, index) => (
                                     <ListItem href={item.link} disablePadding sx={{ color: 'gray' }}>
-                                        <ListItemButton onClick={() => window.location.href = item.link}>
-                                            <ListItemText primary={
+                                        <ListItemButton onClick={() => window.location.href = item.link}> 
+                                            <ListItemText  primary={
                                                 <Typography variant="body1" sx={home.homeTextH4Left} color="textPrimary">
                                                     {item.text}
                                                 </Typography>
-
+                                            
                                             } />
                                         </ListItemButton>
                                     </ListItem>
@@ -202,11 +189,10 @@ function AppBarDrawer() {
                             </List>
                         </AccordionDetails>
                     </Accordion>
-                    {[
-                        { text: 'Simulador de Préstamos', icon: <CurrencyBitcoinIcon />, link: '/cuenta/simulador-personalizado' },
+                    {[                        
+                        { text: 'Simulador de Préstamos', icon: <CurrencyBitcoinIcon/>, link: '/cuenta/simulador-personalizado' },
                         { text: 'Liquidaciones', icon: <StackedLineChartIcon />, link: '/cuenta/liquidacion-cesantia' },
-                        { text: 'Variación de Aporte', icon: <AddchartIcon />, link: '/cuenta/variacion-aporte' },
-                        { text: 'Documentos', icon: <DownloadIcon />, link: '/cuenta/documentos' },
+                        { text: 'Variación de Aporte', icon: <AddchartIcon/>, link: '/cuenta/variacion-aporte' },                      
                     ].map((item, index) => (
                         <ListItem key={item.text} disablePadding>
                             <ListItemButton onClick={() => window.location.href = item.link}>
@@ -221,16 +207,15 @@ function AppBarDrawer() {
                             </ListItemButton>
                         </ListItem>
                     ))}
-
                 </List>
-                <Divider />
+                <Divider /> 
                 <List>
                     {[
                         { text: 'Configuración Cuenta', icon: <PermDataSettingIcon />, link: '/cuenta/configuracion' },
-                        { text: 'Cerrar sesión', icon: <LogoutIcon />, link: '/login' },
+                        { text: 'Ayuda', icon: <HelpIcon />, link: '/simulador' },
                     ].map((item, index) => (
                         <ListItem key={item.text} disablePadding>
-                            <ListItemButton onClick={() => handleItemClick(item.link, index)}>
+                            <ListItemButton onClick={() => window.location.href = item.link}>
                                 <ListItemIcon sx={{ color: '#005f8f' }}>
                                     {item.icon}
                                 </ListItemIcon>

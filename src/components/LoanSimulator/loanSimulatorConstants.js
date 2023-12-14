@@ -31,7 +31,7 @@ export const cardFinality = [
         image: auto,
         title: "Préstamo Prendario",
         descriptionP1: "Para que adquieras el bien que deseas obtener",
-        interes: 10.5,
+        interes: 10,
 
     },
 

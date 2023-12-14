@@ -1,33 +1,18 @@
 import React from 'react';
 import AppBarDrawer from './AppBarDrawer';
-import variacion from '../../assets/account/variation.png';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import home from '../../styles/pages/home';
 import buttons from '../../styles/buttons';
-import account from '../../styles/pages/account';
-import { Box, Paper, Chip } from '@mui/material';
-import { cardLoan, cardLoanSimulator, cardLoanPassword } from './accountConstants';
-import CardMedia from '@mui/material/CardMedia';
+import { Box, Paper } from '@mui/material';
 import fondo from '../../assets/account/fondoAccount.png';
-import { Link } from 'react-router-dom';
-import { flexbox } from '@mui/system';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import PaidIcon from '@mui/icons-material/Paid';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PeopleIcon from '@mui/icons-material/People';
-import AssessmentIcon from '@mui/icons-material/Assessment';
 import DownloadIcon from '@mui/icons-material/Download';
+import { useEffect } from 'react';
 
 const theme = createTheme({
     palette: {
@@ -201,7 +186,12 @@ function handleClickDownloadDocuments(url, name) {
     document.body.removeChild(link);
 }
 function App() {
-
+    useEffect(() => {
+        const userAuth = JSON.parse(window.localStorage.getItem('user'));
+        if(!userAuth || userAuth.user_role !== 'usuario'){
+            window.location.href = '/prohibido';
+        }
+    },[]); 
     return (
         <div>
             <AppBarDrawer />

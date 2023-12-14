@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBarDrawer from '../AppBarDrawer';
 import { ThemeProvider, createTheme, Tabs, Tab, Typography, Box, Button } from '@mui/material';
 import home from '../../../styles/pages/home';
 import { PDFDocument, rgb } from 'pdf-lib';
+import axios from 'axios';
 import Tab1 from './Tabs/loanDataCollateral';
 import Tab2 from './Tabs/personalDataCollateral';
 import Tab3 from './Tabs/spouseDataCollateral';
@@ -31,6 +32,13 @@ function App() {
 
   const [isTerm, setTerm] = useState('');
 
+  useEffect(() => {
+    const userAuth = JSON.parse(window.localStorage.getItem('user'));
+    if(!userAuth || userAuth.user_role !== 'usuario'){
+        window.location.href = '/prohibido';
+    }
+},[]); 
+
   const handleNextTab = () => {
     setActiveTab(activeTab + 1);
   };
@@ -38,6 +46,53 @@ function App() {
   const handlePrevTab = () => {
     setActiveTab(activeTab - 1);
   };
+
+  const [customerData, setCustomerData] = useState([]);
+  const [userData, setUserData] = useState([]);
+  
+  useEffect(() => {
+    const newCustomerData = window.localStorage.getItem('customer');
+    const newUserData = window.localStorage.getItem('user');
+  
+    if (newCustomerData && newUserData) {
+      setCustomerData(JSON.parse(newCustomerData));
+      setUserData(JSON.parse(newUserData));
+    }
+  
+  }, []);
+
+
+  async function createLoan(formData) {
+    console.log(formData);
+    let amortization = '';
+    if (formData.isCheckedFrances) {
+      amortization = 'Frances';
+    }
+    else if (!formData.isCheckedFrances) {
+      amortization = 'Aleman';
+    }
+  
+    try {
+      const response = await axios.post('http://localhost:3000/api/createLoan', {
+        user_id: userData.user_id,
+        loan_type: 'Prendario',
+        loan_amount: formData.amount,
+        loan_deadline: formData.isTerm, // Ajusta la fecha según tus necesidades
+        loan_amortization_type: amortization,
+        loan_guarantors: formData.fullNameGuarantor1  
+      });
+  
+  
+  
+  
+      // Manejar la respuesta del servidor
+      console.log(response.data);
+  
+    } catch (error) {
+      console.error(error);
+      // Manejar el error de alguna manera adecuada para tu aplicación
+    }
+  }
 
   const [formData, setFormData] = useState({
 
@@ -122,7 +177,12 @@ function App() {
 
         </Box>
         <Box display={'flex'} justifyContent={'center'}  >
-          <Button onClick={() => generatePDF(formData)} ><DownloadForOfflineIcon sx={{ fontSize: '60px' }}></DownloadForOfflineIcon></Button>
+          <Button 
+          onClick={() => {
+            generatePDF(formData);
+            createLoan(formData);
+          }} >
+            <DownloadForOfflineIcon sx={{ fontSize: '60px' }}></DownloadForOfflineIcon></Button>
         </Box>
 
       </ThemeProvider>
