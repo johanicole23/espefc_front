@@ -7,7 +7,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
+import { Button, Chip } from '@mui/material';
+import PaidIcon from '@mui/icons-material/Paid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import home from '../../styles/pages/home';
 import buttons from '../../styles/buttons';
@@ -18,6 +19,7 @@ import CardMedia from '@mui/material/CardMedia';
 import fondo from '../../assets/account/fondoAccount.png';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import LoanHistory from './loanHistory';
 
 const theme = createTheme({
     palette: {
@@ -40,17 +42,27 @@ function App() {
 
     useEffect(() => {
         const userAuth = JSON.parse(window.localStorage.getItem('user'));
-        if(!userAuth || userAuth.user_role !== 'usuario'){
+        if (!userAuth || userAuth.user_role !== 'usuario') {
             window.location.href = '/prohibido';
         }
-    },[]); 
+    }, []);
 
     useEffect(() => {
         const newCustomerData = window.localStorage.getItem('customer');
         if (newCustomerData) {
             setCustomerData(JSON.parse(newCustomerData));
         }
-        
+
+    }, []);
+
+    const [userData, setUserData] = useState([]);
+    useEffect(() => {
+        const newUserData = window.localStorage.getItem('user');
+        if (newUserData) {
+            setUserData(JSON.parse(newUserData));
+        }
+
+
     }, []);
     return (
         <div>
@@ -61,7 +73,7 @@ function App() {
                     backgroundRepeat: 'no-repeat',
                     backgroundSize: 'cover',
                     width: '100%',
-                    height: '120vh',
+                    height: '250vh',
                     position: 'absolute',
 
 
@@ -77,27 +89,42 @@ function App() {
                             </Typography>
                         </Grid>
                     </Grid>
+                    <Box display="flex" justifyContent={"space-around"} marginBottom={"2rem"}  >
+
+                        <Card sx={account.formularyFormatCardLoan}>
+                            <CardActionArea>
+                                <CardContent >
+                                    <Box display="flex" flexDirection={'column'} >
+                                        <Typography variant="subtitle1" sx={home.homeTextH3}>Saldo disponible en tu cuenta</Typography>
+                                        <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography sx={home.homeTextH14LightGray}>{userData.user_balance}</Typography>} />
+
+                                    </Box>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </Box>
+                    <LoanHistory></LoanHistory>
                     <Box display="flex" justifyContent="space-around" alignItems="center" sx={{ margin: '0 15%' }} >
                         {cardLoan.map((item) => (
-                            <Card sx={account.formularyFormatCardLoan}  >                                
-                                    <CardActionArea href={item.link}>
-                                        <CardMedia
-                                            sx={account.formularyCardLoanLogo} image={item.image} alt="Descripción de la imagen" />
-                                        <CardContent >
-                                            <Box display="flex" flexDirection={'column'} >
-                                                <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
-                                                <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
-                                            </Box>
-                                        </CardContent>
-                                    </CardActionArea>
-                                    <CardActions >
-                                        <Box marginLeft="90px" >
-                                            <Button size="small" variant="outlined" color="secondary" sx={buttons.appBarButtonText} href={item.link}>
-                                                Más Información
-                                            </Button>
+                            <Card sx={account.formularyFormatCardLoan}  >
+                                <CardActionArea href={item.link}>
+                                    <CardMedia
+                                        sx={account.formularyCardLoanLogo} image={item.image} alt="Descripción de la imagen" />
+                                    <CardContent >
+                                        <Box display="flex" flexDirection={'column'} >
+                                            <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
+                                            <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
                                         </Box>
-                                    </CardActions>
-                                
+                                    </CardContent>
+                                </CardActionArea>
+                                <CardActions >
+                                    <Box marginLeft="90px" >
+                                        <Button size="small" variant="outlined" color="secondary" sx={buttons.appBarButtonText} href={item.link}>
+                                            Más Información
+                                        </Button>
+                                    </Box>
+                                </CardActions>
+
                             </Card>
                         ))}
                     </Box>

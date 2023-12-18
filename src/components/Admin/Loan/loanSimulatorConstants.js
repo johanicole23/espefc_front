@@ -84,19 +84,15 @@ export const amortizationType = [
 
 export const textFieldLoan = [
 
-    {
-        icon: AttachMoneyIcon,
-        iconColor: '#005f8f',
-        textLabel: "Saldo de la cuenta",
-        key: 'loan_balance',
-        disabled: false,
-    },
+    
     {
         icon: PaidIcon,
         iconColor: '#005f8f',
         textLabel: "Monto del préstamo",
         key: 'loan_amount',
         disabled: false,
+        helper: "Solo números, no comas, puntos o espacios",
+        type: "number",
     },
     {
         icon: EditCalendarIcon,
@@ -104,6 +100,8 @@ export const textFieldLoan = [
         textLabel: "Duración (meses)",
         key: 'loan_deadline',
         disabled: true,
+        helper: "Los meses solo en números",
+        type: "number",
     },
 
     {
@@ -112,6 +110,8 @@ export const textFieldLoan = [
         textLabel: "Garantes",
         key: 'loan_guarantors',
         disabled: false,
+        helper: "Solo letras",
+        type: "text",
     },
    
 

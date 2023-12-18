@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     createTheme,
     Typography,
     Box,
     TextField,
-    Button,    
+    Button,
     Paper,
     Checkbox,
     Alert,
     Stack,
-  } from '@mui/material';
+} from '@mui/material';
 
 import MenuItem from '@mui/material/MenuItem';
 import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
@@ -64,6 +64,21 @@ function Tab1({ data, onDataChange, onNextTab }) {
     const [isCheckedFrances, setIsCheckedFrances] = useState(false);
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
 
+
+    const [customerData, setCustomerData] = useState([]);
+    const [userData, setUserData] = useState([]);
+
+    useEffect(() => {
+        const newCustomerData = window.localStorage.getItem('customer');
+        const newUserData = window.localStorage.getItem('user');
+        if (newCustomerData) {
+            setCustomerData(JSON.parse(newCustomerData));
+        }
+        if (newUserData) {
+            setUserData(JSON.parse(newUserData));
+        }     
+
+    }, []);
 
 
     /* const handleAmountTextFieldFocus = () => {
@@ -122,7 +137,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
         setTerm(selectedValueString); // Almacena la cadena en el estado 'isTerm'
         const newData = { ...data, isTerm: event.target.value };
         onDataChange(newData);
-        
+
     };
 
     const handleFieldChange = (fieldName, event) => {
@@ -130,7 +145,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
         onDataChange(newData);
     };
 
-    const handleCheckboxChange = (checkedName,event) => {
+    const handleCheckboxChange = (checkedName, event) => {
         const newData = { ...data, [checkedName]: event.target.checked };
         onDataChange(newData);
     };
@@ -139,14 +154,14 @@ function Tab1({ data, onDataChange, onNextTab }) {
         const fullName = fullNameInputRef.current.value.trim();
         const idValid = validarCedulaEcuatoriana(id);
         const amount = amountInputRef.current.value.trim();
-       
+
         const numberAccount = accountNumberInputRef.current.value.trim();
         const institution = institutionInputRef.current.value.trim();
         //const noneChecked = isCheckedCorriente==true && isCheckedAhorro==true;
         //const atLeastOneChecked = (isCheckedCorriente===true && isCheckedAhorro===false)||(isCheckedCorriente===false && isCheckedAhorro===true);
 
         // Verifica si los campos requeridos están llenos y válidos y al menos un Checkbox está marcado
-        setIsNextButtonDisabled(!(fullName.trim() !== '' &&  currentIndex === 0&&id.trim() !== '' && idValid && isTerm !== -1 && amount.trim() !== '' && numberAccount.trim() !== '' && institution.trim() !== ''));
+        setIsNextButtonDisabled(!(fullName.trim() !== '' && currentIndex === 0 && id.trim() !== '' && idValid && isTerm !== -1 && amount.trim() !== '' && numberAccount.trim() !== '' && institution.trim() !== ''));
 
     }
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -179,15 +194,17 @@ function Tab1({ data, onDataChange, onNextTab }) {
                 <Box display={'flex'} justifyContent={'center'} >
                     <Paper elevation={5} sx={{ padding: '2% 4% ', width: '800px', marginBottom: '2rem' }}>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-                            <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                        <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
                                 id="fullName"
                                 label={<Typography sx={login.textoInput} >Nombres y apellidos completos </Typography>}
-                                defaultValue={data.name}
+                                value={customerData.customer_name}
+                                disabled={"true"}
                                 onChange={(event) => {
-                                    handleFieldChange('name', event);
+                                  
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
+                                InputLabelProps={{ shrink: true }}
                                 variant="standard" inputRef={fullNameInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
@@ -195,12 +212,13 @@ function Tab1({ data, onDataChange, onNextTab }) {
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField type="number" id="numberId" label={<Typography sx={login.textoInput} >Cédula </Typography>}
-                                defaultValue={data.id}
+                                value={userData.user_ci}
+                                disabled={"true"}
                                 onChange={(event) => {
-                                    handleFieldChange('id', event);
-                                    handleChangeId(event); // Llama a la primera función
+                                   
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
+                                InputLabelProps={{ shrink: true }}
                                 inputRef={idInputRef} variant="standard" fullWidth margin="normal" />
                         </Box>
 
@@ -235,7 +253,8 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                     handleFieldChange('amount', event);
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
-                                helperText={<Typography sx={login.textoMensajeAbajoInput} >Cantidad en números. No debe superar el monoto total de su cuenta individual.</Typography>} />
+                                
+                                helperText={<Typography sx={login.textoMensajeAbajoInput} >Valor máximo ${userData.user_balance}. Si es mayor al saldo se necesitan garates</Typography>} />
                         </Box>
 
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
@@ -244,7 +263,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                 id="standard-select-currency"
                                 select
                                 label={<Typography sx={login.textoInput} >Plazo(Meses) </Typography>}
-                               
+
                                 helperText={<Typography sx={login.textoMensajeAbajoInput} >Seleccione una opción</Typography>}
                                 variant="standard"
                                 fullWidth
@@ -275,7 +294,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedAhorro}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedAhorro",event);
+                                            handleCheckboxChange("isCheckedAhorro", event);
                                             handleCheckboxAhorroChange(event);
                                         }} />
                                 </Box>
@@ -287,7 +306,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedCorriente}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedCorriente",event);
+                                            handleCheckboxChange("isCheckedCorriente", event);
                                             handleCheckboxCorrienteChange(event);
                                         }} />
                                 </Box>
@@ -333,7 +352,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedAleman}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedAleman",event);
+                                            handleCheckboxChange("isCheckedAleman", event);
                                             handleCheckboxAlemanChange(event);
                                         }} />
                                 </Box>
@@ -343,7 +362,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedFrances}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedFrances",event);
+                                            handleCheckboxChange("isCheckedFrances", event);
                                             handleCheckboxFrancesChange(event);
                                         }} />
 

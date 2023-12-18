@@ -9,6 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea, CardActions } from '@mui/material';
 import myTheme from '../../../components/MyComponents/myTheme';
+import axios from 'axios';
 import {
     Chip, Stack, Grid, Paper, Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow,
@@ -17,7 +18,7 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Modal from '@mui/material/Modal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { calcularTablaAmortizacionAleman, calcularTablaAmortizacionFrances } from '../../../utils/simulatorFunctions';
 import {
 
@@ -43,14 +44,25 @@ import simulator from '../../../styles/pages/simulator';
 
 
 function LoanSimulator() {
-    function calcularTabla() {
 
+    const [userData, setUserData] = useState([]);
+    useEffect(() => {
+        const newUserData = window.localStorage.getItem('user');
+        if (newUserData) {
+            setUserData(JSON.parse(newUserData));
+        }
+
+
+    }, []);
+
+    function calcularTabla() {
+        const hoy = new Date();
         var tablaAmortizacion = [];
         if (seleccionAleman) {
-            tablaAmortizacion = calcularTablaAmortizacionAleman(valorPrestamo, valorInteres, tiempoPago, valorCuenta);
+            tablaAmortizacion = calcularTablaAmortizacionAleman(hoy, valorInteres, tiempoPago, valorPrestamo, desgravamen);
         }
         if (seleccionFrances) {
-            tablaAmortizacion = calcularTablaAmortizacionFrances(valorPrestamo, valorInteres, tiempoPago, valorCuenta);
+            tablaAmortizacion = calcularTablaAmortizacionFrances(hoy, valorInteres, tiempoPago, valorPrestamo, desgravamen);
         }
 
         return tablaAmortizacion;
@@ -60,16 +72,48 @@ function LoanSimulator() {
     const [tiempoPago, setTiempoPago] = useState('');
     const [valorInteres, setValorInteres] = useState(null);
     const [valorCuenta, setValorCuenta] = useState(null);
+    const [desgravamen, setDesgravamen] = useState([]);
+    const [isDisabled, setIsDisabled] = useState(true);
+    const [isChecked, setIsChecked] = useState(false);
+
+    useEffect(() => {
+        fetchDesgravamen();
+
+    }, []);
+
+    async function fetchDesgravamen() {
+        try {
+            const response = await axios.get('http://localhost:3000/api/deductibles');
+            setDesgravamen(response.data.deductible);
+
+        } catch (error) {
+            console.error('Error al obtener deducibles:', error);
+
+        }
+    }
+
     const handleValorPrestamoChange = (event) => {
+        if (userData.user_balance >= event.target.value) {
+            setIsDisabled(false);
+        }
+        else {
+            setIsDisabled(true);
+        }
         setValorPrestamo(event.target.value);
+    };
+
+    const handleCheckboxChange = (event) => {
+        setIsChecked(!isChecked);
+        if (userData.user_balance < valorPrestamo && !isChecked) {
+            setIsDisabled(false);
+        }
+        else {
+            setIsDisabled(true);
+        }
     };
 
     const handleTiempoPagoChange = (event) => {
         setTiempoPago(event.target.value);
-    };
-
-    const handleValorCuentaChange = (event) => {
-        setValorCuenta(event.target.value);
     };
 
 
@@ -113,7 +157,7 @@ function LoanSimulator() {
                         <Grid item xs={12} md={1}></Grid>
                         <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo"
                             label={
-                                <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
+                                <Typography sx={login.textoInput} >Ej.:${userData.user_balance} máx.</Typography>
                             }
                             variant="standard" fullWidth margin="normal"
                             value={valorPrestamo}
@@ -144,7 +188,7 @@ function LoanSimulator() {
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={1}></Grid>
                         <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:$60.000 máx.</Typography>
+                            <Typography sx={login.textoInput} >Ej.:${userData.user_balance} máx.</Typography>
                         } variant="standard" fullWidth margin="normal"
                             value={valorPrestamo}
                             onChange={handleValorPrestamoChange} /> </Grid>
@@ -174,7 +218,7 @@ function LoanSimulator() {
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={1}></Grid>
                         <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:$15.000 máx.</Typography>
+                            <Typography sx={login.textoInput} >Ej.:${userData.user_balance} máx.</Typography>
                         } variant="standard" fullWidth margin="normal"
                             value={valorPrestamo}
                             onChange={handleValorPrestamoChange} /> </Grid>
@@ -203,11 +247,16 @@ function LoanSimulator() {
                 <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', margin: '0 18%' }} >
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:$10.000 máx.</Typography>
-                        } variant="standard" fullWidth margin="normal"
-                            value={valorPrestamo}
-                            onChange={handleValorPrestamoChange} /> </Grid>
+                        <Grid item xs={12} md={4}>
+                            <TextField
+                                id="prestamo"
+                                name="valorPrestamo"
+                                label={
+                                    <Typography sx={login.textoInput} >Ej.:${userData.user_balance} máx.</Typography>
+                                } variant="standard" fullWidth margin="normal"
+                                value={valorPrestamo}
+                                onChange={handleValorPrestamoChange} />
+                        </Grid>
                         <Grid item xs={12} md={1}></Grid>
                         <Grid item xs={12} md={4}><TextField id="input-with-sx" name="tiempoPago" label={
                             <Typography sx={login.textoInput} >Ej.:48 Meses máx.</Typography>
@@ -248,6 +297,26 @@ function LoanSimulator() {
 
     return (
         <Box>
+            <Box display="flex" justifyContent={"space-around"}  >
+
+                <Card sx={account.formularyFormatCardLoan}>
+                    <CardActionArea>
+                        <CardContent >
+                            <Box display="flex" flexDirection={'column'} >
+                                <Typography variant="subtitle1" sx={home.homeTextH3}>Saldo disponible en tu cuenta</Typography>
+                                <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography sx={home.homeTextH14LightGray}>{userData.user_balance}</Typography>} />
+
+                            </Box>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            </Box>
+            <Box display="flex" justifyContent={"space-around"} margin={"2rem"} >
+                <Typography variant="body2" sx={home.homeTextH4Left}>¿En qué utilizarás tu crédito? </Typography>
+            </Box>
+
+
+
             <Box display="flex" justifyContent="space-evenly" alignItems="center" sx={{ margin: '0 10%' }} >
 
                 {cardFinality.map((item, index) => (
@@ -273,20 +342,12 @@ function LoanSimulator() {
             </Box>
 
             <Box>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '63%', ml: '15%', mt: '3rem' }} >
 
-                    <Grid item xs={12} md={6}> <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>
-                        Simula cuánto dinero tendrías en tu cuenta </Typography> </Grid>
+                <Box display="flex" justifyContent={"space-around"} margin={"1rem"} >
 
-                </Box>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', margin: '0 14%' }} >
+                    <Typography variant="body2" sx={home.homeTextH3}>
+                        Recuerda que si deseas un préstamo con valor mayor al de tu cuenta, necesitas garantes </Typography>
 
-                    <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                        <Typography sx={login.textoInput} >Ej.:$70.000</Typography>
-                    } variant="standard"
-                        sx={{ width: '300px' }}
-                        value={valorCuenta}
-                        onChange={handleValorCuentaChange} /> </Grid>
 
                 </Box>
                 {forms.map((item) => (
@@ -355,8 +416,25 @@ function LoanSimulator() {
                     </CardActionArea>
                 </Card>
             </Box>
+            {valorPrestamo > userData.user_balance && (
+                <Box sx={{ display: 'flex', alignItems: 'center', margin: '1rem', justifyContent: "center" }}>
+                    <Typography sx={home.homeTextH4Left}>Acepto que para este préstamo necesito tener garantes</Typography>
+                    <Checkbox
+                        sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
+                        checked={isChecked}
+                        onChange={(event) => {
+                            handleCheckboxChange(event);
+                        }} />
+                </Box>
+            )}
             <Box display="flex" justifyContent={"center"} width="30%" marginLeft={'38%'} mt="3rem">
-                <Button variant="contained" alignItems='center' color="secondary" onClick={handleOpen} sx={buttons.appBarButtonLogin}>
+
+                <Button
+                    variant="contained" alignItems='center' color="secondary"
+                    onClick={handleOpen} sx={buttons.appBarButtonLogin}
+                    disabled={isDisabled}
+                >
+
                     Calcular crédito</Button>
                 <Modal
                     open={open}
@@ -377,31 +455,27 @@ function LoanSimulator() {
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Dividendo</Typography><hr /></th>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }}>Capital</Typography><hr /></th>
+
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Cuota</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Fecha</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }}>Saldo</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }} bgcolor={'#e2f0af'}>Capital</Typography><hr /></th>
                                             <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Interés</Typography><hr /></th>
                                             <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '110px' }}>Desgravamen</Typography><hr /></th>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }} bgcolor={'#e2f0af'}>Cuota</Typography><hr /></th>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Tasa</Typography><hr /></th>
-
-
-
-                                            <th><hr /><Typography id="modal-modal-title" sx={home.homeTextH3} >
-                                                Total</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={home.homeTextH3} >Cuota</Typography><hr /></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {table.map((fila, index) => (
-                                            <tr key={index}>
+                                            <tr >
+
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.mes}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.pagoCapital}</Typography></td>
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.fecha}</Typography></td>
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.saldoCuenta}</Typography></td>
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4} bgcolor={'#e2f0af'}> ${fila.amortizacion}</Typography></td>
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.pagoInteres}</Typography></td>
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.desgravamen}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4} bgcolor={'#e2f0af'}> ${fila.pagoMensual}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.tasa}%</Typography></td>
-
-
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.total}</Typography></td>
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.cuota}</Typography></td>
 
 
                                             </tr>

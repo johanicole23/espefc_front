@@ -42,7 +42,7 @@ function Tab3({ data, onDataChange,  onPrevTab, onNextTab}) {
     const cellphoneGuarantor1InputRef = useRef(null);
     const phoneGuarantor1InputRef = useRef(null);
 
-    const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
+    const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(false);
 
     const handleChangeId = (event) => {
         const id = idGuarantor1InputRef.current.value.trim().toLowerCase();
@@ -82,6 +82,23 @@ function Tab3({ data, onDataChange,  onPrevTab, onNextTab}) {
         // Verifica todas las condiciones necesarias para habilitar el botón de "Siguiente"
         setIsNextButtonDisabled(!(idGuarantor1 && idValid && cellphoneGuarantor1 && phoneGuarantor1 && fullNameGuarantor1));
     }, [data, setIsNextButtonDisabled]);
+
+    const [customerData, setCustomerData] = useState([]);
+    const [userData, setUserData] = useState([]);
+
+    useEffect(() => {
+        const newCustomerData = window.localStorage.getItem('customer');
+        const newUserData = window.localStorage.getItem('user');
+        if (newCustomerData) {
+            setCustomerData(JSON.parse(newCustomerData));
+        }
+        if (newUserData) {
+            setUserData(JSON.parse(newUserData));
+        }    
+        
+        
+
+    }, []);
 
 
 

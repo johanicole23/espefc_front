@@ -187,9 +187,9 @@ function Home() {
     useEffect(() => {
         const getCarsbyBrand = async () => {
             try {
-                const response = await axios.post('http://localhost:3000/api/getCarVideoByBrand',{
+                const response = await axios.post('http://localhost:3000/api/getCarVideoByBrand', {
                     car_video_brand: 'Mazda',
-                   
+
                 });
                 setCarsData(response.data.car_videos);
                 setSelectedCar(response.data.car_videos);
@@ -206,9 +206,9 @@ function Home() {
 
     const openModal = async (carBrand) => {
         try {
-            const response = await axios.post('http://localhost:3000/api/getCarVideoByBrand',{
+            const response = await axios.post('http://localhost:3000/api/getCarVideoByBrand', {
                 car_video_brand: carBrand,
-               
+
             });
             setCarsData(response.data.car_videos);
             setSelectedCar(response.data.car_videos);
@@ -238,14 +238,24 @@ function Home() {
 
             <Box display="flex" justifyContent="space-evenly" alignItems="center" sx={{ margin: '0 15%' }} >
                 <Grid container spacing={2}>
-                    {cardMarks.map((item) => (
+                    {/* Mapeo para elementos regulares */}
+                    {cardMarks.slice(0, -1).map((item, index) => (
                         <Grid item xs={3} key={item.title}>
                             <Card sx={home.carsFormatCardLoan}>
                                 <CardActionArea onClick={() => openModal(item.title)}>
-                                    <CardMedia
-                                        sx={home.carsCardLogo} image={item.image} alt="Descripción de la imagen" />
+                                    <CardMedia sx={home.carsCardLogo} image={item.image} alt="Descripción de la imagen" />
                                 </CardActionArea>
+                            </Card>
+                        </Grid>
+                    ))}
 
+                    {/* Mapeo para el último elemento */}
+                    {cardMarks.slice(-1).map((item) => (
+                        <Grid item xs={12} key={item.title}>
+                            <Card sx={home.carsFormatCardLoanOthers}>
+                                <CardActionArea onClick={() => openModal(item.title)}>
+                                    <CardMedia  sx={home.carsCardLogoOthers} image={item.image} alt="Descripción de la imagen" />
+                                </CardActionArea>
                             </Card>
                         </Grid>
                     ))}
@@ -309,10 +319,10 @@ function Home() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions >
-                                            <Button size="medium" variant="contained" color="secondary" 
-                                            sx={buttons.registerButton} 
-                                            endIcon={<CallMissedOutgoingIcon />}
-                                            href={car.car_video_href}>
+                                            <Button size="medium" variant="contained" color="secondary"
+                                                sx={buttons.registerButton}
+                                                endIcon={<CallMissedOutgoingIcon />}
+                                                href={car.car_video_href}>
                                                 Ir al sitio oficial
                                             </Button>
 

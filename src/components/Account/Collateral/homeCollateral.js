@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AppBarDrawer from '../AppBarDrawer';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Tabs, Tab, Typography, Box } from '@mui/material';
+import { Tabs, Tab, Typography, Box, Chip } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import home from '../../../styles/pages/home';
 import { cardLoanCollateral } from '../accountConstants';
@@ -9,7 +9,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActionArea from '@mui/material/CardActionArea';
 import account from '../../../styles/pages/account';
-
+import PaidIcon from '@mui/icons-material/Paid';
 
 const theme = createTheme({
     palette: {
@@ -31,10 +31,12 @@ function App() {
 
     useEffect(() => {
         const userAuth = JSON.parse(window.localStorage.getItem('user'));
-        if(!userAuth || userAuth.user_role !== 'usuario'){
+        if (!userAuth || userAuth.user_role !== 'usuario') {
             window.location.href = '/prohibido';
         }
-    },[]); 
+    }, []);
+
+   
     return (
         <div>
             <AppBarDrawer />
@@ -61,6 +63,7 @@ function App() {
 
                     </Box>
                 </Box>
+                
                 <Box display="flex" justifyContent="space-around" alignItems="center" sx={{ margin: '0 15% 5% 15%' }} >
                     {cardLoanCollateral.map((item) => (
                         <Card sx={account.formularyFormatCardLoan}>

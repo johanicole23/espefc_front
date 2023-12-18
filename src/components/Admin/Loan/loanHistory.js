@@ -43,17 +43,14 @@ function LoanHistory() {
         },
     });
 
-    const [open, setOpen] = React.useState(false);
-    const [table1, setTable1] = React.useState([]);
-    const [selectedForm, setSelectedForm] = useState(null);
-    const [isModalSucessOpen, setIsModalSucessOpen] = useState(false);
+   
     const [loans, setLoans] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [isModalAddLoanOpen, setIsModalAddLoanOpen] = useState(false);
     const [selectedIdTypeAddLoan, setSelectedIdTypeAddLoan] = useState('');
     const [isAlertSuccessAddOpen, setIsAlertSuccessAddOpen] = useState(false);
     const [isAlertErrorAddOpen, setIsAlertErrorAddOpen] = useState(false);
-    const [deductibles, setDeductibles] = useState([]);
+   
 
     const dataLoans = useRef();
 
@@ -65,69 +62,24 @@ function LoanHistory() {
         loan_deadline: '',
         loan_amortization_type: '',
         loan_guarantors: '',
-        loan_balance: '',
+
 
     });
 
 
 
     useEffect(() => {
-        fetchDeductibles();
+       
         const interval = setInterval(() => {
 
             getLoans();
         }, 1000);
 
 
-    }, []);
-
-    async function fetchDeductibles() {
-        try {
-          const response = await axios.get('http://localhost:3000/api/deductibles');
-          setDeductibles(response.data.deductible);
-         
-        } catch (error) {
-          console.error('Error al obtener deducibles:', error);
-         
-        }
-      }
+    }, []);   
 
 
-    const handleOpenLoanHistory = (balance, date, amortization, amount, type, term, item, index) => {
-        let interest = 0;
-        var tablaAmortizacion = [];
-
-        if (type === 'Quirografario') {
-            interest = 9;
-        } else if (type === 'Prendario') {
-            interest = 10.5;
-        } else if (type === 'Salud') {
-            interest = 7;
-        }
-        else {
-            interest = 7;
-        }
-
-
-        if (amortization === 'Aleman') {
-            tablaAmortizacion = calcularTablaAmortizacionAleman(date, amount, interest, term, amount, deductibles);
-        }
-        else {
-            tablaAmortizacion = calcularTablaAmortizacionFrances(amount, interest, term, amount);
-        }
-        tablaAmortizacion.forEach(fila => {
-        });
-        setTable1(tablaAmortizacion);
-        setSelectedForm(index);
-        setIsModalSucessOpen(true);
-
-    };
-
-
-    const handleCloseLoanHistory = () => {
-        setIsModalSucessOpen(false);
-
-    }
+  
 
     const getLoans = async () => {
         try {
@@ -240,7 +192,7 @@ function LoanHistory() {
                     loan_deadline: selectedDataAddLoan.loan_deadline, // Ajusta la fecha según tus necesidades
                     loan_amortization_type: selectedDataAddLoan.loan_amortization_type,
                     loan_guarantors: selectedDataAddLoan.loan_guarantors,
-                    loan_inicial_amount: selectedDataAddLoan.loan_balance,
+
                 });
 
             // Manejar la respuesta del servidor
@@ -309,7 +261,7 @@ function LoanHistory() {
                 <Box display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} marginTop={'2rem'} >
                     <TextField
                         sx={{ ...login.textoContrasena, width: '500px', marginBottom: '1rem' }}
-                        id="search"
+                        id="nameSearch"
                         label={<Typography sx={login.textoInput} >Ingrese el nombre del cliente</Typography>}
                         variant="outlined"
                         InputProps={{
@@ -340,9 +292,8 @@ function LoanHistory() {
                                             <Typography marginRight={'5px'} sx={home.homeTextH14Light}>Cliente </Typography> <Chip style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '200px' }}>{item.loan_customer_name} </Typography>} />
                                             <Chip marginLeft={'5px'} style={{ background: '#005f8f' }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '100px' }}>{item.loan_type}</Typography>} variant="outlined" />
                                             <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>emitido</Typography> <Chip style={{ borderColor: '#005f8f' }} icon={<CalendarMonthIcon style={{ color: '#005f8f' }} />} variant="outlined" label={<Typography sx={home.homeTextH14LightGray}> {item.createdAt && item.createdAt.substring(0, 10)}</Typography>} />
-                                            <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>de</Typography> <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography sx={home.homeTextH14LightGray}> {item.loan_amount}</Typography>} />
-                                            <Chip marginLeft={'5px'} style={{ background: '#D6C426', color: 'white' }} icon={<AssessmentIcon style={{ color: 'white' }} />} label={<Typography sx={home.homeTextH14LightWhite}>Tabla de Amortización</Typography>} onClick={() => handleOpenLoanHistory(item.loan_initial_amount, item.createdAt, item.loan_amortization_type, parseInt(item.loan_amount), item.loan_type, parseInt(item.loan_deadline), item, index)} />
-                                            <Chip marginRight={'5px'} marginLeft={'5px'} style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={home.homeTextH14LightGray}> Préstamo {item.loan_state}</Typography>} />
+                                            <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>de</Typography> <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography  sx={{ ...home.homeTextH14LightGray, width: '50px' }}> {item.loan_amount}</Typography>} />                                           
+                                            <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>Estado del préstamo</Typography> <Chip marginRight={'5px'} marginLeft={'5px'} style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography  sx={{ ...home.homeTextH14LightGray, width: '80px' }}>  {item.loan_state}</Typography>} />
                                             <Typography marginLeft={'15px'} marginRight={'10px'} sx={home.homeTextH14Light}>Aceptar</Typography>
                                             <Chip style={{ background: '#b0d626', color: 'white' }} icon={<CheckIcon style={{ color: 'white' }} />} onClick={() => handleAccept(item.loan_id, item.loan_state)} />
                                             <Typography marginLeft={'15px'} marginRight={'10px'} sx={home.homeTextH14Light}>Rechazar</Typography>
@@ -361,59 +312,6 @@ function LoanHistory() {
 
                 <Box display="flex" justifyContent={"center"} width="30%" marginLeft={'38%'} mt="3rem">
 
-
-                    <Modal
-                        open={isModalSucessOpen}
-                        onClose={handleCloseLoanHistory}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" sx={home.homeTextH3}>
-                                Detalle de la Simulación de tu crédito
-                            </Typography>
-                            <Typography id="modal-modal-description" sx={home.homeTextH4}>
-                                Lo que calculaste.
-                            </Typography>
-                            <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
-
-                                <Box paddingRight="2%" paddingLeft='2%' display="flex" justifyContent="center" alignItems="center">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Dividendo</Typography><hr /></th>
-                                                <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Fecha</Typography><hr /></th>
-                                                <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }}>Saldo</Typography><hr /></th>
-                                                <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }} bgcolor={'#e2f0af'}>Cuota</Typography><hr /></th>
-                                                <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Interés</Typography><hr /></th>
-                                                <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '110px' }}>Amortización</Typography><hr /></th>
-                                                <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '110px' }}>Desgravamen</Typography><hr /></th>
-                                                <th><hr /><Typography id="modal-modal-title" sx={home.homeTextH3} >
-                                                    Total</Typography><hr /></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {table1.map((fila) => (
-                                                <tr >
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.mes}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.fecha}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.saldoCuenta}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4} bgcolor={'#e2f0af'}> ${fila.pagoMensual}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.pagoInteres}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.amortizacion}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.desgravamen}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.total}</Typography></td>
-
-
-                                            </tr>
-                                            ))}
-
-                                        </tbody>
-                                    </table>
-                                </Box>
-                            </div>
-                        </Box>
-                    </Modal>
 
                     <Modal
                         open={isModalAddLoanOpen}
@@ -441,7 +339,7 @@ function LoanHistory() {
                                 <TextField
                                     id="standard-select-currency"
                                     select
-                                    label={<Typography sx={login.textoInput} >Elige una marca  </Typography>}
+                                    label={<Typography sx={login.textoInput} >Elige una tipo de préstamo  </Typography>}
                                     // helperText={<Typography sx={login.textoMensajeAbajoInput} >Seleccione una opción</Typography>}
                                     variant="standard"
 
@@ -508,9 +406,10 @@ function LoanHistory() {
                                 {textFieldLoan.map((item, index) => (
                                     (
                                         <Box sx={{ display: 'flex', alignItems: 'flex-end' }} key={index}>
-                                            <item.icon sx={{ color: item.iconColor, mr: 1, my: 0.5 }} />
+                                            <item.icon sx={{ color: item.iconColor, mr: 1, my: 1 }} />
                                             <TextField
                                                 id={`input-${item.key}-with-sx`}
+                                                type={item.type}
                                                 label={
                                                     <Typography
                                                         sx={{
@@ -526,10 +425,11 @@ function LoanHistory() {
                                                 }
                                                 variant="standard"
                                                 fullWidth
-
                                                 margin="normal"
                                                 // Usar los datos de selectedData
                                                 onChange={(event) => handleTextFieldChange(event, item.key)}
+                                                helperText={<Typography sx={login.textoMensajeAbajoInput} >{item.helper}</Typography>} 
+                                                
                                             />
 
                                         </Box>

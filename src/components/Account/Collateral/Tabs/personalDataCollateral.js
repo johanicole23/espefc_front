@@ -45,6 +45,24 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
     const [isCheckedNo, setIsCheckedNo] = useState(false);
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
 
+    const [customerData, setCustomerData] = useState([]);
+    const [userData, setUserData] = useState([]);
+  
+    useEffect(() => {
+        const newCustomerData = window.localStorage.getItem('customer');
+        const newUserData = window.localStorage.getItem('user');
+        if (newCustomerData) {
+            setCustomerData(JSON.parse(newCustomerData));
+        }
+        if (newUserData) {
+            setUserData(JSON.parse(newUserData));
+        }
+
+       
+    }, []);
+    
+    
+
     const handleChangeId = (event) => {
         const id = idInputRef.current.value.trim().toLowerCase();
         setIsAlertIdOpen(!validarCedulaEcuatoriana(id));
@@ -146,7 +164,8 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                             <TextField
                                 id="fullName"
                                 label={<Typography sx={login.textoInput} >Nombres y apellidos completos </Typography>}
-                                defaultValue={data.name}
+                                value={customerData.customer_name}
+                                disabled={"true"}
                                 onChange={(event) => {
                                     handleFieldChange('name', event);
                                     fieldsFilled(event);   // Llama a la segunda función
@@ -158,10 +177,10 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField type="number" id="numberId" label={<Typography sx={login.textoInput} >Cédula </Typography>}
-                                defaultValue={data.id}
+                                value={userData.user_ci}
+                                disabled={"true"}
                                 onChange={(event) => {
-                                    handleFieldChange('id', event);
-                                    handleChangeId(event); // Llama a la primera función
+                                    
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
                                 inputRef={idInputRef} variant="standard" fullWidth margin="normal" />

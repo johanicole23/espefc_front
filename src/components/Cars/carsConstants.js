@@ -16,6 +16,7 @@ import nissan from '../../assets/cars/Nissan.png';
 import peugeot from '../../assets/cars/Peugeot.png';
 import renault from '../../assets/cars/Renault.png';
 import toyota from '../../assets/cars/Toyota.png';
+import others from '../../assets/cars/Otros.png';
 
 import new1 from '../../assets/cars/diapo1.png';
 import new2 from '../../assets/cars/diapo2.png';
@@ -92,6 +93,10 @@ export const cardMarks = [
     {
         image: ford,
         title: "Ford",       
+    },
+    {
+        image: others,
+        title: "Otros",       
     },
 ];
 
