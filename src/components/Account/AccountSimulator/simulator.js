@@ -6,7 +6,6 @@ import MyFooter from '../../MyComponents/myFooter';
 import MyAppBar from '../../MyComponents/myAppBar';
 import { Fade } from '@mui/material';
 import LoanSimulator from './loanSimulator';
-import LoanHistory from './loanHistory';
 import AppBarDrawer from '../AppBarDrawer';
 import home from '../../../styles/pages/home';
 import { useEffect } from 'react';
@@ -43,9 +42,9 @@ function SimulatorLoan() {
             }} >
             <Typography variant="body2" sx={home.homeTextH4}>Todos los préstamos que hayas realizado se encuentran aquí </Typography>
 
-            <LoanHistory></LoanHistory>
+           
             <Typography variant="body2" sx={home.homeTextH1}>Simulemos el cálculo de tu crédito</Typography>
-            <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>¿En qué utilizarás tu crédito? </Typography>
+          
           </Box>
 
           <LoanSimulator></LoanSimulator>

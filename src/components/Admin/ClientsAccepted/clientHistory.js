@@ -4,86 +4,46 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider, createTheme, } from '@mui/material/styles';
 import {
-  Chip, Paper, Switch,
+  Chip, Paper, Switch, Modal, Button, Stack, Alert
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import { calcularTablaAmortizacionAleman, calcularTablaAmortizacionFrances } from '../../../utils/simulatorFunctions';
 import home from '../../../styles/pages/home';
 import login from '../../../styles/pages/login';
+import buttons from '../../../styles/buttons';
 import SearchIcon from '@mui/icons-material/Search';
+import PaidIcon from '@mui/icons-material/Paid';
+import AddIcon from '@mui/icons-material/Add';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useEffect } from 'react';
 import axios from 'axios';
 function LoanHistory() {
 
 
-  const [open, setOpen] = React.useState(false);
-  const [table1, setTable1] = React.useState([]);
-  const [selectedForm, setSelectedForm] = useState(null);
+
   const [isModalSucessOpen, setIsModalSucessOpen] = useState(false);
   const [pendingUsers, setPendingUsers] = useState([]);
+  const [isAlertSuccessAddOpen, setIsAlertSuccessAddOpen] = useState(false);
+  const [isAlertErrorAddOpen, setIsAlertErrorAddOpen] = useState(false);
+  const [userBalance, setUserBalance] = useState('');
+  const [userId, setUserId] = useState('');
 
-  const handleOpenLoanHistory = (amortization, amount, interest, term, item, index) => {
-    var tablaAmortizacion = [];
-    if (amortization === 'Alemán') {
-      tablaAmortizacion = calcularTablaAmortizacionAleman(amount, interest, term, amount);
-    }
-    else {
-      tablaAmortizacion = calcularTablaAmortizacionFrances(amount, interest, term, amount);
-    }
-    tablaAmortizacion.forEach(fila => {
-    });
-    setTable1(tablaAmortizacion);
-    setSelectedForm(index);
+  const handleOpenBalance = (idClient) => {
     setIsModalSucessOpen(true);
-
+    setUserId(idClient);
+    console.log("seteando id:" ,idClient);
   };
 
 
-  const handleCloseLoanHistory = () => {
+  const handleCloseBalance = () => {
     setIsModalSucessOpen(false);
 
   }
 
-  const loanHistory = [
-    {
-      index: 0,
-      id: '1751040716',
-      name: 'Johanna Nicole Molina Pinto',
-      color: '#005f8f',
-    },
-    {
-      index: 1,
-      id: '1751040716',
-      name: 'Johanna Nicole Molina Pinto',
-      color: '#b0d626',
-    },
-    {
-      index: 2,
-      id: '1751040716',
-      name: 'Johanna Nicole Molina Pinto',
-      color: '#005f8f',
-    },
-    {
-      index: 3,
-      id: '1851040716',
-      name: 'Johanna Nicole Molina Pinto',
-      color: '#b0d626',
-    },
-    {
-      index: 4,
-      id: '1751040717',
-      name: 'Johanna Nicole Rivera Pinto',
-      color: '#005f8f',
-    },
-    {
-      index: 5,
-      id: '1851040716',
-      name: 'Ezequiel Mateo Castillo Hidalgo',
-      color: '#b0d626',
-    },
 
-  ]
+
+
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
   const theme = createTheme({
     palette: {
@@ -126,7 +86,7 @@ function LoanHistory() {
 
   const handleSwitchChange = async (event, index) => {
     try {
-      
+
       // Realiza la solicitud al servidor
       console.log('El id del usuario es:', index);
 
@@ -145,9 +105,9 @@ function LoanHistory() {
       } else {
         console.log('El interruptor está desactivado');
 
-      }    
+      }
 
-      
+
     } catch (error) {
       console.error('Error al realizar la solicitud al servidor:', error);
     }
@@ -155,6 +115,46 @@ function LoanHistory() {
     // Acciones que deseas realizar cuando se activa o desactiva el interruptor
 
   };
+  //Función que actualiza el estado de los campos de texto en AddCar
+  function handleTextFieldChange(event) {
+
+    const newValue = event.target.value;
+    setUserBalance(newValue);   
+    setIsAlertErrorAddOpen(false);
+    setIsAlertSuccessAddOpen(false);
+
+  }
+
+  async function handleButtonAddBalance() {
+   
+    try {
+      const response = await axios.post('http://localhost:3000/api/updateBalance',
+        {
+          user_id: userId,
+          user_balance: userBalance,
+
+        });
+
+      // Manejar la respuesta del servidor
+      console.log(response.data);
+      setIsAlertErrorAddOpen(false);
+      setIsAlertSuccessAddOpen(true);
+
+    } catch (error) {
+      console.error(error);
+      setIsAlertErrorAddOpen(true);
+      setIsAlertSuccessAddOpen(false);
+      // Manejar el error de alguna manera adecuada para tu aplicación
+    }
+    setTimeout(() => {
+      // Realizar acciones después de esperar 5 segundos
+      setIsAlertErrorAddOpen(false);
+      setIsAlertSuccessAddOpen(false);
+
+    }, 5000);
+  }
+
+
 
   return (
     <Box>
@@ -162,7 +162,7 @@ function LoanHistory() {
         <Box display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} marginTop={'2rem'} >
           <TextField
             sx={{ ...login.textoContrasena, width: '500px' }}
-            id="search"
+            id="searchClient"
             label={<Typography sx={login.textoInput} >Ingrese el nombre del cliente</Typography>}
             variant="outlined"
             InputProps={{
@@ -188,7 +188,8 @@ function LoanHistory() {
                       <Chip marginLeft={'5px'} style={{ background: '#b0d626' }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '210px' }}>{item.customer_name}</Typography>} variant="outlined" />
                       <Typography marginLeft={'15px'} marginRight={'15px'} sx={home.homeTextH14Light}>Fecha de creación </Typography>
                       <Chip style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '100px' }}>{item.createdAt.slice(0, 10)} </Typography>} />
-                      <Typography marginLeft={'15px'}  sx={home.homeTextH14Light}>Desactivar</Typography><Switch color='secondary' onClick={(event) => handleSwitchChange(event, item.customer_id)}  {...label}/>
+                      <Typography marginLeft={'15px'} sx={home.homeTextH14Light}>Desactivar</Typography><Switch color='secondary' onClick={(event) => handleSwitchChange(event, item.customer_id)}  {...label} />
+                      <Chip style={{ background: '#D6C426', color: 'white' }} icon={<AssessmentIcon style={{ color: 'white' }} />} label={<Typography sx={home.homeTextH14LightWhite}>Asignar saldo </Typography>} onClick={() => handleOpenBalance(item.customer_id)} />
                     </Box>
                   </Paper>
                 </Box>
@@ -200,6 +201,114 @@ function LoanHistory() {
           </Box>
 
         </Box>
+
+
+
+
+        <Modal
+          open={isModalSucessOpen}
+          onClose={handleCloseBalance}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+
+        >
+          <Box sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '500px',
+            bgcolor: 'background.paper',
+            border: '0px solid #000',
+            boxShadow: 20,
+            p: 4,
+          }}>
+            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+
+              <Typography margin={'1rem 0'} id="modal-modal-title" sx={home.homeTextH3}>
+                Asignar un monto a la cuenta de este cliente
+              </Typography>
+
+
+
+              <Box sx={{ display: 'flex', alignItems: 'flex-end' }} >
+                <PaidIcon sx={{ color: "#005f8f", mr: 1, my: 1 }} />
+                <TextField
+                  id="balance"
+                  type="number"
+                  label={
+                    <Typography
+                      sx={{
+                        fontFamily: 'Cairo',
+                        textTransform: 'none',
+                        fontSize: '16px',
+                        width: '100%',
+
+                      }}
+                    >
+                      Saldo de la cuenta
+                    </Typography>
+                  }
+                  variant="standard"
+                  fullWidth
+                  margin="normal"
+                  onChange={(event) => handleTextFieldChange(event)}
+                  helperText={<Typography sx={login.textoMensajeAbajoInput} >Solo números</Typography>}
+
+                />
+
+              </Box>
+
+
+
+              <Box marginTop={'2rem'} display={'flex'} justifyContent={'center'} alignContent={'center'}>
+                <Button size="medium" variant="contained" color="terciary"
+                  onClick={handleButtonAddBalance}
+                  sx={buttons.appBarButtonRegister}
+                  endIcon={<AddIcon />} >
+                  Asignar monto
+                </Button>
+              </Box>
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                {isAlertSuccessAddOpen && (
+                  <Alert
+                    open={isAlertSuccessAddOpen}
+                    severity="success"
+                    sx={{
+                      fontFamily: 'Cairo',
+                      textAlign: 'Right',
+                      fontSize: "14px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Valor agregado con éxito
+                  </Alert>
+                )}
+              </Stack>
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                {isAlertErrorAddOpen && (
+                  <Alert
+                    open={isAlertErrorAddOpen}
+                    severity="error"
+                    sx={{
+                      fontFamily: 'Cairo',
+                      textAlign: 'Right',
+                      fontSize: "14px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    No se pudo agregar el valor.
+                  </Alert>
+                )}
+              </Stack>
+
+
+
+
+            </div>
+          </Box>
+        </Modal >
+
 
 
 

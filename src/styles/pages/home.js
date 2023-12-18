@@ -248,6 +248,16 @@ const home = {
         paddingTop: 0
 
     },
+    carsCardLogoOthers: {
+        display: 'flex',
+        height: '200px',
+        width: '1000px',
+        alignItems: 'center',
+        justifyContent: 'center',
+       
+        paddingTop: 0
+
+    },
 
 
     //Card
@@ -272,6 +282,19 @@ const home = {
     carsFormatCardLoan: {
         maxWidth: '100%',
         width: '220px',
+        height: '220px',
+        marginTop: 5,
+        zIndex: 1,
+        transition: 'transform .2s',
+        boxShadow: '0px 0px 10px 5px rgba(0, 0, 0, 0.1)',
+        '&:hover': {
+            transform: 'scale(1.1)',
+        },
+
+    },
+    carsFormatCardLoanOthers: {
+        maxWidth: '100%',
+        width: '1000px',
         height: '220px',
         marginTop: 5,
         zIndex: 1,

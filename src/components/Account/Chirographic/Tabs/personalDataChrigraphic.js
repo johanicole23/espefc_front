@@ -16,6 +16,7 @@ import TtyIcon from '@mui/icons-material/Tty';
 import home from '../../../../styles/pages/home';
 import loan from '../../../../styles/pages/loan';
 import login from '../../../../styles/pages/login';
+import { useRouteLoaderData } from 'react-router-dom';
 
 
 function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {

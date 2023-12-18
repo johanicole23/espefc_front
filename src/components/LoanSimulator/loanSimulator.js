@@ -14,7 +14,8 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Modal from '@mui/material/Modal';
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useEffect, useRef } from 'react';
 import { calcularTablaAmortizacionAleman, calcularTablaAmortizacionFrances } from '../../utils/simulatorFunctions';
 import {
 
@@ -31,13 +32,14 @@ import simulator from '../../styles/pages/simulator';
 
 function LoanSimulator() {
     function calcularTabla() {
-
+        const hoy = new Date();
         var tablaAmortizacion = [];
+        
         if (seleccionAleman) {
-            tablaAmortizacion = calcularTablaAmortizacionAleman(valorPrestamo, valorInteres, tiempoPago, valorCuenta);
+            tablaAmortizacion = calcularTablaAmortizacionAleman(hoy, valorInteres, tiempoPago, valorPrestamo, desgravamen);
         }
         if (seleccionFrances) {
-            tablaAmortizacion = calcularTablaAmortizacionFrances(valorPrestamo, valorInteres, tiempoPago, valorCuenta);
+            tablaAmortizacion = calcularTablaAmortizacionFrances(hoy, valorInteres, tiempoPago, valorPrestamo, desgravamen);
         }
 
         return tablaAmortizacion;
@@ -47,6 +49,8 @@ function LoanSimulator() {
     const [tiempoPago, setTiempoPago] = useState('');
     const [valorInteres, setValorInteres] = useState(null);
     const [valorCuenta, setValorCuenta] = useState(null);
+    const [desgravamen, setDesgravamen] = useState([]);
+
     const handleValorPrestamoChange = (event) => {
         setValorPrestamo(event.target.value);
     };
@@ -64,7 +68,7 @@ function LoanSimulator() {
     const [seleccionAleman, setSeleccionAleman] = useState(false);
 
     const handleSeleccionFrances = () => {
-        console.log("frances");
+       
         setSeleccionFrances(!seleccionFrances);
         if (seleccionAleman) {
             setSeleccionAleman(false);
@@ -72,13 +76,28 @@ function LoanSimulator() {
     };
 
     const handleSeleccionAleman = () => {
-        console.log("aleman");
+       
         setSeleccionAleman(!seleccionAleman);
         if (seleccionFrances) {
             setSeleccionFrances(false);
         }
     };
 
+    useEffect(() => {
+        fetchDesgravamen();      
+
+    }, []);
+
+    async function fetchDesgravamen() {
+        try {
+            const response = await axios.get('http://localhost:3000/api/deductibles');
+            setDesgravamen(response.data.deductible);
+
+        } catch (error) {
+            console.error('Error al obtener deducibles:', error);
+
+        }
+    }
 
 
 
@@ -214,10 +233,10 @@ function LoanSimulator() {
     const handleOpen = () => {
         const tablaAmortizacion = calcularTabla();
         tablaAmortizacion.forEach(fila => {
-            console.log(fila);
+            //console.log(fila);
         });
         setTable(tablaAmortizacion);
-   
+
         setOpen(true)
     };
 
@@ -363,26 +382,27 @@ function LoanSimulator() {
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Dividendo</Typography><hr /></th>
+
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Cuota</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Fecha</Typography><hr /></th>
                                             <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }}>Saldo</Typography><hr /></th>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }} bgcolor={'#e2f0af'}>Cuota</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }} bgcolor={'#e2f0af'}>Capital</Typography><hr /></th>
                                             <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Interés</Typography><hr /></th>
-                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '110px' }}>Amortización</Typography><hr /></th>
                                             <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '110px' }}>Desgravamen</Typography><hr /></th>
-                                            <th><hr /><Typography id="modal-modal-title" sx={home.homeTextH3} >
-                                                Total</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={home.homeTextH3} >Cuota</Typography><hr /></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {table.map((fila) => (
                                             <tr >
+
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.mes}</Typography></td>
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.fecha}</Typography></td>
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.saldoCuenta}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4} bgcolor={'#e2f0af'}> ${fila.pagoMensual}</Typography></td>
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4} bgcolor={'#e2f0af'}> ${fila.amortizacion}</Typography></td>
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.pagoInteres}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.amortizacion}</Typography></td>
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.desgravamen}</Typography></td>
-                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.total}</Typography></td>
+                                                <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${fila.cuota}</Typography></td>
 
 
                                             </tr>
