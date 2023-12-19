@@ -28,7 +28,7 @@ const theme = createTheme({
     },
   });
 
-function FileConverter() {
+function LoanFileConverter() {
     const [excelFile, setExcelFile] = useState(null);
     const [jsonUpdate, setJsonUpdate] = useState(null);
     const [notification, setNotification] = useState('Actualizar');
@@ -43,24 +43,29 @@ function FileConverter() {
                 convertCSVToJSON(csvData, (jsonData) => {
                     if (jsonData.length > 0) {
                         nuevoJSON = {
-                            balance_json: jsonData.map((registro) => ({
+                            loan_json: jsonData.map((registro) => ({
                                 user_ci: String(registro.cedula),
-                                user_balance: registro["CTA. INV"] || 0,
+                                loan_num: String(registro.numcredito),
+                                loan_type: String(registro.tipocredito),
+                                loan_amount: registro.capital,
+                                loan_deadline: registro.plazo,
+                                loan_pending_amount: registro.salcapital
                             })),
                         }
                         setJsonUpdate(nuevoJSON);
+                        console.log(nuevoJSON);
                     }
                 });
             });
         }
     };
-    
+
     const handleUpdate = () => {
         actualizarSaldos(jsonUpdate);
     }
 
     async function actualizarSaldos(jsonUpdate) {
-        const res = await axios.post('http://localhost:3000/api/updateBalance', jsonUpdate);
+        const res = await axios.post('http://localhost:3000/api/updateLoansAuto', jsonUpdate);
         setNotification(res.data.message);
         setTimeout(() => {
             setExcelFile(null);
@@ -82,8 +87,10 @@ function FileConverter() {
 
     return (
         <ThemeProvider theme={theme} >
+
+
             <Paper elevation={5} sx={{ padding: '2% 20% ', width: '80%', marginBottom: '2rem' }}>
-                <Typography marginBottom={'1rem'} variant="subtitle1" sx={home.homeTextH3Light}>Actualización de Saldos</Typography>
+                <Typography marginBottom={'1rem'} variant="subtitle1" sx={home.homeTextH3Light}>Actualización de Préstamos</Typography>
                 <Typography sx={home.homeTextH5Light} >Sube el archivo excel:  </Typography>
                 <Button
                     fullWidth
@@ -98,18 +105,18 @@ function FileConverter() {
                 {excelFile && <div><Typography sx={home.homeTextH3Light}
                 >Archivo seleccionado: </Typography><Typography sx={home.homeTextH4}>{excelFile.name}</Typography></div>}
                 {excelFile && (
-                <Button
-                    sx={{marginTop: '1rem', width: '80%', marginLeft: '10%', marginRight: '10%' }}
-                    variant="contained"
-                    color="terciary"
-                    component="label"
-                    onClick={handleUpdate}
-                    startIcon={<CloudUploadIcon style={{ color: '#ffffff' }}/>}> <Typography sx={home.homeTextH4W600}> {notification} </Typography>
-                </Button>
+                    <Button
+                        sx={{ marginTop: '1rem', width: '80%', marginLeft: '10%', marginRight: '10%' }}
+                        variant="contained"
+                        color="terciary"
+                        component="label"
+                        onClick={handleUpdate}
+                        startIcon={<CloudUploadIcon style={{ color: '#ffffff' }}/>}> <Typography sx={home.homeTextH4W600}>{notification}</Typography>
+                    </Button>
                 )}
             </Paper>
         </ThemeProvider>
     );
 };
 
-export default FileConverter;
+export default LoanFileConverter;
