@@ -119,6 +119,7 @@ export const carsBrands = [
     'Peugeot',
     'Renault',
     'Toyota',
+    'Otros',
   ];
   
   export const textFieldCars = [

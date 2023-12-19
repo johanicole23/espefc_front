@@ -22,6 +22,7 @@ function LoanHistory() {
   const [selectedForm, setSelectedForm] = useState(null);
   const [isModalSucessOpen, setIsModalSucessOpen] = useState(false);
   const [pendingUsers, setPendingUsers] = useState([]);
+  const [usersList, setUsersList] = useState([]);
 
   const handleOpenLoanHistory = (amortization, amount, interest, term, item, index) => {
     var tablaAmortizacion = [];
@@ -114,7 +115,8 @@ function LoanHistory() {
     const fetchPendingUsers = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/pendingUsers');
-        setPendingUsers(response.data);
+        setPendingUsers(response.data.customers);
+        setUsersList(response.data.users);
       } catch (error) {
         console.error('Error al obtener usuarios pendientes:', error);
       }
@@ -162,7 +164,7 @@ function LoanHistory() {
         <Box display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} marginTop={'2rem'} >
           <TextField
             sx={{ ...login.textoContrasena, width: '500px' }}
-            id="search"
+            id="searchPending"
             label={<Typography sx={login.textoInput} >Ingrese el nombre del cliente</Typography>}
             variant="outlined"
             InputProps={{
@@ -186,6 +188,8 @@ function LoanHistory() {
                     <Box margin={'0 2rem'} display="flex" alignItems="center" justifyContent="space-between" flexDirection={'row'} >
                       <Typography marginRight={'5px'} sx={home.homeTextH14Light}>Nombre del Usuario </Typography>
                       <Chip marginLeft={'5px'} style={{ background: '#005f8f' }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '210px' }}>{item.customer_name}</Typography>} variant="outlined" />
+                      <Typography marginLeft={'15px'} marginRight={'15px'} sx={home.homeTextH14Light}>CI:  </Typography>
+                      <Chip style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '100px' }}>{usersList[index].user_ci} </Typography>} />
                       <Typography marginLeft={'15px'} marginRight={'15px'} sx={home.homeTextH14Light}>Fecha de creación </Typography>
                       <Chip style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '100px' }}>{item.createdAt.slice(0, 10)} </Typography>} />
                       <Typography marginLeft={'15px'} sx={home.homeTextH14Light}>Aprobar</Typography> <Switch color='terciary' onClick={(event) => handleSwitchChange(event, item.customer_id)}/>

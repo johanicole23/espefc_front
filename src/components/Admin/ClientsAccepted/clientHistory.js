@@ -24,6 +24,7 @@ function LoanHistory() {
 
   const [isModalSucessOpen, setIsModalSucessOpen] = useState(false);
   const [pendingUsers, setPendingUsers] = useState([]);
+  const [usersList, setUsersList] = useState([]);
   const [isAlertSuccessAddOpen, setIsAlertSuccessAddOpen] = useState(false);
   const [isAlertErrorAddOpen, setIsAlertErrorAddOpen] = useState(false);
   const [userBalance, setUserBalance] = useState('');
@@ -74,7 +75,8 @@ function LoanHistory() {
     const fetchPendingUsers = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/getApprovedUsers');
-        setPendingUsers(response.data);
+        setPendingUsers(response.data.customers);
+        setUsersList(response.data.users);
       } catch (error) {
         console.error('Error al obtener usuarios pendientes:', error);
       }
@@ -128,7 +130,7 @@ function LoanHistory() {
   async function handleButtonAddBalance() {
    
     try {
-      const response = await axios.post('http://localhost:3000/api/updateBalance',
+      const response = await axios.post('http://localhost:3000/api/editBalanceManual',
         {
           user_id: userId,
           user_balance: userBalance,
@@ -186,6 +188,8 @@ function LoanHistory() {
                     <Box margin={'0 2rem'} display="flex" alignItems="center" justifyContent="space-between" flexDirection={'row'} >
                       <Typography marginRight={'5px'} sx={home.homeTextH14Light}>Nombre del Usuario </Typography>
                       <Chip marginLeft={'5px'} style={{ background: '#b0d626' }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '210px' }}>{item.customer_name}</Typography>} variant="outlined" />
+                      <Typography marginLeft={'15px'} marginRight={'15px'} sx={home.homeTextH14Light}>CI:  </Typography>
+                      <Chip style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '100px' }}>{usersList[index].user_ci} </Typography>} />
                       <Typography marginLeft={'15px'} marginRight={'15px'} sx={home.homeTextH14Light}>Fecha de creación </Typography>
                       <Chip style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '100px' }}>{item.createdAt.slice(0, 10)} </Typography>} />
                       <Typography marginLeft={'15px'} sx={home.homeTextH14Light}>Desactivar</Typography><Switch color='secondary' onClick={(event) => handleSwitchChange(event, item.customer_id)}  {...label} />
@@ -263,7 +267,7 @@ function LoanHistory() {
 
               <Box marginTop={'2rem'} display={'flex'} justifyContent={'center'} alignContent={'center'}>
                 <Button size="medium" variant="contained" color="terciary"
-                  onClick={handleButtonAddBalance}
+                  onClick={()=>handleButtonAddBalance()}
                   sx={buttons.appBarButtonRegister}
                   endIcon={<AddIcon />} >
                   Asignar monto

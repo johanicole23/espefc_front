@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -6,7 +5,7 @@ import { ThemeProvider, createTheme, } from '@mui/material/styles';
 import {
     Chip, Paper, Switch,
 } from '@mui/material';
-import { TextField, Button, Checkbox, MenuItem, Stack, Alert, Autocomplete } from '@mui/material';
+import { Radio, RadioGroup, FormControlLabel, TextField, Button, Checkbox, MenuItem, Stack, Alert, Autocomplete } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
@@ -17,6 +16,7 @@ import {
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import SearchIcon from '@mui/icons-material/Search';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import PaidIcon from '@mui/icons-material/Paid';
 import ClearIcon from '@mui/icons-material/Clear';
 import AddIcon from '@mui/icons-material/Add';
@@ -40,17 +40,29 @@ function LoanHistory() {
                 main: '#b0d626'
 
             },
+            cuaternary: {
+                main: '#FE5B78'
+            }
         },
     });
 
-   
+
     const [loans, setLoans] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [isModalAddLoanOpen, setIsModalAddLoanOpen] = useState(false);
     const [selectedIdTypeAddLoan, setSelectedIdTypeAddLoan] = useState('');
     const [isAlertSuccessAddOpen, setIsAlertSuccessAddOpen] = useState(false);
     const [isAlertErrorAddOpen, setIsAlertErrorAddOpen] = useState(false);
-   
+    const [isAlertSuccessCredit, setIsAlertSuccessCredit] = useState(false);
+    const [isAlertErrorCredit, setIsAlertErrorCredit] = useState(false);
+    const [isAlertSuccessDenegate, setIsAlertSuccessDenegate] = useState(false);
+    const [isAlertErrorDenegate, setIsAlertErrorDenegate] = useState(false);
+    const [isModalCredit, setIsModalCredit] = useState(false);
+    const [isModalDenegate, setIsModalDenegate] = useState(false);
+    const [loanCredit, setLoanCredit] = useState('');
+    const [loanId, setLoanId] = useState('');
+    const [loanState, setLoanState] = useState('');
+
 
     const dataLoans = useRef();
 
@@ -69,17 +81,17 @@ function LoanHistory() {
 
 
     useEffect(() => {
-       
+
         const interval = setInterval(() => {
 
             getLoans();
         }, 1000);
 
 
-    }, []);   
+    }, []);
 
 
-  
+
 
     const getLoans = async () => {
         try {
@@ -106,30 +118,81 @@ function LoanHistory() {
         setSearchValue(event.target.value);
     };
 
-    const handleChangeState = async (state, id) => {
+    const toggleChecked = () => {
+        setIsModalCredit((prev) => !prev);
+    };
+
+    const toggleCheckedDenegate = () => {
+        setIsModalDenegate((prev) => !prev);
+    };
+
+
+    function handleTextFieldChangeCredit(event) {
+
+        const newValue = event.target.value;
+        setLoanCredit(newValue);
+        setIsAlertErrorCredit(false);
+        setIsAlertSuccessCredit(false);
+
+    }
+
+
+    const handleChangeState = async () => {
         try {
             const response = await axios.post('http://localhost:3000/api/changeLoanState', {
-                loan_id: id,
-                loan_state: state,
+                loan_id: loanId,
+                loan_state: loanState,
+                loan_num: loanCredit,
             });
-
+            setIsAlertErrorCredit(false);
+            setIsAlertSuccessCredit(true);
+            setIsAlertErrorDenegate(false);
+            setIsAlertSuccessDenegate(true);
 
         } catch (error) {
             console.error('Error al realizar la solicitud:', error);
+            setIsAlertErrorCredit(true);
+            setIsAlertSuccessCredit(false);
+            setIsAlertErrorDenegate(true);
+            setIsAlertSuccessDenegate(false);
         }
+        setTimeout(() => {
+            // Realizar acciones después de esperar 5 segundos
+            setIsModalCredit(false);
+            setIsModalDenegate(false);
+            setIsAlertErrorCredit(false);
+            setIsAlertSuccessCredit(false);
+            setIsAlertErrorDenegate(false);
+            setIsAlertSuccessDenegate(false);
+
+        }, 5000);
+
     };
 
     const handleAccept = (id, state) => {
 
         if (state != 'Aprobado') {
-            handleChangeState("Aprobado", id);
+            setLoanId(id);
+            setLoanState("Aprobado");
+
+            setIsModalCredit(true);
 
         }
 
     };
+
+    const handleAcceptCredit = (id, state) => {
+
+        handleChangeState();
+
+    };
+
+
     const handleReject = (id, state) => {
         if (state != 'Rechazado') {
-            handleChangeState("Rechazado", id);
+            setLoanId(id);
+            setLoanState("Rechazado");
+            setIsModalDenegate(true);
 
         }
     };
@@ -225,7 +288,7 @@ function LoanHistory() {
         const fetchPendingUsers = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/getApprovedUsers');
-                setPendingUsers(response.data);
+                setPendingUsers(response.data.customers);
                 console.log('Usuarios pendientes:', response.data);
             } catch (error) {
                 console.error('Error al obtener usuarios pendientes:', error);
@@ -252,13 +315,18 @@ function LoanHistory() {
         //setSelectedDataAddLoan(updatedSelectedDataAddLoan);
         //console.log(selectedOption.customer_name); // Establece el valor del texto cuando se selecciona una opción
     };
+    const [selectedValueRadio, setSelectedValueRadio] = useState('');
 
+    const handleChangeRadio = (event) => {
+        setSelectedValueRadio(event.target.value);
+    };
 
 
     return (
         <Box>
             <ThemeProvider theme={theme}>
                 <Box display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} marginTop={'2rem'} >
+
                     <TextField
                         sx={{ ...login.textoContrasena, width: '500px', marginBottom: '1rem' }}
                         id="nameSearch"
@@ -272,6 +340,9 @@ function LoanHistory() {
                         value={searchValue}
                         onChange={handleSearchChange}
                     />
+                </Box>
+                <Box display='flex' justifyContent='space-between' sx={{ margin: '0 10%' }}>
+
                     <Button size="medium" variant="outlined" color="primary"
                         sx={buttons.appBarButtonText}
                         marginTop={'1rem'}
@@ -280,6 +351,22 @@ function LoanHistory() {
                     >
                         Agregar Préstamo
                     </Button>
+
+                    <RadioGroup value={selectedValueRadio} onChange={handleChangeRadio}>
+                        <FormControlLabel
+                            value="pending"
+                            control={<Radio icon={<FilterListIcon />} checkedIcon={<FilterListIcon style={{ color: '#005f8f' }} />} />}
+                            label={<Typography sx={{ ...home.homeTextH4LeftLight, marginLeft: '0.5rem' }}>Filtrar por Pendientes</Typography>}
+                        />
+                    </RadioGroup>
+
+
+
+
+                </Box>
+                <Box display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} marginTop={'2rem'} >
+
+
                     <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', my: 2 }}>
 
                         <Box display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} marginTop={'2rem'} >
@@ -292,8 +379,8 @@ function LoanHistory() {
                                             <Typography marginRight={'5px'} sx={home.homeTextH14Light}>Cliente </Typography> <Chip style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '200px' }}>{item.loan_customer_name} </Typography>} />
                                             <Chip marginLeft={'5px'} style={{ background: '#005f8f' }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '100px' }}>{item.loan_type}</Typography>} variant="outlined" />
                                             <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>emitido</Typography> <Chip style={{ borderColor: '#005f8f' }} icon={<CalendarMonthIcon style={{ color: '#005f8f' }} />} variant="outlined" label={<Typography sx={home.homeTextH14LightGray}> {item.createdAt && item.createdAt.substring(0, 10)}</Typography>} />
-                                            <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>de</Typography> <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography  sx={{ ...home.homeTextH14LightGray, width: '50px' }}> {item.loan_amount}</Typography>} />                                           
-                                            <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>Estado del préstamo</Typography> <Chip marginRight={'5px'} marginLeft={'5px'} style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography  sx={{ ...home.homeTextH14LightGray, width: '80px' }}>  {item.loan_state}</Typography>} />
+                                            <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>de</Typography> <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '50px' }}> {item.loan_amount}</Typography>} />
+                                            <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>Estado del préstamo</Typography> <Chip marginRight={'5px'} marginLeft={'5px'} style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '80px' }}>  {item.loan_state}</Typography>} />
                                             <Typography marginLeft={'15px'} marginRight={'10px'} sx={home.homeTextH14Light}>Aceptar</Typography>
                                             <Chip style={{ background: '#b0d626', color: 'white' }} icon={<CheckIcon style={{ color: 'white' }} />} onClick={() => handleAccept(item.loan_id, item.loan_state)} />
                                             <Typography marginLeft={'15px'} marginRight={'10px'} sx={home.homeTextH14Light}>Rechazar</Typography>
@@ -428,8 +515,8 @@ function LoanHistory() {
                                                 margin="normal"
                                                 // Usar los datos de selectedData
                                                 onChange={(event) => handleTextFieldChange(event, item.key)}
-                                                helperText={<Typography sx={login.textoMensajeAbajoInput} >{item.helper}</Typography>} 
-                                                
+                                                helperText={<Typography sx={login.textoMensajeAbajoInput} >{item.helper}</Typography>}
+
                                             />
 
                                         </Box>
@@ -486,12 +573,186 @@ function LoanHistory() {
                     </Modal >
 
                 </Box>
+                <Modal
+                    open={isModalCredit}
+                    onClose={toggleChecked}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+
+                >
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '500px',
+                        bgcolor: 'background.paper',
+                        border: '0px solid #000',
+                        boxShadow: 20,
+                        p: 4,
+                    }}>
+                        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+
+                            <Typography margin={'1rem 0'} id="modal-modal-title" sx={home.homeTextH3}>
+                                Asignar un número de crédito a este préstamo
+                            </Typography>
+
+
+
+                            <Box sx={{ display: 'flex', alignItems: 'flex-end' }} >
+                                <PaidIcon sx={{ color: "#005f8f", mr: 1, my: 1 }} />
+                                <TextField
+                                    id="numcredit"
+                                    type="text"
+                                    label={
+                                        <Typography
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textTransform: 'none',
+                                                fontSize: '16px',
+                                                width: '100%',
+
+                                            }}
+                                        >
+                                            Número de crédito
+                                        </Typography>
+                                    }
+                                    variant="standard"
+                                    fullWidth
+                                    margin="normal"
+                                    onChange={(event) => handleTextFieldChangeCredit(event)}
+                                    helperText={<Typography sx={login.textoMensajeAbajoInput} >Solo números</Typography>}
+
+                                />
+
+                            </Box>
+
+
+
+                            <Box marginTop={'2rem'} display={'flex'} justifyContent={'center'} alignContent={'center'}>
+                                <Button size="medium" variant="contained" color="terciary"
+                                    onClick={() => handleAcceptCredit()}
+                                    sx={buttons.appBarButtonRegister}
+                                    endIcon={<AddIcon />} >
+                                    Asignar número
+                                </Button>
+                            </Box>
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                {isAlertSuccessCredit && (
+                                    <Alert
+                                        open={isAlertSuccessCredit}
+                                        severity="success"
+                                        sx={{
+                                            fontFamily: 'Cairo',
+                                            textAlign: 'Right',
+                                            fontSize: "14px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        Valor agregado con éxito
+                                    </Alert>
+                                )}
+                            </Stack>
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                {isAlertErrorCredit && (
+                                    <Alert
+                                        open={isAlertErrorCredit}
+                                        severity="error"
+                                        sx={{
+                                            fontFamily: 'Cairo',
+                                            textAlign: 'Right',
+                                            fontSize: "14px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        No se pudo agregar el valor.
+                                    </Alert>
+                                )}
+                            </Stack>
+
+
+
+
+                        </div>
+                    </Box>
+                </Modal >
+
+                <Modal
+                    open={isModalDenegate}
+                    onClose={toggleCheckedDenegate}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+
+                >
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '500px',
+                        bgcolor: 'background.paper',
+                        border: '0px solid #000',
+                        boxShadow: 20,
+                        p: 4,
+                    }}>
+                        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+
+                            <Typography margin={'1rem 0'} id="modal-modal-title" sx={home.homeTextH3}>
+                                ¿Está de acuerdo en rechazar este préstamo?
+                            </Typography>
+
+
+                            <Box marginTop={'2rem'} display={'flex'} justifyContent={'center'} alignContent={'center'}>
+                                <Button size="medium" variant="contained" color="cuaternary"
+                                    onClick={() => handleAcceptCredit()}
+                                    sx={buttons.appBarButtonRegister}
+                                >
+                                    Rechazar
+                                </Button>
+                            </Box>
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                {isAlertSuccessDenegate && (
+                                    <Alert
+                                        open={isAlertSuccessDenegate}
+                                        severity="success"
+                                        sx={{
+                                            fontFamily: 'Cairo',
+                                            textAlign: 'Right',
+                                            fontSize: "14px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        Cambio de estado exitoso.
+                                    </Alert>
+                                )}
+                            </Stack>
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                {isAlertErrorDenegate && (
+                                    <Alert
+                                        open={isAlertErrorDenegate}
+                                        severity="error"
+                                        sx={{
+                                            fontFamily: 'Cairo',
+                                            textAlign: 'Right',
+                                            fontSize: "14px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        Error al cambiar de estado.
+                                    </Alert>
+                                )}
+                            </Stack>
+
+
+
+
+
+                        </div>
+                    </Box>
+                </Modal >
             </ThemeProvider>
         </Box>
 
     );
 }
 export default LoanHistory;
-
-
-

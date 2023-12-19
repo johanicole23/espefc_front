@@ -33,13 +33,26 @@ import simulator from '../../styles/pages/simulator';
 function LoanSimulator() {
     function calcularTabla() {
         const hoy = new Date();
+        let desgravamenValor=0;
         var tablaAmortizacion = [];
+        if(selectedForm ==0){
+            desgravamenValor=desgravamen[0].deductible_number;
+        }
+        else if(selectedForm ==1){
+            desgravamenValor=desgravamen[1].deductible_number;
+        }
+        else if(selectedForm ==2){
+            desgravamenValor=desgravamen[3].deductible_number;
+        }
+        else if(selectedForm ==3){
+            desgravamenValor=desgravamen[4].deductible_number;
+        }
         
         if (seleccionAleman) {
-            tablaAmortizacion = calcularTablaAmortizacionAleman(hoy, valorInteres, tiempoPago, valorPrestamo, desgravamen);
+            tablaAmortizacion = calcularTablaAmortizacionAleman(hoy, valorInteres, tiempoPago, valorPrestamo, desgravamenValor);
         }
         if (seleccionFrances) {
-            tablaAmortizacion = calcularTablaAmortizacionFrances(hoy, valorInteres, tiempoPago, valorPrestamo, desgravamen);
+            tablaAmortizacion = calcularTablaAmortizacionFrances(hoy, valorInteres, tiempoPago, valorPrestamo, desgravamenValor);
         }
 
         return tablaAmortizacion;
