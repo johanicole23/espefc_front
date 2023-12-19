@@ -49,7 +49,8 @@ function LoanFileConverter() {
                                 loan_type: String(registro.tipocredito),
                                 loan_amount: registro.capital,
                                 loan_deadline: registro.plazo,
-                                loan_pending_amount: registro.salcapital
+                                loan_pending_amount: registro.salcapital,
+                                createdAt: Date.parse(registro.fecha),
                             })),
                         }
                         setJsonUpdate(nuevoJSON);
