@@ -13,9 +13,8 @@ function calcularTablaAmortizacionFrances(fechaPrestamo,  tasaInteres, duracionM
   let fecha = new Date(fechaPrestamo);
   fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
 
-  let desgravamenObjIndex = deductibles.length - 1;
-  let currentDeductibleObj = deductibles[desgravamenObjIndex];
-  const porcentajeDesgravamen = (currentDeductibleObj.deductible_number) / 100;
+ 
+  const porcentajeDesgravamen = (deductibles) / 100;
 
 
   for (let mes = 1; mes <= duracionMeses ; mes++) {
@@ -61,9 +60,7 @@ function calcularTablaAmortizacionAleman(fechaPrestamo, tasaInteres, duracionMes
   let fecha = new Date(fechaPrestamo);
   fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
 
-  let desgravamenObjIndex = deductibles.length - 1;
-  let currentDeductibleObj = deductibles[desgravamenObjIndex];
-  const porcentajeDesgravamen = (currentDeductibleObj.deductible_number) / 100;
+  const porcentajeDesgravamen = (deductibles) / 100;
 
 
   for (let mes = 1; mes <= duracionMeses ; mes++) {

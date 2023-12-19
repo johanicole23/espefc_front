@@ -95,6 +95,7 @@ function Home() {
         {images.map((item) => (
           < Box sx={{
             position: 'relative',
+            width:'100%'
 
           }}>
             <img src={item.src} alt={item.alt} />

@@ -254,7 +254,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
                                 
-                                helperText={<Typography sx={login.textoMensajeAbajoInput} >Valor máximo ${userData.user_balance}. Si es mayor al saldo se necesitan garates</Typography>} />
+                                helperText={<Typography sx={login.textoMensajeAbajoInput} >Valor máximo ${userData.user_balance}. Si es mayor al saldo se necesitan garantes</Typography>} />
                         </Box>
 
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
