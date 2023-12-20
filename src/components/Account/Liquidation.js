@@ -12,7 +12,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import home from '../../styles/pages/home';
 import buttons from '../../styles/buttons';
 import account from '../../styles/pages/account';
-import {Box, Paper} from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { cardLoan, cardLoanSimulator, cardLoanPassword } from './accountConstants';
 import CardMedia from '@mui/material/CardMedia';
 import fondo from '../../assets/account/fondoAccount.png';
@@ -48,10 +48,10 @@ function handleClickDownloadDocuments(url, name) {
 function App() {
     useEffect(() => {
         const userAuth = JSON.parse(window.localStorage.getItem('user'));
-        if(!userAuth || userAuth.user_role !== 'usuario'){
+        if (!userAuth || userAuth.user_role !== 'usuario') {
             window.location.href = '/prohibido';
         }
-    },[]); 
+    }, []);
     return (
         <div>
             <AppBarDrawer />
@@ -75,6 +75,18 @@ function App() {
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={home.homeTextH4Left}>Sirve para proporcionar una red de seguridad financiera a los empleados en caso de que se enfrenten a la pérdida de empleo, a menudo debido a recortes de personal, cambios en la estructura de la institución, o cualquier otra circunstancia que resulte en la terminación del contrato de trabajo.
                                     <br />Estos fondos están destinados a proteger los derechos y la estabilidad financiera de los empleados, especialmente aquellos que han dedicado años de servicio a la institución. </Typography>
+                                <Typography sx={home.homeTextH4Left}
+                                >
+                                   <br />   A continuación los requisitos para este proceso<br />
+                                </Typography>
+                                <Typography sx={home.homeTextH4Left}
+                                >
+                                    <br />                                 
+                                    <li>Copia a color de cédula de ciudadanía o identidad actual </li>
+                                    <li>Certificado bancario</li>
+                                    <li>Aviso de salida</li>                            
+
+                                </Typography>
                             </Paper>
 
 

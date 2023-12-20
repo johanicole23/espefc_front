@@ -69,8 +69,8 @@ export const style = {
 };
 
 export const loanType = [
-    'Quirografario',
-    'Prendario',
+    'Quirografarios',
+    'Prendarios',
     'Educativo',
     'Salud'
 ];

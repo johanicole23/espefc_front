@@ -75,7 +75,7 @@ function App() {
     try {
       const response = await axios.post('http://localhost:3000/api/createLoan', {
         user_id: userData.user_id,
-        loan_type: 'Prendario',
+        loan_type: 'Prendarios',
         loan_amount: formData.amount,
         loan_deadline: formData.isTerm, // Ajusta la fecha según tus necesidades
         loan_amortization_type: amortization,

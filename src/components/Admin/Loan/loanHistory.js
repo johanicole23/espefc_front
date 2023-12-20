@@ -62,7 +62,7 @@ function LoanHistory() {
     const [loanCredit, setLoanCredit] = useState('');
     const [loanId, setLoanId] = useState('');
     const [loanState, setLoanState] = useState('');
-
+    const [filteredLoans, setFilteredLoans] = useState([]);
 
     const dataLoans = useRef();
 
@@ -109,10 +109,35 @@ function LoanHistory() {
         }
     };
 
+    const [selectedValueRadio, setSelectedValueRadio] = useState(false); // Inicializa selectedValueRadio
 
-    const filteredLoans = loans.filter(loan =>
-        loan.loan_customer_name.toLowerCase().includes(searchValue.toLowerCase())
-    );
+
+    const handleChangeRadio = (event) => {
+        const newValue = event.target.value;
+        if(selectedValueRadio){
+            setSelectedValueRadio(false);
+        }
+        else{
+            setSelectedValueRadio(true);
+        }      
+    };
+    
+
+    useEffect(() => {
+        // Esta función se ejecutará cuando selectedValueRadio cambie
+        const newFilteredLoans = loans.filter((loan) => {
+            const customerNameMatches = loan.loan_customer_name.toLowerCase().includes(searchValue.toLowerCase());
+
+            if (selectedValueRadio === true) {
+                return customerNameMatches && loan.loan_state.toLowerCase() === "pendiente";
+            }
+
+            return customerNameMatches;
+        });
+
+        // Actualiza el estado con los préstamos filtrados
+        setFilteredLoans(newFilteredLoans);
+    }, [selectedValueRadio, loans, searchValue]);
 
     const handleSearchChange = (event) => {
         setSearchValue(event.target.value);
@@ -315,12 +340,6 @@ function LoanHistory() {
         //setSelectedDataAddLoan(updatedSelectedDataAddLoan);
         //console.log(selectedOption.customer_name); // Establece el valor del texto cuando se selecciona una opción
     };
-    const [selectedValueRadio, setSelectedValueRadio] = useState('');
-
-    const handleChangeRadio = (event) => {
-        setSelectedValueRadio(event.target.value);
-    };
-
 
     return (
         <Box>
@@ -352,14 +371,14 @@ function LoanHistory() {
                         Agregar Préstamo
                     </Button>
 
-                    <RadioGroup value={selectedValueRadio} onChange={handleChangeRadio}>
+                    <RadioGroup  >
                         <FormControlLabel
-                            value="pending"
+                           value={selectedValueRadio}
+                            onChange={handleChangeRadio}
                             control={<Radio icon={<FilterListIcon />} checkedIcon={<FilterListIcon style={{ color: '#005f8f' }} />} />}
                             label={<Typography sx={{ ...home.homeTextH4LeftLight, marginLeft: '0.5rem' }}>Filtrar por Pendientes</Typography>}
                         />
                     </RadioGroup>
-
 
 
 
@@ -377,7 +396,7 @@ function LoanHistory() {
                                     <Paper sx={{ height: '2.2rem' }}>
                                         <Box margin={'0 2rem'} display="flex" alignItems="center" justifyContent="space-between" flexDirection={'row'} >
                                             <Typography marginRight={'5px'} sx={home.homeTextH14Light}>Cliente </Typography> <Chip style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '200px' }}>{item.loan_customer_name} </Typography>} />
-                                            <Chip marginLeft={'5px'} style={{ background: '#005f8f' }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '100px' }}>{item.loan_type}</Typography>} variant="outlined" />
+                                            <Chip marginLeft={'5px'} style={{ background: '#005f8f' }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '115px', textTransform: 'uppercase' }}>{item.loan_type}</Typography>} variant="outlined" />
                                             <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>emitido</Typography> <Chip style={{ borderColor: '#005f8f' }} icon={<CalendarMonthIcon style={{ color: '#005f8f' }} />} variant="outlined" label={<Typography sx={home.homeTextH14LightGray}> {item.createdAt && item.createdAt.substring(0, 10)}</Typography>} />
                                             <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>de</Typography> <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '50px' }}> {item.loan_amount}</Typography>} />
                                             <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>Estado del préstamo</Typography> <Chip marginRight={'5px'} marginLeft={'5px'} style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '80px' }}>  {item.loan_state}</Typography>} />
@@ -426,7 +445,7 @@ function LoanHistory() {
                                 <TextField
                                     id="standard-select-currency"
                                     select
-                                    label={<Typography sx={login.textoInput} >Elige una tipo de préstamo  </Typography>}
+                                    label={<Typography sx={login.textoInput} >Elige un tipo de préstamo  </Typography>}
                                     // helperText={<Typography sx={login.textoMensajeAbajoInput} >Seleccione una opción</Typography>}
                                     variant="standard"
 
@@ -594,7 +613,7 @@ function LoanHistory() {
                         <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
 
                             <Typography margin={'1rem 0'} id="modal-modal-title" sx={home.homeTextH3}>
-                                Asignar un número de crédito a este préstamo
+                                Asignar un número secuencial a este préstamo
                             </Typography>
 
 
@@ -614,7 +633,7 @@ function LoanHistory() {
 
                                             }}
                                         >
-                                            Número de crédito
+                                            Número secuencial
                                         </Typography>
                                     }
                                     variant="standard"

@@ -71,7 +71,7 @@ function LoanHistory() {
                             <Box marginBottom={'10px'} >
                                 <Paper width='80%' sx={{ height: '2.2rem' }}>
                                     <Box display="flex" alignItems="center" justifyContent="space-around" flexDirection={'row'} >
-                                        <Chip label={<Typography sx={{ ...home.homeTextH14LightGray, width: '200px' }}>Préstamo {item.loan_type}</Typography>} variant="outlined" />
+                                        <Chip label={<Typography sx={{ ...home.homeTextH14LightGray, width: '200px', textTransform: 'uppercase' }}> {item.loan_type}</Typography>} variant="outlined" />
                                         <Typography sx={home.homeTextH14Light}>de</Typography> <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '100px' }}>Monto {item.loan_amount}</Typography>} />
                                         <Typography sx={home.homeTextH14Light}>por pagar</Typography> <Chip style={{ borderColor: '#FE5B78' }} icon={<PaidIcon style={{ color: '#FE5B78' }} />} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '100px' }}>Valor -{item.loan_pending_amount}</Typography>} />
                                         <Typography sx={home.homeTextH14Light}>emitido</Typography> <Chip style={{ borderColor: '#005f8f' }} icon={<CalendarMonthIcon style={{ color: '#005f8f' }} />} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '80px' }}>{item.createdAt && item.createdAt.substring(0, 10)}</Typography>} />

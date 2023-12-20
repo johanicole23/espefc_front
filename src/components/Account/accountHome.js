@@ -95,13 +95,34 @@ function App() {
                             <CardActionArea>
                                 <CardContent >
                                     <Box display="flex" flexDirection={'column'} >
-                                        <Typography variant="subtitle1" sx={home.homeTextH3}>Saldo disponible en tu cuenta</Typography>
+                                        <Typography marginBottom={'2rem'} variant="subtitle1" sx={home.homeTextH3}>Saldo disponible en tu cuenta individual</Typography>
                                         <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography sx={home.homeTextH14LightGray}>{userData.user_balance}</Typography>} />
 
                                     </Box>
                                 </CardContent>
                             </CardActionArea>
                         </Card>
+
+                        {cardLoanPassword.map((item) => (
+                            <Card sx={account.formularyFormatCardLoan}>
+                                <CardActionArea>
+
+                                    <CardContent >
+                                        <Box display="flex" flexDirection={'column'} >
+                                            <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
+                                            <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
+                                        </Box>
+                                    </CardContent>
+                                </CardActionArea>
+                                <CardActions >
+                                    <Box marginLeft="58px" >
+                                        <Button size="medium" variant="contained" fullWidth color="secondary" sx={buttons.accountButtonTextPrimary} href="/cuenta/configuracion/contrasena">
+                                            {item.button}
+                                        </Button>
+                                    </Box>
+                                </CardActions>
+                            </Card>
+                        ))}
                     </Box>
                     <LoanHistory></LoanHistory>
                     <Box display="flex" justifyContent="space-around" alignItems="center" sx={{ margin: '0 15%' }} >
@@ -130,26 +151,7 @@ function App() {
                     </Box>
 
                     <Box display="flex" justifyContent="space-around" alignItems="center" sx={{ margin: '0 15%' }} >
-                        {cardLoanPassword.map((item) => (
-                            <Card sx={account.formularyFormatCardLoan}>
-                                <CardActionArea>
-
-                                    <CardContent >
-                                        <Box display="flex" flexDirection={'column'} >
-                                            <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
-                                            <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
-                                        </Box>
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions >
-                                    <Box marginLeft="58px" >
-                                        <Button size="medium" variant="contained" fullWidth color="secondary" sx={buttons.accountButtonTextPrimary} href="/cuenta/configuracion/contrasena">
-                                            {item.button}
-                                        </Button>
-                                    </Box>
-                                </CardActions>
-                            </Card>
-                        ))}
+                        
 
                         {cardLoanSimulator.map((item) => (
                             <Card sx={account.formularyFormatCardLoan}>

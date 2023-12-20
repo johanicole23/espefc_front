@@ -33,21 +33,21 @@ import simulator from '../../styles/pages/simulator';
 function LoanSimulator() {
     function calcularTabla() {
         const hoy = new Date();
-        let desgravamenValor=0;
+        let desgravamenValor = 0;
         var tablaAmortizacion = [];
-        if(selectedForm ==0){
-            desgravamenValor=desgravamen[0].deductible_number;
+        if (selectedForm == 0) {
+            desgravamenValor = desgravamen[0].deductible_number;
         }
-        else if(selectedForm ==1){
-            desgravamenValor=desgravamen[1].deductible_number;
+        else if (selectedForm == 1) {
+            desgravamenValor = desgravamen[1].deductible_number;
         }
-        else if(selectedForm ==2){
-            desgravamenValor=desgravamen[3].deductible_number;
+        else if (selectedForm == 2) {
+            desgravamenValor = desgravamen[3].deductible_number;
         }
-        else if(selectedForm ==3){
-            desgravamenValor=desgravamen[4].deductible_number;
+        else if (selectedForm == 3) {
+            desgravamenValor = desgravamen[4].deductible_number;
         }
-        
+
         if (seleccionAleman) {
             tablaAmortizacion = calcularTablaAmortizacionAleman(hoy, valorInteres, tiempoPago, valorPrestamo, desgravamenValor);
         }
@@ -81,7 +81,7 @@ function LoanSimulator() {
     const [seleccionAleman, setSeleccionAleman] = useState(false);
 
     const handleSeleccionFrances = () => {
-       
+
         setSeleccionFrances(!seleccionFrances);
         if (seleccionAleman) {
             setSeleccionAleman(false);
@@ -89,7 +89,7 @@ function LoanSimulator() {
     };
 
     const handleSeleccionAleman = () => {
-       
+
         setSeleccionAleman(!seleccionAleman);
         if (seleccionFrances) {
             setSeleccionFrances(false);
@@ -97,7 +97,7 @@ function LoanSimulator() {
     };
 
     useEffect(() => {
-        fetchDesgravamen();      
+        fetchDesgravamen();
 
     }, []);
 
@@ -387,7 +387,7 @@ function LoanSimulator() {
                             Detalle de la Simulación de tu crédito
                         </Typography>
                         <Typography id="modal-modal-description" sx={home.homeTextH4}>
-                            Lo que calculaste.
+                            Tabla de amortización
                         </Typography>
                         <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
 

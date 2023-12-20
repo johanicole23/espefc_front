@@ -40,6 +40,10 @@ function Register() {
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [isAlertUserOpen, setIsAlertUserOpen] = useState(false);
     const [isAlertIdOpen, setIsAlertIdOpen] = useState(false);
+    const [isAlertNameOpen, setIsAlertNameOpen] = useState(false);
+    const [isAlertEduEmailOpen, setIsAlertEduEmailOpen] = useState(false);
+    const [isAlertEmailOpen, setIsAlertEmailOpen] = useState(false);
+    const [isAlertPhoneOpen, setIsAlertPhoneOpen] = useState(false);
     const [questions, setQuestions] = useState([]);
 
     const [iconNameColor, setIconNameColor] = useState('action.active');
@@ -82,47 +86,7 @@ function Register() {
 
     const textFieldRegister = [
 
-        {
-            icon: AssignmentIndIcon,
-            iconColor: iconNameColor,
-            textLabel: "Nombres y Apellidos",
-            textError: " * Solo letras",
-            inputRef: nameInputRef,
-            name: 'customer_name',
-            value: formData.customer_name,
-
-        },
-
-        {
-            icon: EmailIcon,
-            iconColor: iconEmailColor,
-            textLabel: "Correo Electrónico de la ESPE",
-            textError: " *Correo Inválido",
-            inputRef: emailInputRef,
-            name: 'customer_espe_email',
-            value: formData.customer_espe_email,
-
-        },
-        {
-            icon: ContactMailIcon,
-            iconColor: iconEmailPersonalColor,
-            textLabel: "Correo Electrónico Personal",
-            textError: " *Correo Inválido",
-            inputRef: emailPersonalInputRef,
-            name: 'customer_personal_email',
-            value: formData.customer_personal_email,
-
-        },
-        {
-            icon: ContactPhoneIcon,
-            iconColor: iconNumberColor,
-            textLabel: "Teléfono Celular",
-            textError: " * Solo números",
-            inputRef: numberInputRef,
-            name: 'customer_phone',
-            value: formData.customer_phone,
-
-        },
+       
         {
             icon: HomeIcon,
             iconColor: iconDirColor,
@@ -165,15 +129,19 @@ function Register() {
             // setIsModalEmptyOpen(true);
             //flagEmpty = true;
             setIsAlertOpen(true);
+            setTimeout(() => {
+                // Realizar acciones después de esperar 5 segundos
+                setIsAlertOpen(false);
+            }, 5000);
         }
 
         if (!/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(nameValue)) {
-            setIconNameColor('error.main');
+           
             flag1 = false;
         }
-        
+
         else {
-            setIconNameColor('action.active');
+           
             flag1 = true;
         }
 
@@ -183,38 +151,38 @@ function Register() {
             flag2 = true;
         }
         if (!/^\d+$/.test(numberValue)) {
-            setIconNumberColor('error.main');
+           
             flag3 = false;
         }
         else {
-            setIconNumberColor('action.active');
+            
             flag3 = true;
         }
 
         if (!emailValue.endsWith('@espe.edu.ec')) {
             // El correo electrónico no es válido, abre el modal Email
-            setIconEmailColor('error.main');
+         
             flag4 = false;
         }
         else {
-            setIconEmailColor('action.active');
+           
             flag4 = true
         }
 
         if (!emailPersonalValue.endsWith('.com')) {
             // El correo electrónico no es válido, abre el modal Email
-            setIconEmailPersonalColor('error.main');
+           
             flag5 = false;
         }
         else {
-            setIconEmailPersonalColor('action.active');
+           
             flag5 = true
         }
 
-        if (flag1 === true && flag2 ===true && flag3 ===true && flag4 === true && flag5 ===true) {
+        if (flag1 === true && flag2 === true && flag3 === true && flag4 === true && flag5 === true) {
             setIsModalSucessOpen(true);
             setIsAlertOpen(false);
-          
+
         }
     }
 
@@ -273,7 +241,7 @@ function Register() {
         setFormData({ ...formData, security_questions: updatedSecurityQuestions });
     };
 
-    
+
     const handleCloseUserConfirm = () => {
         setIsModalUserConfirmOpen(false);
     };
@@ -292,6 +260,46 @@ function Register() {
     const handleChangeId = (event) => {
         const id = idInputRef.current.value.trim().toLowerCase();
         setIsAlertIdOpen(!validarCedulaEcuatoriana(id));
+    }
+
+    const handleChangeName = (event) => {
+        const name = event.target.value;
+        if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(name))) {
+            setIsAlertNameOpen(true);
+        }
+        else {
+            setIsAlertNameOpen(false);
+        }
+    }
+
+    const handleChangeEduEmail = (event) => {
+        const email = event.target.value;
+        if (!email.endsWith('@espe.edu.ec')) {
+            setIsAlertEduEmailOpen(true);
+        }
+        else {
+            setIsAlertEduEmailOpen(false);
+        }
+    }
+
+    const handleChangeEmail = (event) => {
+        const email = event.target.value;
+        if (!email.endsWith('.com')) {
+            setIsAlertEmailOpen(true);
+        }
+        else {
+            setIsAlertEmailOpen(false);
+        }
+    }
+
+    const handleChangePhone = (event) => {
+        const phone = event.target.value;
+        if (!/^\d{10}$/.test(phone)) {
+            setIsAlertPhoneOpen(true);
+        }
+        else {
+            setIsAlertPhoneOpen(false);
+        }
     }
 
 
@@ -341,7 +349,7 @@ function Register() {
                                 <Typography variant="subtitle1" sx={home.homeTextH3Light}>Registro de cuenta</Typography>
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                     <BadgeIcon sx={{ color: iconIdColor, mr: 1, my: 0.5 }} />
-                                    <TextField id="input-with-sx" label={<Typography
+                                    <TextField id="ci" label={<Typography
                                         sx={{
                                             fontFamily: "Cairo",
                                             textTransform: 'none',
@@ -378,6 +386,159 @@ function Register() {
                                     )}
                                 </Stack>
 
+
+
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                    <AssignmentIndIcon sx={{ color: iconNameColor, mr: 1, my: 0.5 }} />
+                                    <TextField id="name" label={<Typography
+                                        sx={{
+                                            fontFamily: "Cairo",
+                                            textTransform: 'none',
+                                            fontSize: "16px",
+                                            width: '100%',
+                                            color: iconNameColor
+                                        }} >Nombres y Apellidos </Typography>}
+                                        inputRef={nameInputRef}
+                                        name={'customer_name'}
+                                        value={formData.customer_name}
+                                        onChange={(event) => {
+                                            handleInputChange(event);
+                                            handleChangeName(event); // Llama a la primera función
+
+                                        }}
+
+                                        variant="standard" fullWidth margin="normal" />
+
+                                </Box>
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    {isAlertNameOpen && (
+                                        <Alert
+                                            open={isAlertNameOpen}
+                                            severity="error"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            Nombre incorrecto, solo letras.
+                                        </Alert>
+                                    )}
+                                </Stack>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                    <EmailIcon sx={{ color: iconEmailColor, mr: 1, my: 0.5 }} />
+                                    <TextField id="edu_email" label={<Typography
+                                        sx={{
+                                            fontFamily: "Cairo",
+                                            textTransform: 'none',
+                                            fontSize: "16px",
+                                            width: '100%',
+                                            color: iconEmailColor
+                                        }} >Correo Electrónico de la ESPE </Typography>}
+                                        inputRef={emailInputRef}
+                                        name={'customer_espe_email'}
+                                        value={formData.customer_espe_email}
+                                        onChange={(event) => {
+                                            handleInputChange(event);
+                                            handleChangeEduEmail(event); 
+
+                                        }}
+                                        variant="standard" fullWidth margin="normal" />
+
+                                </Box>
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    {isAlertEduEmailOpen && (
+                                        <Alert
+                                            open={isAlertEduEmailOpen}
+                                            severity="error"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            Email educativo incorrecto.
+                                        </Alert>
+                                    )}
+                                </Stack>                                
+
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                    <ContactMailIcon sx={{ color:iconEmailPersonalColor, mr: 1, my: 0.5 }} />
+                                    <TextField id="email" label={<Typography
+                                        sx={{
+                                            fontFamily: "Cairo",
+                                            textTransform: 'none',
+                                            fontSize: "16px",
+                                            width: '100%',
+                                            color: iconEmailPersonalColor
+                                        }} >Correo Electrónico Personal </Typography>}
+                                        inputRef={ emailPersonalInputRef}
+                                        name={'customer_personal_email'}
+                                        value={formData.customer_personal_email}
+                                        onChange={(event) => {
+                                            handleInputChange(event);
+                                            handleChangeEmail(event); 
+
+                                        }}
+                                        variant="standard" fullWidth margin="normal" />
+
+                                </Box>
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    {isAlertEmailOpen && (
+                                        <Alert
+                                            open={isAlertEmailOpen}
+                                            severity="error"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            Email personal incorrecto.
+                                        </Alert>
+                                    )}
+                                </Stack>
+       
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                    <ContactPhoneIcon sx={{ color: iconNumberColor, mr: 1, my: 0.5 }} />
+                                    <TextField id="phone" label={<Typography
+                                        sx={{
+                                            fontFamily: "Cairo",
+                                            textTransform: 'none',
+                                            fontSize: "16px",
+                                            width: '100%',
+                                            color: iconNumberColor
+                                        }} >Teléfono Celular</Typography>}
+                                        inputRef={numberInputRef}
+                                        name={'customer_phone'}
+                                        value={formData.customer_phone}
+                                        onChange={(event) => {
+                                            handleInputChange(event);
+                                            handleChangePhone(event); 
+
+                                        }}
+                                        variant="standard" fullWidth margin="normal" />
+
+                                </Box>
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    {isAlertPhoneOpen && (
+                                        <Alert
+                                            open={isAlertPhoneOpen}
+                                            severity="error"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            Celular inválido.
+                                        </Alert>
+                                    )}
+                                </Stack>
                                 {textFieldRegister.map((item) => (
                                     <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                         <item.icon sx={{ color: item.iconColor, mr: 1, my: 0.5 }} />

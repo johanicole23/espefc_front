@@ -13,6 +13,7 @@ import AccessCars from './accessCars';
 import AccessCarsDiaps from './accessCarsDiaps';
 import AccessUpload from './accessUpload';
 import AccessUploadLoans from './accessUploadLoans';
+import AccessDesgravamen from './accessDesgravamen';
 import {
   theme,
   checked,
@@ -54,6 +55,7 @@ function SimulatorLoan() {
               <AccessCarsDiaps />
               <AccessUpload/>
               <AccessUploadLoans/>
+              <AccessDesgravamen/>
 
 
             </Box>

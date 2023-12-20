@@ -317,7 +317,7 @@ function LoanSimulator() {
                     <CardActionArea>
                         <CardContent >
                             <Box display="flex" flexDirection={'column'} >
-                                <Typography variant="subtitle1" sx={home.homeTextH3}>Saldo disponible en tu cuenta</Typography>
+                                <Typography variant="subtitle1" sx={home.homeTextH3}>Saldo disponible en tu cuenta individual</Typography>
                                 <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography sx={home.homeTextH14LightGray}>{userData.user_balance}</Typography>} />
 
                             </Box>
@@ -461,7 +461,7 @@ function LoanSimulator() {
                             Detalle de la Simulación de tu crédito
                         </Typography>
                         <Typography id="modal-modal-description" sx={home.homeTextH4}>
-                            Lo que calculaste.
+                            Tabla de amortización
                         </Typography>
                         <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
 
