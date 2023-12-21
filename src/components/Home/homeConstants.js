@@ -10,6 +10,7 @@ import new2 from '../../assets/CarruselNews/Noticia2.png';
 import new2Mobile from '../../assets/CarruselNews/Noticia2Mobile.png';
 import new3 from '../../assets/CarruselNews/Noticia3.png';
 import new3Mobile from '../../assets/CarruselNews/Noticia3Mobile.png';
+import new4 from '../../assets/CarruselNews/Noticia4.png';
 import mazda from '../../assets/marcas/mazda.png';
 import kia from '../../assets/marcas/kia.png';
 import lg from '../../assets/marcas/lg.png';
@@ -131,6 +132,12 @@ export const newImages = [
     {
         key: '3',
         src: new3,
+        alt: 'Descripción de la imagen 2',
+        href: ''
+      },
+      {
+        key: '4',
+        src: new4,
         alt: 'Descripción de la imagen 2',
         href: ''
       },

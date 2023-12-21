@@ -114,14 +114,14 @@ function LoanHistory() {
 
     const handleChangeRadio = (event) => {
         const newValue = event.target.value;
-        if(selectedValueRadio){
+        if (selectedValueRadio) {
             setSelectedValueRadio(false);
         }
-        else{
+        else {
             setSelectedValueRadio(true);
-        }      
+        }
     };
-    
+
 
     useEffect(() => {
         // Esta función se ejecutará cuando selectedValueRadio cambie
@@ -373,7 +373,7 @@ function LoanHistory() {
 
                     <RadioGroup  >
                         <FormControlLabel
-                           value={selectedValueRadio}
+                            value={selectedValueRadio}
                             onChange={handleChangeRadio}
                             control={<Radio icon={<FilterListIcon />} checkedIcon={<FilterListIcon style={{ color: '#005f8f' }} />} />}
                             label={<Typography sx={{ ...home.homeTextH4LeftLight, marginLeft: '0.5rem' }}>Filtrar por Pendientes</Typography>}
@@ -399,11 +399,16 @@ function LoanHistory() {
                                             <Chip marginLeft={'5px'} style={{ background: '#005f8f' }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '115px', textTransform: 'uppercase' }}>{item.loan_type}</Typography>} variant="outlined" />
                                             <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>emitido</Typography> <Chip style={{ borderColor: '#005f8f' }} icon={<CalendarMonthIcon style={{ color: '#005f8f' }} />} variant="outlined" label={<Typography sx={home.homeTextH14LightGray}> {item.createdAt && item.createdAt.substring(0, 10)}</Typography>} />
                                             <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>de</Typography> <Chip style={{ borderColor: '#b0d626' }} icon={<PaidIcon style={{ color: '#b0d626' }} />} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '50px' }}> {item.loan_amount}</Typography>} />
-                                            <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>Estado del préstamo</Typography> <Chip marginRight={'5px'} marginLeft={'5px'} style={{ borderColor: '#005f8f' }} variant="outlined" label={<Typography sx={{ ...home.homeTextH14LightGray, width: '80px' }}>  {item.loan_state}</Typography>} />
+                                            <Typography marginRight={'5px'} marginLeft={'5px'} sx={home.homeTextH14Light}>Estado del préstamo</Typography>
+                                            <Chip marginRight={'5px'} marginLeft={'5px'}
+                                                style={{
+                                                    background: item.loan_state === 'Pendiente' ? '#005f8f' : item.loan_state === 'Rechazado' ? '#FE5B78' : item.loan_state === 'Aceptado' ? '#FE5B78' : '#b0d626',
+                                                    color: 'white'
+                                                }}  label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '80px' }}>  {item.loan_state}</Typography>} />
                                             <Typography marginLeft={'15px'} marginRight={'10px'} sx={home.homeTextH14Light}>Aceptar</Typography>
-                                            <Chip style={{ background: '#b0d626', color: 'white' }} icon={<CheckIcon style={{ color: 'white' }} />} onClick={() => handleAccept(item.loan_id, item.loan_state)} />
+                                            <Chip style={{ background: 'white', color: '#b0d626' }} variant='outlined' icon={<CheckIcon style={{ color: '#b0d626' }} />} onClick={() => handleAccept(item.loan_id, item.loan_state)} />
                                             <Typography marginLeft={'15px'} marginRight={'10px'} sx={home.homeTextH14Light}>Rechazar</Typography>
-                                            <Chip style={{ background: '#FE5B78', color: 'white' }} icon={<ClearIcon style={{ color: 'white' }} />} onClick={() => handleReject(item.loan_id, item.loan_state)} />
+                                            <Chip style={{ background: 'white', color: '#FE5B78' }} variant='outlined' icon={<ClearIcon style={{ color: '#FE5B78' }} />} onClick={() => handleReject(item.loan_id, item.loan_state)} />
 
                                         </Box>
                                     </Paper>

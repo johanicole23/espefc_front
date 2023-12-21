@@ -1,13 +1,10 @@
 import React from 'react';
 import AppBarDrawer from './AppBarDrawer';
 import bienvenida from '../../assets/account/welcome.png';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardActions from '@mui/material/CardActions';
-import { Button, Chip } from '@mui/material';
+import {
+    Button, Chip, Modal, Grid, Typography, Card, CardContent, CardActionArea,
+    CardActions, CardMedia
+} from '@mui/material';
 import PaidIcon from '@mui/icons-material/Paid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import home from '../../styles/pages/home';
@@ -15,11 +12,12 @@ import buttons from '../../styles/buttons';
 import account from '../../styles/pages/account';
 import Box from '@mui/material/Box';
 import { cardLoan, cardLoanSimulator, cardLoanPassword } from './accountConstants';
-import CardMedia from '@mui/material/CardMedia';
 import fondo from '../../assets/account/fondoAccount.png';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import LoanHistory from './loanHistory';
+import PasswordChange from '../Account/Configuration/passwordFunctions';
+import axios from 'axios';
 
 const theme = createTheme({
     palette: {
@@ -61,9 +59,30 @@ function App() {
         if (newUserData) {
             setUserData(JSON.parse(newUserData));
         }
-
-
     }, []);
+
+    useEffect(() => {
+
+        setIsModalPasswordOpen(userData.user_first_time);        
+
+
+    }, [userData]);
+
+    const [isModalPasswordOpen, setIsModalPasswordOpen] = useState(false);
+    
+
+    const handleCloseModal = () => {
+        const newUserData = window.localStorage.getItem('user');
+        if (newUserData) {
+            setUserData(JSON.parse(newUserData));
+        }
+        if(!userData.user_first_time){
+            setIsModalPasswordOpen(false);
+        }
+       
+
+    };
+
     return (
         <div>
             <AppBarDrawer />
@@ -151,7 +170,7 @@ function App() {
                     </Box>
 
                     <Box display="flex" justifyContent="space-around" alignItems="center" sx={{ margin: '0 15%' }} >
-                        
+
 
                         {cardLoanSimulator.map((item) => (
                             <Card sx={account.formularyFormatCardLoan}>
@@ -171,6 +190,52 @@ function App() {
 
 
                     </Box>
+                    <Modal
+                        open={isModalPasswordOpen}
+
+                        aria-labelledby="modal-modal-title"
+                        sx={{ zIndex: 1 }}
+                        aria-describedby="modal-modal-description"
+
+                    >
+                        <Box sx={{
+                            position: 'absolute',
+
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '800px',
+                            bgcolor: 'background.paper',
+                            border: '0px solid #000',
+                            boxShadow: 20,
+                            p: 4,
+                        }}>
+                            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+
+                                <Typography margin={'1rem 0'} id="modal-modal-title" sx={home.homeTextH3}>
+                                    Editar Contraseña
+                                </Typography>
+                                <PasswordChange />
+
+                                <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        sx={buttons.passwordChange}
+                                        component="label"
+                                        onClick={handleCloseModal}
+                                        
+                                        fullWidth
+                                    >
+                                        Cerrar
+
+                                    </Button>
+
+                                </Box>
+
+                            </div>
+                        </Box>
+                    </Modal >
 
 
 

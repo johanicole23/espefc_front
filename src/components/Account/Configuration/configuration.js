@@ -301,7 +301,7 @@ function App() {
                             sx={home.homeTextH4Left}
                         >Si deseas cambiar la contraseña y aumentar la seguridad de la misma, ingresa aquí.</Typography>
                         <Button fullWidth variant="outlined" color="secondary" sx={buttons.appBarButtonText}
-                            href='/admin-cuenta/configuracion/contrasena'>
+                            href='/cuenta/configuracion/contrasena'>
                             Editar contraseña
                         </Button>
                     </Paper>

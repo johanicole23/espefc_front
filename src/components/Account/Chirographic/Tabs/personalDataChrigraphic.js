@@ -1,13 +1,15 @@
-import React, { useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     createTheme,
     Typography,
     Box,
     TextField,
-    Button,    
+    Button,
     Paper,
-    Checkbox
-  } from '@mui/material';
+    Checkbox,
+    Stack,
+    Alert,
+} from '@mui/material';
 import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
 import ArrowCircleRightTwoToneIcon from '@mui/icons-material/ArrowCircleRightTwoTone';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
@@ -27,10 +29,17 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
     const sedeInputRef = useRef(null);
     const othersInputRef = useRef(null);
 
+    const [isAlertDirectionOpen, setIsAlertDirectionOpen] = useState(false);
+    const [isAlertCellphoneOpen, setIsAlertCellphoneOpen] = useState(false);
+    const [isAlertPhoneConventionOpen, setIsAlertPhoneConventionOpen] = useState(false);
+    const [isAlertSedeOpen, setIsAlertSedeOpen] = useState(false);
+    const [isAlertOthersOpen, setIsAlertOthersOpen] = useState(false);
+
+
     const [isCheckedAdmin, setIsCheckedAdmin] = useState(true);
     const [isCheckedTeacher, setIsCheckedTeacher] = useState(false);
     const [isCheckedNombrament, setIsCheckedNombrament] = useState(true);
-    const [isCheckedContract, setIsCheckedContract] = useState(false);   
+    const [isCheckedContract, setIsCheckedContract] = useState(false);
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
 
     const handleCheckboxAdminChange = (event) => {
@@ -70,6 +79,43 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
     const handleFieldChange = (fieldName, event) => {
         const newData = { ...data, [fieldName]: event.target.value };
         onDataChange(newData);
+        if (fieldName === 'direction') {
+            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+                setIsAlertDirectionOpen(true);
+            }
+            else {
+                setIsAlertDirectionOpen(false);
+            }
+        }
+        if (fieldName === 'cellphone') {
+            if (!/^\d{10}$/.test(event.target.value)) {
+                setIsAlertCellphoneOpen(true);
+            }
+            else {
+                setIsAlertCellphoneOpen(false);
+            }
+        }
+
+        if (fieldName === 'phoneConvention') {
+            if (!/^\d{7}$/.test(event.target.value)) {
+                setIsAlertPhoneConventionOpen(true);
+            }
+            else {
+                setIsAlertPhoneConventionOpen(false);
+            }
+        }
+
+        if (fieldName === 'sede') {
+            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+                setIsAlertSedeOpen(true);
+            }
+            else {
+                setIsAlertSedeOpen(false);
+            }
+        }
+
+       
+
     };
 
     const handleCheckboxChange = (checkedName, event) => {
@@ -82,7 +128,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         const cellphone = cellphoneInputRef.current.value.trim();
         const phoneConvention = phoneConventionInputRef.current.value.trim();
         const sede = sedeInputRef.current.value.trim();
-        setIsNextButtonDisabled(!(direction.trim() !== '' &&  cellphone === 0&& phoneConvention.trim() !== '' && sede.trim() !== '' ));
+        setIsNextButtonDisabled(!(direction.trim() !== '' && cellphone === 0 && phoneConvention.trim() !== '' && sede.trim() !== ''));
 
     }
 
@@ -92,7 +138,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         const cellphone = cellphoneInputRef.current.value.trim();
         const phoneConvention = phoneConventionInputRef.current.value.trim();
         const sede = sedeInputRef.current.value.trim();
-        setIsNextButtonDisabled(!(direction && cellphone && phoneConvention && sede ));
+        setIsNextButtonDisabled(!(direction && cellphone && phoneConvention && sede));
     }, [data, setIsNextButtonDisabled]);
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -126,6 +172,22 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 variant="standard" inputRef={directionInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertDirectionOpen && (
+                                <Alert
+                                    open={isAlertDirectionOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Dirección inválida
+                                </Alert>
+                            )}
+                        </Stack>
 
 
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
@@ -142,6 +204,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 variant="standard" inputRef={cellphoneInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                             <TtyIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+
                             <TextField
                                 id="phoneConvention"
                                 type="number"
@@ -155,6 +218,39 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 sx={{ color: 'action.active' }} />
                         </Box>
 
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertCellphoneOpen && (
+                                <Alert
+                                    open={isAlertCellphoneOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Teléfono celular inválido
+                                </Alert>
+                            )}
+                        </Stack>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertPhoneConventionOpen && (
+                                <Alert
+                                    open={isAlertPhoneConventionOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Teléfono convencional inválido
+                                </Alert>
+                            )}
+                        </Stack>
+
                         <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
                             <Typography sx={loan.marcaRellenoAux}>Categoría:</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -166,9 +262,9 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedAdmin}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedAdmin",event);
+                                            handleCheckboxChange("isCheckedAdmin", event);
                                             handleCheckboxAdminChange(event);
-                                        }} 
+                                        }}
                                     />
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -179,9 +275,9 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedTeacher}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedTeacher",event);
+                                            handleCheckboxChange("isCheckedTeacher", event);
                                             handleCheckboxTeacherChange(event);
-                                        }} 
+                                        }}
                                     />
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: '2rem' }}>
@@ -199,6 +295,22 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
 
                             </Box>
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertSedeOpen && (
+                                <Alert
+                                    open={isAlertSedeOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Sede inválida
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
                             <Typography sx={loan.marcaRellenoAux}>Tipo de contrato</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -210,9 +322,9 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedNombrament}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedNombrament",event);
+                                            handleCheckboxChange("isCheckedNombrament", event);
                                             handleCheckboxNombramentChange(event);
-                                        }} 
+                                        }}
                                     />
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -223,9 +335,9 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                         sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
                                         checked={data.isCheckedContract}
                                         onChange={(event) => {
-                                            handleCheckboxChange("isCheckedContract",event);
+                                            handleCheckboxChange("isCheckedContract", event);
                                             handleCheckboxContractChange(event);
-                                        }} 
+                                        }}
                                     />
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: '2rem' }}>
@@ -242,6 +354,22 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 </Box>
                             </Box>
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertOthersOpen && (
+                                <Alert
+                                    open={isAlertOthersOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Tipo de contrato inválido
+                                </Alert>
+                            )}
+                        </Stack>
 
                         <Box display="flex" justifyContent="space-between">
                             <Button size="small" variant="outlined" color="secondary" width="30%" sx={login.textoBoton} onClick={onPrevTab} >

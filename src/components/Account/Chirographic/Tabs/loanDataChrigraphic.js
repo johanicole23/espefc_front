@@ -24,6 +24,7 @@ import { validarCedulaEcuatoriana } from '../../../Register/registerConstants';
 import home from '../../../../styles/pages/home';
 import loan from '../../../../styles/pages/loan';
 import login from '../../../../styles/pages/login';
+import axios from 'axios';
 
 const theme = createTheme({
     palette: {
@@ -51,6 +52,9 @@ function Tab1({ data, onDataChange, onNextTab }) {
     ];
 
     const [isAlertIdOpen, setIsAlertIdOpen] = useState(false);
+    const [isAlertAmountOpen, setIsAlertAmountOpen] = useState(false);
+    const [isAlertNumberAccountOpen, setIsAlertNumberAccountOpen] = useState(false);
+
     const idInputRef = useRef(null);
     const fullNameInputRef = useRef(null);
     const amountInputRef = useRef(null);
@@ -63,7 +67,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
     const [isCheckedAleman, setIsCheckedAleman] = useState(true);
     const [isCheckedFrances, setIsCheckedFrances] = useState(false);
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
-
+    const [selectedInstitution, setSelectedInstitution] = useState('');
 
     const [customerData, setCustomerData] = useState([]);
     const [userData, setUserData] = useState([]);
@@ -76,7 +80,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
         }
         if (newUserData) {
             setUserData(JSON.parse(newUserData));
-        }     
+        }
 
     }, []);
 
@@ -143,6 +147,23 @@ function Tab1({ data, onDataChange, onNextTab }) {
     const handleFieldChange = (fieldName, event) => {
         const newData = { ...data, [fieldName]: event.target.value };
         onDataChange(newData);
+        if (fieldName === 'amount') {
+            if (event.target.value > parseInt(userData.user_balance, 10)) {
+                setIsAlertAmountOpen(true);
+            }
+            else {
+                setIsAlertAmountOpen(false);
+            }
+        }
+        if (fieldName === 'accountNumber') {
+            if (!/^\d{20}$/.test( event.target.value)) {
+                setIsAlertNumberAccountOpen(true);
+            }
+            else {
+                setIsAlertNumberAccountOpen(false);
+            }
+        }
+
     };
 
     const handleCheckboxChange = (checkedName, event) => {
@@ -156,12 +177,12 @@ function Tab1({ data, onDataChange, onNextTab }) {
         const amount = amountInputRef.current.value.trim();
 
         const numberAccount = accountNumberInputRef.current.value.trim();
-        const institution = institutionInputRef.current.value.trim();
+
         //const noneChecked = isCheckedCorriente==true && isCheckedAhorro==true;
         //const atLeastOneChecked = (isCheckedCorriente===true && isCheckedAhorro===false)||(isCheckedCorriente===false && isCheckedAhorro===true);
 
         // Verifica si los campos requeridos están llenos y válidos y al menos un Checkbox está marcado
-        setIsNextButtonDisabled(!(fullName.trim() !== '' && currentIndex === 0 && id.trim() !== '' && idValid && isTerm !== -1 && amount.trim() !== '' && numberAccount.trim() !== '' && institution.trim() !== ''));
+        setIsNextButtonDisabled(!(fullName.trim() !== '' && currentIndex === 0 && id.trim() !== '' && idValid && isTerm !== -1 && amount.trim() !== '' && numberAccount.trim() !== ''));
 
     }
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -177,12 +198,57 @@ function Tab1({ data, onDataChange, onNextTab }) {
         const idValid = validarCedulaEcuatoriana(id);
         const amount = amountInputRef.current.value.trim();
         const numberAccount = accountNumberInputRef.current.value.trim();
-        const institution = institutionInputRef.current.value.trim();
+
         const fullName = fullNameInputRef.current.value.trim();
         // Verifica todas las condiciones necesarias para habilitar el botón de "Siguiente"
-        setIsNextButtonDisabled(!(id && idValid && amount && numberAccount && institution && fullName));
+        setIsNextButtonDisabled(!(id && idValid && amount && numberAccount && fullName));
     }, [data, setIsNextButtonDisabled]);
 
+
+    const [institutions, setInstitutions] = useState([]);
+
+    async function fetchInstitutions() {
+        try {
+            const response = await axios.get('http://localhost:3000/api/institutions');
+            const data = response.data;
+
+            if (data.success) {
+
+                console.log(response.data.institutions);
+                return data.institutions;
+
+            } else {
+                console.error('Error al obtener las instituciones:', data.message);
+                return [];
+            }
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+            return [];
+        }
+    }
+
+    useEffect(() => {
+        const getInstitutions = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/institutions');
+                setInstitutions(response.data.institutions);
+
+
+            } catch (error) {
+                console.error('Error al obtener vehículos', error);
+            }
+        };
+
+        getInstitutions();
+    }, []);
+
+    const handleSelectChangeInstitution = (event) => {
+        const selectedValue = event.target.value;
+        const selectedValueString = String(selectedValue); // Convierte el valor en una cadena
+        setSelectedInstitution(selectedValueString); // Almacena la cadena en el estado 'isTerm'
+        const newData = { ...data, institution: event.target.value };
+        onDataChange(newData);
+    };
 
 
 
@@ -194,14 +260,14 @@ function Tab1({ data, onDataChange, onNextTab }) {
                 <Box display={'flex'} justifyContent={'center'} >
                     <Paper elevation={5} sx={{ padding: '2% 4% ', width: '800px', marginBottom: '2rem' }}>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
-                        <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                            <AssignmentIndIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
                                 id="fullName"
                                 label={<Typography sx={login.textoInput} >Nombres y apellidos completos </Typography>}
                                 value={customerData.customer_name}
                                 disabled={"true"}
                                 onChange={(event) => {
-                                  
+
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
                                 InputLabelProps={{ shrink: true }}
@@ -215,7 +281,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                 value={userData.user_ci}
                                 disabled={"true"}
                                 onChange={(event) => {
-                                   
+
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
                                 InputLabelProps={{ shrink: true }}
@@ -253,9 +319,25 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                     handleFieldChange('amount', event);
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
-                                
+
                                 helperText={<Typography sx={login.textoMensajeAbajoInput} >Valor máximo ${userData.user_balance}. Si es mayor al saldo se necesitan garantes</Typography>} />
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertAmountOpen && (
+                                <Alert
+                                    open={isAlertAmountOpen}
+                                    severity="warning"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Este monto no debe exceder su saldo en su cuenta individual o necesita garantes
+                                </Alert>
+                            )}
+                        </Stack>
 
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <CalendarMonthIcon sx={{ color: 'action.active', mr: 1, my: 4 }} />
@@ -327,19 +409,46 @@ function Tab1({ data, onDataChange, onNextTab }) {
                                     label={<Typography sx={login.textoInput}  >Número de cuenta</Typography>}
                                     helperText={<Typography sx={login.textoMensajeAbajoInput} >Cuenta a transferir el valor del préstamo</Typography>} variant="standard" fullWidth margin="normal" />
                             </Box>
-
-                            <Box display={'flex'} >
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                {isAlertNumberAccountOpen && (
+                                    <Alert
+                                        open={isAlertNumberAccountOpen}
+                                        severity="error"
+                                        sx={{
+                                            fontFamily: 'Cairo',
+                                            textAlign: 'Right',
+                                            fontSize: "14px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        Número de cuenta inválido
+                                    </Alert>
+                                )}
+                            </Stack>
+                            <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                                 <AccountBalanceOutlinedIcon sx={{ color: 'action.active', mr: 1, my: 5 }} />
                                 <TextField
-                                    inputRef={institutionInputRef}
-                                    id="institution"
-                                    defaultValue={data.institution}
+                                    select
+                                    label={<Typography sx={login.textoInput} >Institución Bancaria</Typography>}
+
+                                    helperText={<Typography sx={login.textoMensajeAbajoInput} >Seleccione una opción</Typography>}
+                                    variant="standard"
+                                    fullWidth
+                                    value={data.institution}
                                     onChange={(event) => {
                                         handleFieldChange('institution', event);
-                                        fieldsFilled(event);
+                                        handleSelectChangeInstitution(event); // Llama a la primera función
+                                        fieldsFilled(event);   // Llama a la segunda función
                                     }}
-                                    helperText={<Typography sx={login.textoMensajeAbajoInput} >Institución correspondiente a la cuenta</Typography>} label={<Typography sx={login.textoInput} >Institución financiera</Typography>} variant="standard" fullWidth margin="normal" />
+                                >
+                                    {institutions && institutions.map((institution) => (
+                                        <MenuItem key={institution.institution_id} value={institution.institution_name}>
+                                            {institution.institution_name}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
                             </Box>
+
 
                         </Box>
 

@@ -103,7 +103,7 @@ function FileConverter() {
                     <Button
                         sx={{ ...buttons.registerButton, marginTop: '1rem', marginRight: '10%' }}
                         variant="contained"
-                        color="terciary"
+                        color="terciary"                    
                         component="label"
                         onClick={handleUpdate}
                         startIcon={<CloudUploadIcon style={{ color: '#ffffff' }} />}> {notification} 
