@@ -1,7 +1,7 @@
 
 
 
-function calcularTablaAmortizacionFrances(fechaPrestamo,  tasaInteres, duracionMeses, saldoCuenta, deductibles) {
+function calcularTablaAmortizacionFrances(fechaPrestamo, tasaInteres, duracionMeses, saldoCuenta, deductibles) {
 
   const tablaAmortizacion = [];
 
@@ -13,12 +13,15 @@ function calcularTablaAmortizacionFrances(fechaPrestamo,  tasaInteres, duracionM
   let fecha = new Date(fechaPrestamo);
   fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
 
- 
+
   const porcentajeDesgravamen = (deductibles) / 100;
 
-
-  for (let mes = 1; mes <= duracionMeses ; mes++) {
-    console.log("DURACION",duracionMeses);
+  var totalDesgravamen = 0;
+  var totalCapital = 0;
+  var totalCuota = 0;
+  var totalInteres = 0;
+  for (let mes = 1; mes <= duracionMeses; mes++) {
+    console.log("DURACION", duracionMeses);
     const interesTemporal = saldoTemporal * tasaInteresMensual;
     const capital = cuotaFija - interesTemporal;
     const desgravamenTemporal = saldoTemporal * (porcentajeDesgravamen);
@@ -32,6 +35,11 @@ function calcularTablaAmortizacionFrances(fechaPrestamo,  tasaInteres, duracionM
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
     const fechaFormateada = fecha.toLocaleDateString('es-ES', options);
 
+    totalDesgravamen += desgravamenTemporal;
+    totalCapital += capital;
+    totalCuota += cuota;
+    totalInteres += interesTemporal;
+
     const filaTabla = {
       mes,
       fecha: fechaFormateada,
@@ -41,20 +49,28 @@ function calcularTablaAmortizacionFrances(fechaPrestamo,  tasaInteres, duracionM
       desgravamen: desgravamenTemporal.toFixed(2),
       cuota: cuota.toFixed(2),
 
+
     };
 
     saldoTemporal = saldoTemporal - capital;
     tablaAmortizacion.push(filaTabla);
   }
 
-  return tablaAmortizacion;
+  const totalTable = {
+    totalDesgravamen: totalDesgravamen.toFixed(2),
+    totalCapital: totalCapital.toFixed(2),
+    totalCuota: totalCuota.toFixed(2),
+    totalInteres: totalInteres.toFixed(2),
+  };
+
+  return { tablaAmortizacion, totalTable };
 }
 
 function calcularTablaAmortizacionAleman(fechaPrestamo, tasaInteres, duracionMeses, saldoCuenta, deductibles) {
 
   const tablaAmortizacion = [];
 
-  const tasaInteresMensual = (tasaInteres / 100) / 12;
+  const tasaInteresMensual = saldoCuenta / duracionMeses;
   var saldoTemporal = saldoCuenta;
 
   let fecha = new Date(fechaPrestamo);
@@ -62,10 +78,13 @@ function calcularTablaAmortizacionAleman(fechaPrestamo, tasaInteres, duracionMes
 
   const porcentajeDesgravamen = (deductibles) / 100;
 
-
-  for (let mes = 1; mes <= duracionMeses ; mes++) {
-    console.log("DURACION",duracionMeses);
-    const interesTemporal = saldoTemporal * tasaInteresMensual;
+  var totalDesgravamen = 0;
+  var totalCapital = 0;
+  var totalCuota = 0;
+  var totalInteres = 0;
+  for (let mes = 1; mes <= duracionMeses; mes++) {
+    console.log("DURACION", duracionMeses);
+    const interesTemporal = ((saldoTemporal * 0.1) / 100) + tasaInteresMensual;
     const capital = saldoCuenta / duracionMeses;
     const desgravamenTemporal = saldoTemporal * (porcentajeDesgravamen);
     const cuota = interesTemporal + capital + desgravamenTemporal;
@@ -77,6 +96,10 @@ function calcularTablaAmortizacionAleman(fechaPrestamo, tasaInteres, duracionMes
 
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
     const fechaFormateada = fecha.toLocaleDateString('es-ES', options);
+    totalDesgravamen += desgravamenTemporal;
+    totalCapital += capital;
+    totalCuota += cuota;
+    totalInteres += interesTemporal;
 
     const filaTabla = {
       mes,
@@ -85,16 +108,21 @@ function calcularTablaAmortizacionAleman(fechaPrestamo, tasaInteres, duracionMes
       pagoInteres: interesTemporal.toFixed(2),
       amortizacion: capital.toFixed(2),
       desgravamen: desgravamenTemporal.toFixed(2),
-      cuota: cuota.toFixed(2),
-
+      cuota: cuota.toFixed(2)
     };
 
     saldoTemporal = saldoTemporal - capital;
     tablaAmortizacion.push(filaTabla);
   }
 
-  return tablaAmortizacion;
+  const totalTable = {
+    totalDesgravamen: totalDesgravamen.toFixed(2),
+    totalCapital: totalCapital.toFixed(2),
+    totalCuota: totalCuota.toFixed(2),
+    totalInteres: totalInteres.toFixed(2),
+  };
 
+  return { tablaAmortizacion, totalTable };
 }
 
 function calcularExtra(fechaPrestamo, montoPrestamo, tasaInteres, duracionMeses, saldoCuenta, deductibles) {
@@ -138,13 +166,13 @@ function calcularExtra(fechaPrestamo, montoPrestamo, tasaInteres, duracionMeses,
     const interesTemporal = ((saldoTemporal * (tasaInteres / 100) * 30) / 360);
 
 
-   
+
     currentDeductibleObj = deductibles[desgravamenObjIndex];
 
 
     if (deductibles[desgravamenObjIndex + 1]) {//si
       nextDeductibleObj = deductibles[desgravamenObjIndex + 1];// id 2
-     
+
     }
     else {
       nextDeductibleObj = currentDeductibleObj;
@@ -154,10 +182,10 @@ function calcularExtra(fechaPrestamo, montoPrestamo, tasaInteres, duracionMeses,
     if (fecha.getTime() < new Date(currentDeductibleObj.createdAt).getTime()) {
 
       deductible = past;
-      
+
     }
     else {//no
-      
+
       deductible = currentDeductibleObj;//id 1
 
 

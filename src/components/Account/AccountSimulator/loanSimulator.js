@@ -57,19 +57,19 @@ function LoanSimulator() {
 
     function calcularTabla() {
         const hoy = new Date();
-        let desgravamenValor=0;
+        let desgravamenValor = 0;
         var tablaAmortizacion = [];
-        if(selectedForm ==0){
-            desgravamenValor=desgravamen[0].deductible_number;
+        if (selectedForm == 0) {
+            desgravamenValor = desgravamen[0].deductible_number;
         }
-        else if(selectedForm ==1){
-            desgravamenValor=desgravamen[1].deductible_number;
+        else if (selectedForm == 1) {
+            desgravamenValor = desgravamen[1].deductible_number;
         }
-        else if(selectedForm ==2){
-            desgravamenValor=desgravamen[3].deductible_number;
+        else if (selectedForm == 2) {
+            desgravamenValor = desgravamen[3].deductible_number;
         }
-        else if(selectedForm ==3){
-            desgravamenValor=desgravamen[4].deductible_number;
+        else if (selectedForm == 3) {
+            desgravamenValor = desgravamen[4].deductible_number;
         }
 
         if (seleccionAleman) {
@@ -287,14 +287,14 @@ function LoanSimulator() {
 
     const [open, setOpen] = React.useState(false);
 
-    const [table, setTable] = React.useState([]);
+    const [amortizationTable, setAmortizationTable] = React.useState([]);
+    const [totalTable, setTotalTable] = React.useState([]);
 
     const handleOpen = () => {
-        const tablaAmortizacion = calcularTabla();
-        tablaAmortizacion.forEach(fila => {
-        });
-        setTable(tablaAmortizacion);
-        setOpen(true)
+        const tablas = calcularTabla();
+        setAmortizationTable(tablas.tablaAmortizacion);
+        setTotalTable(tablas.totalTable);
+        setOpen(true);
     };
 
 
@@ -480,7 +480,7 @@ function LoanSimulator() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {table.map((fila, index) => (
+                                        {amortizationTable.map((fila, index) => (
                                             <tr >
 
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.mes}</Typography></td>
@@ -495,6 +495,32 @@ function LoanSimulator() {
                                             </tr>
                                         ))}
 
+                                    </tbody>
+                                </table>
+
+                            </Box>
+                            <br />
+                            <br />
+                            <Box paddingRight="2%" paddingLeft='2%' display="flex" justifyContent="center" alignItems="center">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '110px' }}>Total Desgravamen</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }}> Total de Capital</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Total Cuota</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Total Interés</Typography><hr /></th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr >
+
+                                            <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${totalTable.totalDesgravamen}</Typography></td>
+                                            <td><Typography id="modal-modal-description" sx={home.homeTextH4}> ${totalTable.totalCapital}</Typography></td>
+                                            <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${totalTable.totalCuota}</Typography></td>
+                                            <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${totalTable.totalInteres}</Typography></td>
+
+                                        </tr>
                                     </tbody>
                                 </table>
                             </Box>
