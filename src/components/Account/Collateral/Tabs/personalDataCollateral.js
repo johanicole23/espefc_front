@@ -47,7 +47,15 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
 
     const [customerData, setCustomerData] = useState([]);
     const [userData, setUserData] = useState([]);
-  
+
+    const [isAlertCivilOpen, setIsAlertCivilOpen] = useState(false);
+    const [isAlertAgeOpen, setIsAlertAgeOpen] = useState(false);
+    const [isAlertDateOpen, setIsAlertDateOpen] = useState(false);
+    const [isAlertDirectionOpen, setIsAlertDirectionOpen] = useState(false);
+    const [isAlertCellphoneOpen, setIsAlertCellphoneOpen] = useState(false);
+    const [isAlertEmailOpen, setIsAlertEmailOpen] = useState(false);
+    const [isAlertSedeOpen, setIsAlertSedeOpen] = useState(false);
+
     useEffect(() => {
         const newCustomerData = window.localStorage.getItem('customer');
         const newUserData = window.localStorage.getItem('user');
@@ -58,10 +66,10 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
             setUserData(JSON.parse(newUserData));
         }
 
-       
+
     }, []);
-    
-    
+
+
 
     const handleChangeId = (event) => {
         const id = idInputRef.current.value.trim().toLowerCase();
@@ -101,10 +109,6 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         fieldsFilled();
     };
 
-    const handleFieldChange = (fieldName, event) => {
-        const newData = { ...data, [fieldName]: event.target.value };
-        onDataChange(newData);
-    };
 
     const handleCheckboxChange = (checkedName, event) => {
         const newData = { ...data, [checkedName]: event.target.checked };
@@ -122,7 +126,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         const bornDate = bornDateInputRef.current.value.trim();
         const email = emailInputRef.current.value.trim();
         const sede = sedeInputRef.current.value.trim();
-        setIsNextButtonDisabled(!(civilState.trim() !== '' && age.trim() !== '' && bornDate.trim() !== '' && email.trim() !== '' && fullName.trim() !== '' && currentIndex === 0 && id.trim() !== '' && idValid && direction.trim() !== '' && cellphone === 0  && sede.trim() !== ''));
+        setIsNextButtonDisabled(!(civilState.trim() !== '' && age.trim() !== '' && bornDate.trim() !== '' && email.trim() !== '' && fullName.trim() !== '' && currentIndex === 0 && id.trim() !== '' && idValid && direction.trim() !== '' && cellphone === 0 && sede.trim() !== ''));
 
     }
 
@@ -138,7 +142,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         const direction = directionInputRef.current.value.trim();
         const cellphone = cellphoneInputRef.current.value.trim();
         const sede = sedeInputRef.current.value.trim();
-        setIsNextButtonDisabled(!(civilState && age && bornDate && email && id && idValid && fullName && direction && cellphone  && sede));
+        setIsNextButtonDisabled(!(civilState && age && bornDate && email && id && idValid && fullName && direction && cellphone && sede));
     }, [data, setIsNextButtonDisabled]);
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -148,7 +152,73 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         }
     };
 
+    const handleFieldChange = (fieldName, event) => {
+        const newData = { ...data, [fieldName]: event.target.value };
+        onDataChange(newData);
+        if (fieldName === 'civilState') {
+            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+                setIsAlertCivilOpen(true);
+            }
+            else {
+                setIsAlertCivilOpen(false);
+            }
+        }
+        if (fieldName === 'age') {
+            if (!/^\d{2}$/.test(event.target.value)) {
+                setIsAlertAgeOpen(true);
+            }
+            else {
+                setIsAlertAgeOpen(false);
+            }
+        }
 
+        if (fieldName === 'bornDate') {
+            if (!/^\d{2}-\d{2}-\d{4}$/.test(event.target.value)) {
+                setIsAlertDateOpen(true);
+            }
+            else {
+                setIsAlertDateOpen(false);
+            }
+        }
+
+        if (fieldName === 'direction') {
+            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+                setIsAlertDirectionOpen(true);
+            }
+            else {
+                setIsAlertDirectionOpen(false);
+            }
+        }
+
+        if (fieldName === 'cellphone') {
+            if (!/^\d{10}$/.test(event.target.value)) {
+                setIsAlertCellphoneOpen(true);
+            }
+            else {
+                setIsAlertCellphoneOpen(false);
+            }
+        }
+
+        if (fieldName === 'email') {
+            if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(event.target.value))) {
+                setIsAlertEmailOpen(true);
+            }
+            else {
+                setIsAlertEmailOpen(false);
+            }
+        }
+
+        if (fieldName === 'sede') {
+            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+                setIsAlertSedeOpen(true);
+            }
+            else {
+                setIsAlertSedeOpen(false);
+            }
+        }
+
+
+    };
 
 
 
@@ -180,7 +250,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 value={userData.user_ci}
                                 disabled={"true"}
                                 onChange={(event) => {
-                                    
+
                                     fieldsFilled(event);   // Llama a la segunda función
                                 }}
                                 inputRef={idInputRef} variant="standard" fullWidth margin="normal" />
@@ -214,6 +284,22 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 variant="standard" inputRef={civilStateInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertCivilOpen && (
+                                <Alert
+                                    open={isAlertCivilOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Estado civil inválido
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <CakeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
@@ -227,11 +313,27 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 variant="standard" inputRef={ageInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertAgeOpen && (
+                                <Alert
+                                    open={isAlertAgeOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Edad inválida
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <DateRangeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
                                 id="bornDate"
-                                label={<Typography sx={login.textoInput} >Fecha de Nacimiento DD/MM/AAAA</Typography>}
+                                label={<Typography sx={login.textoInput} >Fecha de Nacimiento DD-MM-AAAA</Typography>}
                                 defaultValue={data.bornDate}
                                 onChange={(event) => {
                                     handleFieldChange('bornDate', event);
@@ -240,6 +342,22 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 variant="standard" inputRef={bornDateInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertDateOpen && (
+                                <Alert
+                                    open={isAlertDateOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Fecha inválida
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <HomeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
@@ -253,7 +371,22 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 variant="standard" inputRef={directionInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
-
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertDirectionOpen && (
+                                <Alert
+                                    open={isAlertDirectionOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Dirección inválida
+                                </Alert>
+                            )}
+                        </Stack>
 
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <ContactPhoneIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -281,6 +414,38 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                 variant="standard" inputRef={emailInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertCellphoneOpen && (
+                                <Alert
+                                    open={isAlertCellphoneOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Teléfono celular inválido
+                                </Alert>
+                            )}
+                        </Stack>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertEmailOpen && (
+                                <Alert
+                                    open={isAlertEmailOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Email inválido
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
                             <Typography sx={loan.marcaRellenoAux}>Separación de Bienes</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -310,7 +475,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                         }}
                                     />
                                 </Box>
-                               
+
                             </Box>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '2%', flexDirection: 'column' }}>
@@ -354,6 +519,22 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
                                         variant="standard" inputRef={sedeInputRef} fullWidth margin="normal"
                                         sx={{ color: 'action.active' }} />
                                 </Box>
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    {isAlertSedeOpen && (
+                                        <Alert
+                                            open={isAlertSedeOpen}
+                                            severity="error"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            Sede inválida
+                                        </Alert>
+                                    )}
+                                </Stack>
 
                             </Box>
                         </Box>

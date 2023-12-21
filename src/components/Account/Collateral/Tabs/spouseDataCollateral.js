@@ -50,11 +50,6 @@ function Tab3({ data, onDataChange,  onPrevTab, onNextTab}) {
         setIsAlertIdOpen(!validarCedulaEcuatoriana(id));
     }
 
-    const handleFieldChange = (fieldName, event) => {
-        const newData = { ...data, [fieldName]: event.target.value };
-        onDataChange(newData);
-    };
-
 
     const fieldsFilled = (event) => {
         const idGuarantor1 = idGuarantor1InputRef.current.value.trim();
@@ -67,6 +62,10 @@ function Tab3({ data, onDataChange,  onPrevTab, onNextTab}) {
 
     }
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isAlertNameOpen, setIsAlertNameOpen] = useState(false);
+    const [isAlertCellphoneOpen, setIsAlertCellphoneOpen] = useState(false);
+    const [isAlertEmailOpen, setIsAlertEmailOpen] = useState(false);
+
     const handlePrev = () => {
         if (currentIndex > 0) {
             setCurrentIndex(currentIndex - 1);
@@ -85,7 +84,38 @@ function Tab3({ data, onDataChange,  onPrevTab, onNextTab}) {
     }, [data, setIsNextButtonDisabled]);
 
 
+    const handleFieldChange = (fieldName, event) => {
+        const newData = { ...data, [fieldName]: event.target.value };
+        onDataChange(newData);
+        if (fieldName === 'fullNameGuarantor1') {
+            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+                setIsAlertNameOpen(true);
+            }
+            else {
+                setIsAlertNameOpen(false);
+            }
+        }
 
+        if (fieldName === 'cellphoneGuarantor1') {
+            if (!/^\d{10}$/.test(event.target.value)) {
+                setIsAlertCellphoneOpen(true);
+            }
+            else {
+                setIsAlertCellphoneOpen(false);
+            }
+        }
+
+        if (fieldName === 'emailSpouse') {
+            if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(event.target.value))) {
+                setIsAlertEmailOpen(true);
+            }
+            else {
+                setIsAlertEmailOpen(false);
+            }
+        }
+
+
+    };
 
     return (
         <Box marginTop="2rem">
@@ -105,6 +135,23 @@ function Tab3({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 variant="standard" inputRef={fullNameGuarantor1InputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertNameOpen && (
+                                <Alert
+                                    open={isAlertNameOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Nombre o apellido inválido
+                                </Alert>
+                            )}
+                        </Stack>
 
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -148,6 +195,22 @@ function Tab3({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 sx={{ color: 'action.active' }} />
                         </Box>
 
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertCellphoneOpen && (
+                                <Alert
+                                    open={isAlertCellphoneOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Teléfono celular inválido
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <EmailIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
@@ -162,7 +225,22 @@ function Tab3({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 variant="standard" inputRef={emailSpouseInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.sactive' }} />
                         </Box>
-
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertEmailOpen && (
+                                <Alert
+                                    open={isAlertEmailOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Email inválido
+                                </Alert>
+                            )}
+                        </Stack>
                         
                         <Box display="flex" justifyContent="space-between">
                             <Button size="small" variant="outlined" color="secondary" width="30%" sx={login.textoBoton} onClick={onPrevTab} >
