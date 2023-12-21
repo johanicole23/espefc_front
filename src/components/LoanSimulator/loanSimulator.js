@@ -63,12 +63,15 @@ function LoanSimulator() {
     const [valorInteres, setValorInteres] = useState(null);
     const [valorCuenta, setValorCuenta] = useState(null);
     const [desgravamen, setDesgravamen] = useState([]);
-
-    const handleValorPrestamoChange = (event) => {
-        setValorPrestamo(event.target.value);
-    };
+    const [isDisabled, setIsDisabled] = useState(true);
+    const [isChecked, setIsChecked] = useState(false);
 
     const handleTiempoPagoChange = (event) => {
+        if(event.target.value > 84){
+            setIsDisabled(true);
+        }else{
+            setIsDisabled(false);
+        }
         setTiempoPago(event.target.value);
     };
 
@@ -76,6 +79,25 @@ function LoanSimulator() {
         setValorCuenta(event.target.value);
     };
 
+    const handleValorPrestamoChange = (event) => {
+        if (valorCuenta >= event.target.value) {
+            setIsDisabled(false);
+        }
+        else {
+            setIsDisabled(true);
+        }
+        setValorPrestamo(event.target.value);
+    };
+
+    const handleCheckboxChange = (event) => {
+        setIsChecked(!isChecked);
+        if (valorCuenta < valorPrestamo && !isChecked) {
+            setIsDisabled(false);
+        }
+        else {
+            setIsDisabled(true);
+        }
+    };
 
     const [seleccionFrances, setSeleccionFrances] = useState(false);
     const [seleccionAleman, setSeleccionAleman] = useState(false);
@@ -241,16 +263,14 @@ function LoanSimulator() {
 
     const [open, setOpen] = React.useState(false);
 
-    const [table, setTable] = React.useState([]);
+    const [amortizationTable, setAmortizationTable] = React.useState([]);
+    const [totalTable, setTotalTable] = React.useState([]);
 
     const handleOpen = () => {
-        const tablaAmortizacion = calcularTabla();
-        tablaAmortizacion.forEach(fila => {
-            //console.log(fila);
-        });
-        setTable(tablaAmortizacion);
-
-        setOpen(true)
+        const tablas = calcularTabla();
+        setAmortizationTable(tablas.tablaAmortizacion);
+        setTotalTable(tablas.totalTable);
+        setOpen(true);
     };
 
 
@@ -373,8 +393,19 @@ function LoanSimulator() {
                     </CardActionArea>
                 </Card>
             </Box>
+            {valorPrestamo > valorCuenta && (
+                <Box sx={{ display: 'flex', alignItems: 'center', margin: '1rem', justifyContent: "center" }}>
+                    <Typography sx={home.homeTextH4Left}>Acepto que para este préstamo necesito tener garantes</Typography>
+                    <Checkbox
+                        sx={{ color: '#b0d626', '&.Mui-checked': { color: '#b0d626' } }}
+                        checked={isChecked}
+                        onChange={(event) => {
+                            handleCheckboxChange(event);
+                        }} />
+                </Box>
+            )}
             <Box display="flex" justifyContent={"center"} width="30%" marginLeft={'38%'} mt="3rem">
-                <Button variant="contained" alignItems='center' color="secondary" onClick={handleOpen} sx={buttons.appBarButtonLogin}>
+                <Button variant="contained" alignItems='center' color="secondary" onClick={handleOpen} sx={buttons.appBarButtonLogin} disabled={isDisabled}>
                     Calcular crédito</Button>
                 <Modal
                     open={open}
@@ -406,7 +437,7 @@ function LoanSimulator() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {table.map((fila) => (
+                                        {amortizationTable.map((fila) => (
                                             <tr >
 
                                                 <td><Typography id="modal-modal-description" sx={home.homeTextH4}>{fila.mes}</Typography></td>
@@ -421,6 +452,31 @@ function LoanSimulator() {
                                             </tr>
                                         ))}
 
+                                    </tbody>
+                                </table>
+                            </Box>
+                            <br />
+                            <br />
+                            <Box paddingRight="2%" paddingLeft='2%' display="flex" justifyContent="center" alignItems="center">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '110px' }}>Total Desgravamen</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '100px' }}> Total de Capital</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Total Cuota</Typography><hr /></th>
+                                            <th><hr /><Typography id="modal-modal-title" sx={{ ...home.homeTextH3, width: '80px' }}>Total Interés</Typography><hr /></th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr >
+
+                                            <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${totalTable.totalDesgravamen}</Typography></td>
+                                            <td><Typography id="modal-modal-description" sx={home.homeTextH4}> ${totalTable.totalCapital}</Typography></td>
+                                            <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${totalTable.totalCuota}</Typography></td>
+                                            <td><Typography id="modal-modal-description" sx={home.homeTextH4}>${totalTable.totalInteres}</Typography></td>
+
+                                        </tr>
                                     </tbody>
                                 </table>
                             </Box>

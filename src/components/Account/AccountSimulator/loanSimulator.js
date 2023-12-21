@@ -127,6 +127,11 @@ function LoanSimulator() {
     };
 
     const handleTiempoPagoChange = (event) => {
+        if(event.target.value > 84){
+            setIsDisabled(true);
+        }else{
+            setIsDisabled(false);
+        }
         setTiempoPago(event.target.value);
     };
 

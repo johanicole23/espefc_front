@@ -43,12 +43,12 @@ function Tab4({ data, onDataChange,  onPrevTab, onNextTab}) {
     const directionSpouseInputRef = useRef(null);
     const directionWorkInputRef = useRef(null);
     const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
+    const [isAlertNameOpen, setIsAlertNameOpen] = useState(false);
+    const [isAlertCellphoneOpen, setIsAlertCellphoneOpen] = useState(false);
+    const [isAlertEmailOpen, setIsAlertEmailOpen] = useState(false);
+    const [isAlertDirectionOpen, setIsAlertDirectionOpen] = useState(false);
+    const [isAlertDirectionWorkOpen, setIsAlertDirectionWorkOpen] = useState(false);
 
-
-    const handleFieldChange = (fieldName, event) => {
-        const newData = { ...data, [fieldName]: event.target.value };
-        onDataChange(newData);
-    };
 
 
     const fieldsFilled = (event) => {     
@@ -61,6 +61,55 @@ function Tab4({ data, onDataChange,  onPrevTab, onNextTab}) {
         }
     };
 
+    const handleFieldChange = (fieldName, event) => {
+        const newData = { ...data, [fieldName]: event.target.value };
+        onDataChange(newData);
+        if (fieldName === 'fullNameGuarantor2') {
+            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+                setIsAlertNameOpen(true);
+            }
+            else {
+                setIsAlertNameOpen(false);
+            }
+        }
+
+        if (fieldName === 'cellphoneGuarantor2') {
+            if (!/^\d{10}$/.test(event.target.value)) {
+                setIsAlertCellphoneOpen(true);
+            }
+            else {
+                setIsAlertCellphoneOpen(false);
+            }
+        }
+
+        if (fieldName === 'emailReference') {
+            if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(event.target.value))) {
+                setIsAlertEmailOpen(true);
+            }
+            else {
+                setIsAlertEmailOpen(false);
+            }
+        }
+
+        if (fieldName === 'directionSpouse') {
+            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+                setIsAlertDirectionOpen(true);
+            }
+            else {
+                setIsAlertDirectionOpen(false);
+            }
+        }
+
+        if (fieldName === 'directionWork') {
+            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+                setIsAlertDirectionWorkOpen(true);
+            }
+            else {
+                setIsAlertDirectionWorkOpen(false);
+            }
+        }
+
+    };
 
 
     return (
@@ -81,6 +130,23 @@ function Tab4({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 variant="standard" inputRef={fullNameGuarantor2InputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertNameOpen && (
+                                <Alert
+                                    open={isAlertNameOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Nombre o apellido inválido
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <EmailIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
@@ -96,7 +162,22 @@ function Tab4({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 sx={{ color: 'action.sactive' }} />
                         </Box>
 
-                        
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertEmailOpen && (
+                                <Alert
+                                    open={isAlertEmailOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Email inválido
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <ContactPhoneIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
@@ -112,6 +193,22 @@ function Tab4({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 sx={{ color: 'action.active' }} />
                         </Box>
 
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertCellphoneOpen && (
+                                <Alert
+                                    open={isAlertCellphoneOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Celular inválido
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <HomeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
@@ -125,6 +222,23 @@ function Tab4({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 variant="standard" inputRef={directionSpouseInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertDirectionOpen && (
+                                <Alert
+                                    open={isAlertDirectionOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Dirección inválida
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <WorkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
@@ -138,6 +252,23 @@ function Tab4({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 variant="standard" inputRef={directionWorkInputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertDirectionWorkOpen && (
+                                <Alert
+                                    open={isAlertDirectionWorkOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Dirección inválida
+                                </Alert>
+                            )}
+                        </Stack>
 
                         <Box display="flex" justifyContent="space-between">
                             <Button size="small" variant="outlined" color="secondary" width="30%" sx={login.textoBoton} onClick={onPrevTab} >
