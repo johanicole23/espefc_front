@@ -8,25 +8,26 @@ import home from '../../../styles/pages/home';
 import buttons from '../../../styles/buttons';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
-import {textFieldNews,
+import {
+    textFieldNews,
 } from './accessConstants';
 import axios from 'axios';
 
 const theme = createTheme({
     palette: {
-      primary: {
-        main: '#005f8f'
-  
-      },
-      secondary: {
-        main: '#005F8F'
-      },
-      terciary: {
-        main: '#b0d626'
-  
-      },
+        primary: {
+            main: '#005f8f'
+
+        },
+        secondary: {
+            main: '#005F8F'
+        },
+        terciary: {
+            main: '#b0d626'
+
+        },
     },
-  });
+});
 
 function FileConverter() {
     const [excelFile, setExcelFile] = useState(null);
@@ -54,7 +55,7 @@ function FileConverter() {
             });
         }
     };
-    
+
     const handleUpdate = () => {
         actualizarSaldos(jsonUpdate);
     }
@@ -90,7 +91,8 @@ function FileConverter() {
                     variant="contained"
                     color="secondary"
                     component="label"
-                > <Typography sx={home.homeTextH14LightWhite}> {excelFile ? 'Cambiar archivo' : 'Subir archivo'} </Typography>
+                    sx={buttons.registerButton}
+                > {excelFile ? 'Cambiar archivo' : 'Subir archivo'}
                     <VisuallyHiddenInput type="file" onChange={handleExcelFileChange} />
                 </Button>
                 <br />
@@ -98,14 +100,14 @@ function FileConverter() {
                 {excelFile && <div><Typography sx={home.homeTextH3Light}
                 >Archivo seleccionado: </Typography><Typography sx={home.homeTextH4}>{excelFile.name}</Typography></div>}
                 {excelFile && (
-                <Button
-                    sx={{marginTop: '1rem', width: '80%', marginLeft: '10%', marginRight: '10%' }}
-                    variant="contained"
-                    color="terciary"
-                    component="label"
-                    onClick={handleUpdate}
-                    startIcon={<CloudUploadIcon style={{ color: '#ffffff' }}/>}> <Typography sx={home.homeTextH4W600}> {notification} </Typography>
-                </Button>
+                    <Button
+                        sx={{ ...buttons.registerButton, marginTop: '1rem', marginRight: '10%' }}
+                        variant="contained"
+                        color="terciary"
+                        component="label"
+                        onClick={handleUpdate}
+                        startIcon={<CloudUploadIcon style={{ color: '#ffffff' }} />}> {notification} 
+                    </Button>
                 )}
             </Paper>
         </ThemeProvider>

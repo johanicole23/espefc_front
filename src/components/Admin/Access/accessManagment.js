@@ -14,6 +14,7 @@ import AccessCarsDiaps from './accessCarsDiaps';
 import AccessUpload from './accessUpload';
 import AccessUploadLoans from './accessUploadLoans';
 import AccessDesgravamen from './accessDesgravamen';
+import AccessBanks from './accessBanks';
 import {
   theme,
   checked,
@@ -56,6 +57,7 @@ function SimulatorLoan() {
               <AccessUpload/>
               <AccessUploadLoans/>
               <AccessDesgravamen/>
+              <AccessBanks/>
 
 
             </Box>

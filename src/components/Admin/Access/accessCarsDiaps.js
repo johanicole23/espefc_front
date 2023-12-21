@@ -8,6 +8,7 @@ import home from '../../../styles/pages/home';
 import buttons from '../../../styles/buttons';
 import login from '../../../styles/pages/login';
 import MenuItem from '@mui/material/MenuItem';
+import EditIcon from '@mui/icons-material/Edit';
 
 import axios from 'axios';
 import {
@@ -210,6 +211,7 @@ function AccessCarsDiaps() {
 
                     <Button size="medium" variant="contained" color="secondary"
                         onClick={() => updateNewsOnServer()}
+                        endIcon={<EditIcon />} 
                         sx={buttons.registerButton} >
                         Editar Diapositiva
                     </Button>
