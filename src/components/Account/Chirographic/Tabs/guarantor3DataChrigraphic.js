@@ -7,8 +7,8 @@ import {
     TextField,
     Button,
     Alert,
-    Stack,Paper,
-  } from '@mui/material';
+    Stack, Paper,
+} from '@mui/material';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import BadgeIcon from '@mui/icons-material/Badge';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
@@ -32,9 +32,13 @@ const theme = createTheme({
         },
     },
 });
-function Tab5({ data, onDataChange,  onPrevTab, onNextTab}) {
+function Tab5({ data, onDataChange, onPrevTab, onNextTab }) {
 
     const [isAlertIdOpen, setIsAlertIdOpen] = useState(false);
+    const [isAlertNameOpen, setIsAlertNameOpen] = useState(false);
+    const [isAlertCellphoneOpen, setIsAlertCellphoneOpen] = useState(false);
+    const [isAlertPhoneConventionOpen, setIsAlertPhoneConventionOpen] = useState(false);
+
     const idGuarantor3InputRef = useRef(null);
     const fullNameGuarantor3InputRef = useRef(null);
     const cellphoneGuarantor3InputRef = useRef(null);
@@ -50,6 +54,31 @@ function Tab5({ data, onDataChange,  onPrevTab, onNextTab}) {
     const handleFieldChange = (fieldName, event) => {
         const newData = { ...data, [fieldName]: event.target.value };
         onDataChange(newData);
+        if (fieldName === 'fullNameGuarantor3') {
+            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+                setIsAlertNameOpen(true);
+            }
+            else {
+                setIsAlertNameOpen(false);
+            }
+        }
+        if (fieldName === 'cellphoneGuarantor3') {
+            if (!/^\d{10}$/.test(event.target.value)) {
+                setIsAlertCellphoneOpen(true);
+            }
+            else {
+                setIsAlertCellphoneOpen(false);
+            }
+        }
+
+        if (fieldName === 'phoneGuarantor3') {
+            if (!/^\d{7}$/.test(event.target.value)) {
+                setIsAlertPhoneConventionOpen(true);
+            }
+            else {
+                setIsAlertPhoneConventionOpen(false);
+            }
+        }
     };
 
 
@@ -70,16 +99,16 @@ function Tab5({ data, onDataChange,  onPrevTab, onNextTab}) {
         }
     };
 
-   /* useEffect(() => {
-        // Esta función se ejecutará cada vez que cambie el contenido de los campos de entrada
-        const idGuarantor3 = idGuarantor3InputRef.current.value.trim();
-        const fullNameGuarantor3 = fullNameGuarantor3InputRef.current.value.trim();
-        const idValid = validarCedulaEcuatoriana(idGuarantor3);
-        const cellphoneGuarantor3 = cellphoneGuarantor3InputRef.current.value.trim();
-        const phoneGuarantor3 = phoneGuarantor3InputRef.current.value.trim();
-        // Verifica todas las condiciones necesarias para habilitar el botón de "Siguiente"
-        //setIsNextButtonDisabled(!(idGuarantor3 && idValid && cellphoneGuarantor3 && phoneGuarantor3 && fullNameGuarantor3));
-    }, [data, setIsNextButtonDisabled]);*/
+    /* useEffect(() => {
+         // Esta función se ejecutará cada vez que cambie el contenido de los campos de entrada
+         const idGuarantor3 = idGuarantor3InputRef.current.value.trim();
+         const fullNameGuarantor3 = fullNameGuarantor3InputRef.current.value.trim();
+         const idValid = validarCedulaEcuatoriana(idGuarantor3);
+         const cellphoneGuarantor3 = cellphoneGuarantor3InputRef.current.value.trim();
+         const phoneGuarantor3 = phoneGuarantor3InputRef.current.value.trim();
+         // Verifica todas las condiciones necesarias para habilitar el botón de "Siguiente"
+         //setIsNextButtonDisabled(!(idGuarantor3 && idValid && cellphoneGuarantor3 && phoneGuarantor3 && fullNameGuarantor3));
+     }, [data, setIsNextButtonDisabled]);*/
 
 
 
@@ -102,6 +131,22 @@ function Tab5({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 variant="standard" inputRef={fullNameGuarantor3InputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertNameOpen && (
+                                <Alert
+                                    open={isAlertNameOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Nombre inválido. Solo letras
+                                </Alert>
+                            )}
+                        </Stack>
 
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <BadgeIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -144,7 +189,22 @@ function Tab5({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 variant="standard" inputRef={cellphoneGuarantor3InputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
-
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertCellphoneOpen && (
+                                <Alert
+                                    open={isAlertCellphoneOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Teléfono celular inválido
+                                </Alert>
+                            )}
+                        </Stack>
                         <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                             <TtyIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
                             <TextField
@@ -159,8 +219,23 @@ function Tab5({ data, onDataChange,  onPrevTab, onNextTab}) {
                                 variant="standard" inputRef={phoneGuarantor3InputRef} fullWidth margin="normal"
                                 sx={{ color: 'action.active' }} />
                         </Box>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertPhoneConventionOpen && (
+                                <Alert
+                                    open={isAlertPhoneConventionOpen}
+                                    severity="error"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Teléfono convencional inválido
+                                </Alert>
+                            )}
+                        </Stack>
 
-                      
                         <Box display="flex" justifyContent="space-between">
                             <Button size="small" variant="outlined" color="secondary" width="30%" sx={login.textoBoton} onClick={onPrevTab} >
                                 <ArrowCircleLeftTwoToneIcon sx={{ marginRight: '2rem' }} /> Anterior

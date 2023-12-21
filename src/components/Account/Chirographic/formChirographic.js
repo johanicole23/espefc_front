@@ -189,7 +189,6 @@ function App() {
         { text: fullNameGuarantor1, x: 75, y: 480, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
         { text: cellphoneGuarantor1, x: 184, y: 447, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
         { text: phoneGuarantor1, x: 365, y: 447, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
-        { text: name, x: 230, y: 463, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
   
         { text: idGuarantor2, x: 375, y: 418, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
         { text: fullNameGuarantor2, x: 75, y: 418, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
@@ -248,6 +247,12 @@ function App() {
       else if (!isCheckedContract && !isCheckedNombrament) {
         contentToInsert.push(
           { text: others, x: 320, y: 516, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) }
+        );
+      }
+      if (fullNameGuarantor1 != '') {
+        contentToInsert.push(
+          { text: name, x: 230, y: 463, size: 10, color: rgb(3 / 255, 75 / 255, 110 / 255) },
+       
         );
       }
       if (fullNameGuarantor2 != '') {

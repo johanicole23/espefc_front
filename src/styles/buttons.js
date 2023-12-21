@@ -86,6 +86,13 @@ const buttons = {
         width:'35%'
         
     },
+    passwordChange: {
+        fontFamily: "Cairo",
+        textTransform: 'none',
+        fontSize: "16px",
+       
+        
+    },
 
     accountLoanChirographicImage: {
         fontFamily: "Cairo",
