@@ -37,11 +37,11 @@ function App() {
 
     useEffect(() => {
         const userAuth = JSON.parse(window.localStorage.getItem('user'));
-        if(!userAuth || userAuth.user_role !== 'admin'){
+        if (!userAuth || userAuth.user_role !== 'admin') {
             window.location.href = '/prohibido';
         }
-    },[]);
-    
+    }, []);
+
     const [iconNameColor, setIconNameColor] = useState('action.active');
     const [iconIdColor, setIconIdColor] = useState('action.active');
     const [iconNumberColor, setIconNumberColor] = useState('action.active');
@@ -143,11 +143,15 @@ function App() {
     const [customerData, setCustomerData] = useState([]);
     const [userData, setUserData] = useState([]);
     const [currentUser, setCurrentUser] = useState({});
+    const [token, setToken] = useState(null);
 
     useEffect(() => {
         const newCustomerData = window.localStorage.getItem('customer');
         const newUserData = window.localStorage.getItem('user');
-        console.log(newCustomerData);
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
         if (newCustomerData && newUserData) {
             setCustomerData(JSON.parse(newCustomerData));
             setUserData(JSON.parse(newUserData));
@@ -174,6 +178,7 @@ function App() {
                 customer_personal_email: currentUser.customer_personal_email,
                 customer_phone: currentUser.customer_phone,
                 customer_direction: currentUser.customer_direction,
+                authorization: token,
             });
 
             if (response.data.success) {

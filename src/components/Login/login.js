@@ -66,6 +66,7 @@ function Login() {
     const passwordInputRef = useRef(null);
     const [customer, setCustomer] = useState({});
     const [user, setUser] = useState({});
+    const [token, setToken] = useState({});
 
     const idInputRef = useRef(null);
     const idRecuperationInputRef = useRef(null);
@@ -123,6 +124,7 @@ function Login() {
             const digitArray = numberToArray(codeJSON)
             if (verificationCode.join() === digitArray.join()) {
                 console.log("Código coincide:");
+                window.localStorage.setItem('authUser','Bearer '+token);
                 window.localStorage.setItem('user', JSON.stringify(user));
                 window.localStorage.setItem('customer', JSON.stringify(customer));
                 if(user.user_role === 'admin'){
@@ -166,11 +168,12 @@ function Login() {
             else {
                 const response = await axios.post('http://localhost:3000/api/loginUser', formData);
 
-                const { success, user, customer, code, message } = response.data;
+                const { success, user, customer, code, token, message } = response.data;
 
                 if (response.data.success) {
                     console.log('Inicio de sesión exitoso');
                     setcodeJSON(code);
+                    setToken(token);
                     setCustomer(customer);
                     setUser(user);
                     setIsAlertCredentialsOpen(false);

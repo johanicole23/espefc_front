@@ -30,6 +30,7 @@ function AccessCarsDiaps() {
     const [newData, setNewData] = useState([]);
     const newDataRef = useRef([]);
     const [dataChanged, setDataChanged] = useState(false);
+    const [token, setToken] = useState(null);
 
     const [updatedData, setUpdatedData] = useState({
         car_id: 1,
@@ -58,6 +59,13 @@ function AccessCarsDiaps() {
         }
     };
 
+    useEffect(() => {
+        
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
+    }, []);
 
     // Actualiza el estado de selectedData cuando se selecciona un nuevo ID 
     useEffect(() => {
@@ -116,7 +124,13 @@ function AccessCarsDiaps() {
     }, []);
     async function updateNewsOnServer() {
         try {
-            const response = await axios.post('http://localhost:3000/api/updateCar', updatedData);
+            const response = await axios.post('http://localhost:3000/api/updateCar', {
+                car_id: updatedData.car_id,
+                car_title: updatedData.car_title,
+                car_content: updatedData.car_content,
+                car_phrase: updatedData.car_phrase,
+                authorization: token,
+            });
 
 
             if (response.data.success) {

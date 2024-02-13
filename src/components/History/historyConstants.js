@@ -15,13 +15,18 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 const rows = [
   createData('Contacto General', '3989400 ext. 3260', 'fondoespe@espe.edu.ec'),
-  createData('Byron Bermeo', '0998213636', 'bybeoliveros@gmail.com'),
-  createData('Guillermo Smith', '099-5503091', 'drobalino@fcpcespe.com.ec'),
-  createData('Diana Robalino', '099-5503091', 'drobalino@fcpcespe.com.ec'),
+  createData('Ing. Byron Bermeo', '0998590328', 'bybeoliveros@gmail.com'),
+  createData('Guillermo Chiluisa', '0980846124', 'gchiluisa@fcpcespe.com.ec'),
+  createData('Ing. Diana Robalino', '0995503091', 'drobalino@fcpcespe.com.ec'),
+  createData('Lic. Michelle Calderón', '0988369995', 'scalderon@fcpcespe.com.ec'),
+  createData('Ing. Diana Sánchez', '0998169682', 'diana.sanchez1719@outlook.com'),
 ];
 
 const theme = createTheme({
   palette: {
+    light: {
+      main: '#FFFFFF'
+    },
     primary: {
       main: '#FFFFFF'
 

@@ -53,11 +53,15 @@ function App() {
   };
   const [customerData, setCustomerData] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [token, setToken] = useState(null);
   
   useEffect(() => {
     const newCustomerData = window.localStorage.getItem('customer');
     const newUserData = window.localStorage.getItem('user');
-  
+    const token = window.localStorage.getItem('authUser');
+    if(token){
+        setToken(token);
+    }
     if (newCustomerData && newUserData) {
       setCustomerData(JSON.parse(newCustomerData));
       setUserData(JSON.parse(newUserData));
@@ -83,7 +87,8 @@ function App() {
         loan_amount: formData.amount,
         loan_deadline: formData.isTerm, // Ajusta la fecha según tus necesidades
         loan_amortization_type: amortization,
-        loan_guarantors: formData.fullNameGuarantor1 + formData.fullNameGuarantor2 + formData.fullNameGuarantor3
+        loan_guarantors: formData.fullNameGuarantor1 + formData.fullNameGuarantor2 + formData.fullNameGuarantor3,
+        authorization: token,
       });
   
   

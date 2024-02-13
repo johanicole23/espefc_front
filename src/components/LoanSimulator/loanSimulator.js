@@ -7,7 +7,7 @@ import { ThemeProvider, createTheme, } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { CardActionArea, CardActions } from '@mui/material';
+import { CardActionArea, CardActions, Stack, Alert } from '@mui/material';
 import myTheme from '../../components/MyComponents/myTheme';
 import { Grid } from '@mui/material';
 import TextField from '@mui/material/TextField';
@@ -65,13 +65,31 @@ function LoanSimulator() {
     const [desgravamen, setDesgravamen] = useState([]);
     const [isDisabled, setIsDisabled] = useState(true);
     const [isChecked, setIsChecked] = useState(false);
+    const [isAlertValueLoanOpen, setIsAlertValueLoanOpen] = useState(true);
+    const [isAlertValueTimeOpen, setIsAlertValueTimeOpen] = useState(true);
+    useEffect(() => {
+        if ((tiempoPago <= 84 && tiempoPago !== null && tiempoPago !== '') && (valorPrestamo !== '' && valorPrestamo !== null && valorCuenta >= valorPrestamo) && (!isChecked)) {
+            setIsDisabled(false);
+        } else if ((tiempoPago <= 84 && tiempoPago !== null && tiempoPago !== '') && (valorPrestamo !== '' && valorPrestamo !== null && valorCuenta < valorPrestamo) && (isChecked)) {
+            setIsDisabled(false);
+        } else {
+            setIsDisabled(true);
+        }
+
+        if (tiempoPago <= 84 && tiempoPago !== null && tiempoPago !== '') {
+            setIsAlertValueTimeOpen(false);
+        } else {
+            setIsAlertValueTimeOpen(true);
+        }
+        if ((valorPrestamo !== '' && valorPrestamo !== null && valorCuenta > valorPrestamo) && (isChecked)) {
+            setIsAlertValueLoanOpen(false);
+        } else {
+            setIsAlertValueLoanOpen(true);
+        }
+
+    }, [tiempoPago, valorPrestamo, isChecked]);
 
     const handleTiempoPagoChange = (event) => {
-        if(event.target.value > 84){
-            setIsDisabled(true);
-        }else{
-            setIsDisabled(false);
-        }
         setTiempoPago(event.target.value);
     };
 
@@ -80,23 +98,11 @@ function LoanSimulator() {
     };
 
     const handleValorPrestamoChange = (event) => {
-        if (valorCuenta >= event.target.value) {
-            setIsDisabled(false);
-        }
-        else {
-            setIsDisabled(true);
-        }
         setValorPrestamo(event.target.value);
     };
 
     const handleCheckboxChange = (event) => {
         setIsChecked(!isChecked);
-        if (valorCuenta < valorPrestamo && !isChecked) {
-            setIsDisabled(false);
-        }
-        else {
-            setIsDisabled(true);
-        }
     };
 
     const [seleccionFrances, setSeleccionFrances] = useState(false);
@@ -156,6 +162,7 @@ function LoanSimulator() {
                             <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
                         } variant="standard" fullWidth margin="normal"
                             value={valorPrestamo}
+
                             onChange={handleValorPrestamoChange} /> </Grid>
                         <Grid item xs={12} md={1}></Grid>
                         <Grid item xs={12} md={4}><TextField id="input-with-sx" name="tiempoPago" label={
@@ -165,6 +172,49 @@ function LoanSimulator() {
                             onChange={handleTiempoPagoChange} /> </Grid>
                     </Grid>
                 </Box>
+                <Box display="flex" margin={"0 20%"} >
+                    {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertValueLoanOpen && (
+                                <Alert
+                                    open={isAlertValueLoanOpen}
+                                    severity="warning"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
+                                </Alert>
+                            )}
+
+                        </Stack>
+                    )}
+
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                        {isAlertValueTimeOpen && (
+                            <Alert
+                                open={isAlertValueTimeOpen}
+                                severity="error"
+                                sx={{
+                                    fontFamily: 'Cairo',
+                                    textAlign: 'Right',
+                                    fontSize: "14px",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                El valor en meses es incorrecto.
+                            </Alert>
+                        )}
+
+                    </Stack>
+
+                </Box>
+
+
+
             </div>
         },
         {
@@ -183,7 +233,7 @@ function LoanSimulator() {
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={1}></Grid>
                         <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:$60.000 máx.</Typography>
+                            <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
                         } variant="standard" fullWidth margin="normal"
                             value={valorPrestamo}
                             onChange={handleValorPrestamoChange} /> </Grid>
@@ -194,6 +244,46 @@ function LoanSimulator() {
                             value={tiempoPago}
                             onChange={handleTiempoPagoChange} /> </Grid>
                     </Grid>
+                </Box>
+                <Box display="flex" margin={"0 20%"} >
+                    {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertValueLoanOpen && (
+                                <Alert
+                                    open={isAlertValueLoanOpen}
+                                    severity="warning"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
+                                </Alert>
+                            )}
+
+                        </Stack>
+                    )}
+
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                        {isAlertValueTimeOpen && (
+                            <Alert
+                                open={isAlertValueTimeOpen}
+                                severity="error"
+                                sx={{
+                                    fontFamily: 'Cairo',
+                                    textAlign: 'Right',
+                                    fontSize: "14px",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                El valor en meses es incorrecto.
+                            </Alert>
+                        )}
+
+                    </Stack>
+
                 </Box>
             </div>
         },
@@ -213,7 +303,7 @@ function LoanSimulator() {
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={1}></Grid>
                         <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:$15.000 máx.</Typography>
+                            <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
                         } variant="standard" fullWidth margin="normal"
                             value={valorPrestamo}
                             onChange={handleValorPrestamoChange} /> </Grid>
@@ -224,6 +314,46 @@ function LoanSimulator() {
                             value={tiempoPago}
                             onChange={handleTiempoPagoChange} /> </Grid>
                     </Grid>
+                </Box>
+                <Box display="flex" margin={"0 20%"} >
+                    {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertValueLoanOpen && (
+                                <Alert
+                                    open={isAlertValueLoanOpen}
+                                    severity="warning"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
+                                </Alert>
+                            )}
+
+                        </Stack>
+                    )}
+
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                        {isAlertValueTimeOpen && (
+                            <Alert
+                                open={isAlertValueTimeOpen}
+                                severity="error"
+                                sx={{
+                                    fontFamily: 'Cairo',
+                                    textAlign: 'Right',
+                                    fontSize: "14px",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                El valor en meses es incorrecto.
+                            </Alert>
+                        )}
+
+                    </Stack>
+
                 </Box>
             </div>
         },
@@ -243,7 +373,7 @@ function LoanSimulator() {
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={1}></Grid>
                         <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:$10.000 máx.</Typography>
+                            <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
                         } variant="standard" fullWidth margin="normal"
                             value={valorPrestamo}
                             onChange={handleValorPrestamoChange} /> </Grid>
@@ -254,6 +384,46 @@ function LoanSimulator() {
                             value={tiempoPago}
                             onChange={handleTiempoPagoChange} /> </Grid>
                     </Grid>
+                </Box>
+                <Box display="flex" margin={"0 20%"} >
+                    {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                            {isAlertValueLoanOpen && (
+                                <Alert
+                                    open={isAlertValueLoanOpen}
+                                    severity="warning"
+                                    sx={{
+                                        fontFamily: 'Cairo',
+                                        textAlign: 'Right',
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
+                                </Alert>
+                            )}
+
+                        </Stack>
+                    )}
+
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                        {isAlertValueTimeOpen && (
+                            <Alert
+                                open={isAlertValueTimeOpen}
+                                severity="error"
+                                sx={{
+                                    fontFamily: 'Cairo',
+                                    textAlign: 'Right',
+                                    fontSize: "14px",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                El valor en meses es incorrecto.
+                            </Alert>
+                        )}
+
+                    </Stack>
+
                 </Box>
             </div>
         },
@@ -334,6 +504,8 @@ function LoanSimulator() {
 
 
 
+
+
             <Box display="flex" flexDirection="column"
                 sx={{
                     position: 'relative',
@@ -342,7 +514,7 @@ function LoanSimulator() {
                     marginLeft: "18%"
                 }} >
 
-                <Typography variant="body2" sx={home.homeTextH4Left}>¿Qué sistema de amortización deseas aplicar a tu crédito? </Typography>
+                <Typography variant="body2" sx={home.homeTextH4Left}>¿Qué sistema de amortización deseas aplicar a tu préstamo? </Typography>
 
             </Box>
             <Box display="flex" justifyContent={"space-evenly"} component={"form"} sx={{ width: '70%', margin: '0 18%' }} >
@@ -363,7 +535,7 @@ function LoanSimulator() {
                                                 },
                                             }} />} />
                                 </Box>
-                                <Typography variant="body2" sx={home.homeTextH4}>El valor de las cuotas que se pagarán se mantendrá fijo en el tiempo
+                                <Typography variant="body2" sx={home.homeTextH4}>El valor de las cuotas que se pagarán se mantendrán fijas en el tiempo
                                 </Typography>
                             </Box>
                         </CardContent>
@@ -387,12 +559,13 @@ function LoanSimulator() {
                                             }} />} />
                                 </Box>
                                 <Typography variant="body2" sx={home.homeTextH4}>
-                                    El valor de las cuotas que se pagarán será variable e ira decreciendo en el tiempo.</Typography>
+                                    El valor de las cuotas que se pagarán serán variables e irán decreciendo en el tiempo.</Typography>
                             </Box>
                         </CardContent>
                     </CardActionArea>
                 </Card>
             </Box>
+
             {valorPrestamo > valorCuenta && (
                 <Box sx={{ display: 'flex', alignItems: 'center', margin: '1rem', justifyContent: "center" }}>
                     <Typography sx={home.homeTextH4Left}>Acepto que para este préstamo necesito tener garantes</Typography>
@@ -406,7 +579,7 @@ function LoanSimulator() {
             )}
             <Box display="flex" justifyContent={"center"} width="30%" marginLeft={'38%'} mt="3rem">
                 <Button variant="contained" alignItems='center' color="secondary" onClick={handleOpen} sx={buttons.appBarButtonLogin} disabled={isDisabled}>
-                    Calcular crédito</Button>
+                    Calcular préstamo</Button>
                 <Modal
                     open={open}
                     onClose={handleClose}
@@ -415,7 +588,7 @@ function LoanSimulator() {
                 >
                     <Box sx={style}>
                         <Typography id="modal-modal-title" sx={home.homeTextH3}>
-                            Detalle de la Simulación de tu crédito
+                            Detalle de la Simulación de tu préstamo
                         </Typography>
                         <Typography id="modal-modal-description" sx={home.homeTextH4}>
                             Tabla de amortización

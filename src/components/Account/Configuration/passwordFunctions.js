@@ -55,6 +55,7 @@ function App() {
     const [isAlertChangeNot, setIsAlertChangeNot] = useState(false);
     const passwordInputRef = useRef(null);
     const passwordAgainInputRef = useRef(null);
+    const [token, setToken] = useState(null);
     const alertSecurity = [
         {
             message: 'Seguridad Alta',
@@ -108,7 +109,10 @@ function App() {
     useEffect(() => {
         const newCustomerData = window.localStorage.getItem('customer');
         const newUserData = window.localStorage.getItem('user');
-        console.log(newCustomerData);
+        const token = window.localStorage.getItem('authUser');
+        if(token){
+            setToken(token);
+        }
         if (newCustomerData && newUserData) {
             setCustomerData(JSON.parse(newCustomerData));
             setUserData(JSON.parse(newUserData));
@@ -173,13 +177,13 @@ function App() {
     const handleChangePassword = async (e) => {
 
         e.preventDefault();
-        console.log(passwordNow, password);
         try {
             const response = await axios.post('http://localhost:3000/api/changePassword',
                 {
                     user_ci: userData.user_ci,
                     user_password: passwordNow,
                     user_new_password: password,
+                    authorization: token,
                 });
             console.log(response.data);
             setIsAlertChangeOk(true);

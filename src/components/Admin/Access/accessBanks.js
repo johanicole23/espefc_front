@@ -50,19 +50,27 @@ function AccessBanks() {
     const [filterText, setFilterText] = useState('');
     const [newData, setNewData] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
-
+    const [token, setToken] = useState(null);
 
 
     const handleCloseEdit = () => {
         setIsModalEditOpen(false);
     };
     useEffect(() => {
-        obtenerInstituciones();
+        
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
     }, []);
+
+    useEffect(() => {
+        obtenerInstituciones();
+    }, [token]);
 
     async function obtenerInstituciones() {
         try {
-            const response = await axios.get('http://localhost:3000/api/institutions');
+            const response = await axios.post('http://localhost:3000/api/institutions', { authorization: token });
             console.log("instituciones", response.data.institutions);
             setNewData(response.data.institutions);
 
@@ -75,7 +83,8 @@ function AccessBanks() {
         try {
             const response = await axios.post('http://localhost:3000/api/updateInstitution', {
                 institution_id: selectedItem,
-                institution_name: editInstitution
+                institution_name: editInstitution,
+                authorization: token
             });
 
             if (response.data.success) {
@@ -108,7 +117,8 @@ function AccessBanks() {
 
         try {
             const response = await axios.post('http://localhost:3000/api/createInstitution', {
-                institution_name: institution
+                institution_name: institution,
+                authorization: token
             });
 
             if (response.data.success) {

@@ -34,8 +34,8 @@ function SimulatorLoan() {
               marginTop: '8rem'
             }} >
             <Typography variant="body2" sx={home.homeTextH4}>Prueba diferentes escenarios para familiarizarte con el sistema </Typography>
-            <Typography variant="body2" sx={home.homeTextH1}>Simulemos el cálculo de tu crédito</Typography>
-            <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>¿En qué utilizarás tu crédito? </Typography>
+            <Typography variant="body2" sx={home.homeTextH1}>Simulemos el cálculo de tu préstamo</Typography>
+            <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>¿En qué utilizarás tu préstamo? </Typography>
           </Box>
           
           <LoanSimulator></LoanSimulator>

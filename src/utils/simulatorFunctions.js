@@ -5,13 +5,37 @@ function calcularTablaAmortizacionFrances(fechaPrestamo, tasaInteres, duracionMe
 
   const tablaAmortizacion = [];
 
-  const tasaInteresMensual = (tasaInteres / 100) / 12;
-  var saldoTemporal = saldoCuenta;
-  const cuotaFija = (((saldoCuenta) * (tasaInteresMensual) * Math.pow((1 + tasaInteresMensual), duracionMeses)) / (Math.pow((1 + tasaInteresMensual), duracionMeses) - 1));
-
+  const tasaInteresMensual = tasaInteres /(12*100);
 
   let fecha = new Date(fechaPrestamo);
-  fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
+  fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 2, 0);
+
+
+  const ultimoDiaDelMes = new Date(fechaPrestamo.getFullYear(), fechaPrestamo.getMonth() + 1, 0);
+  const diasEnMesPrestamo = new Date(fechaPrestamo.getFullYear(), fechaPrestamo.getMonth() + 2, 0).getDate();
+  let mesesRestantes =  (Math.ceil((ultimoDiaDelMes - fechaPrestamo) / (1000 * 60 * 60 * 24)));
+  mesesRestantes =  (mesesRestantes+ diasEnMesPrestamo);
+  let duracionMesesExtra = parseFloat(mesesRestantes/30) + parseFloat(duracionMeses);
+  console.log("mesesRestantes: " + (mesesRestantes/30));
+  console.log("duraciontotal " + duracionMesesExtra);
+  console.log("duracionmeses " + duracionMeses);
+
+
+  var saldoTemporal = saldoCuenta;
+  const cuotaFija = ((saldoCuenta * tasaInteresMensual * Math.pow(1 + tasaInteresMensual, duracionMeses)) /
+  (Math.pow(1 + tasaInteresMensual, duracionMeses) - 1)).toFixed(2);
+
+  console.log("cuotafijaaa:"+cuotaFija);
+
+ 
+
+  const diferenciaEnMillis = ultimoDiaDelMes - fechaPrestamo;
+
+  // Convierte la diferencia en días, teniendo en cuenta las horas
+  const diasRestantes = (diferenciaEnMillis / (1000 * 60 * 60 * 24));
+
+ 
+
 
 
   const porcentajeDesgravamen = (deductibles) / 100;
@@ -20,17 +44,45 @@ function calcularTablaAmortizacionFrances(fechaPrestamo, tasaInteres, duracionMe
   var totalCapital = 0;
   var totalCuota = 0;
   var totalInteres = 0;
-  for (let mes = 1; mes <= duracionMeses; mes++) {
-    console.log("DURACION", duracionMeses);
-    const interesTemporal = saldoTemporal * tasaInteresMensual;
-    const capital = cuotaFija - interesTemporal;
-    const desgravamenTemporal = saldoTemporal * (porcentajeDesgravamen);
-    const cuota = interesTemporal + capital + desgravamenTemporal;
+  var mesAux = 2;
+  var dias ;
+  console.log("HOLAAA: "+mesesRestantes);
 
-    if (mes !== 1) {
-      fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 2, 0);
-      saldoTemporal = saldoTemporal.toFixed(2);
+  for (let mes = 1; mes <= duracionMeses; mes++) {
+
+    let interesTemporal ;
+    let capital ;
+    const desgravamenTemporal = saldoTemporal * porcentajeDesgravamen;
+    let cuota;
+    
+    if (mes === 1) {
+
+      console.log("meses restantes:", mesesRestantes);
+      
+      var tasaInteresAux = tasaInteresMensual * mesesRestantes;
+      interesTemporal = saldoTemporal * (tasaInteresMensual*(mesesRestantes/30));
+      capital = cuotaFija - interesTemporal;
+      cuota = interesTemporal + capital + desgravamenTemporal;      
+
     }
+    else{
+      dias = new Date(fechaPrestamo.getFullYear(), fechaPrestamo.getMonth() + mesAux+1, 0).getDate();
+      let tasaInteres2 = tasaInteresMensual * (dias/30);
+      mesAux++;      
+      fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 2, 0);
+      interesTemporal = (saldoTemporal) * (tasaInteres2);     
+      capital = (cuotaFija - interesTemporal);
+      if(mes==duracionMeses)
+      {
+        capital= saldoTemporal;
+      }
+      saldoTemporal = saldoTemporal.toFixed(2);
+      cuota = interesTemporal + capital + desgravamenTemporal;
+
+      
+    }
+
+
 
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
     const fechaFormateada = fecha.toLocaleDateString('es-ES', options);
@@ -70,11 +122,12 @@ function calcularTablaAmortizacionAleman(fechaPrestamo, tasaInteres, duracionMes
 
   const tablaAmortizacion = [];
 
-  const tasaInteresMensual = saldoCuenta / duracionMeses;
+
+  const tasaInteresMensual = tasaInteres /(360*100);
   var saldoTemporal = saldoCuenta;
 
   let fecha = new Date(fechaPrestamo);
-  fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
+  fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 2, 0);
 
   const porcentajeDesgravamen = (deductibles) / 100;
 
@@ -82,16 +135,46 @@ function calcularTablaAmortizacionAleman(fechaPrestamo, tasaInteres, duracionMes
   var totalCapital = 0;
   var totalCuota = 0;
   var totalInteres = 0;
+
+  const ultimoDiaDelMes = new Date(fechaPrestamo.getFullYear(), fechaPrestamo.getMonth() + 1, 0);
+  const diasEnMesPrestamo = new Date(fechaPrestamo.getFullYear(), fechaPrestamo.getMonth() + 2, 0).getDate();
+  let mesesRestantes = (Math.ceil((ultimoDiaDelMes - fechaPrestamo) / (1000 * 60 * 60 * 24)));
+  console.log( "mesesRestantes: ", mesesRestantes+ diasEnMesPrestamo);
+  mesesRestantes =  (mesesRestantes+ diasEnMesPrestamo);
+  console.log( "mesesRestantesLuego: ", mesesRestantes+ diasEnMesPrestamo);
+  console.log("diasenMesPrestamo: ", diasEnMesPrestamo);
+  let mesAux = 2;
+  var dias ;
+
   for (let mes = 1; mes <= duracionMeses; mes++) {
-    console.log("DURACION", duracionMeses);
-    const interesTemporal = ((saldoTemporal * 0.1) / 100) + tasaInteresMensual;
-    const capital = saldoCuenta / duracionMeses;
+
+    let interesTemporal;
+    const capital = saldoCuenta / (duracionMeses);
     const desgravamenTemporal = saldoTemporal * (porcentajeDesgravamen);
-    const cuota = interesTemporal + capital + desgravamenTemporal;
+    let cuota = interesTemporal + capital + desgravamenTemporal;
+
+    console.log("cuota "+mes+":"+cuota);
 
     if (mes !== 1) {
+      dias = new Date(fechaPrestamo.getFullYear(), fechaPrestamo.getMonth() + mesAux+1, 0).getDate();
+      console.log(dias);
+      let tasaInteres2 = tasaInteresMensual * dias;
+      mesAux++;
+      console.log("mes",mes);
       fecha = new Date(fecha.getFullYear(), fecha.getMonth() + 2, 0);
+      interesTemporal = (saldoTemporal) * (tasaInteres2);
       saldoTemporal = saldoTemporal.toFixed(2);
+      cuota = interesTemporal + capital + desgravamenTemporal;
+    }
+  
+
+    if (mes === 1) {
+
+      let tasaInteresAux = tasaInteresMensual * mesesRestantes;
+      interesTemporal = saldoTemporal * tasaInteresAux;
+      cuota = interesTemporal + capital + desgravamenTemporal;
+
+
     }
 
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
