@@ -191,6 +191,7 @@ function Home() {
                     car_video_brand: 'Mazda',
 
                 });
+                console.log(response.data.car_videos);
                 setCarsData(response.data.car_videos);
                 setSelectedCar(response.data.car_videos);
                 console.log(response.data.car_videos);// Guardar en la ref
@@ -254,7 +255,7 @@ function Home() {
                         <Grid item xs={12} key={item.title}>
                             <Card sx={home.carsFormatCardLoanOthers}>
                                 <CardActionArea onClick={() => openModal(item.title)}>
-                                    <CardMedia  sx={home.carsCardLogoOthers} image={item.image} alt="Descripción de la imagen" />
+                                    <CardMedia sx={home.carsCardLogoOthers} image={item.image} alt="Descripción de la imagen" />
                                 </CardActionArea>
                             </Card>
                         </Grid>
@@ -303,7 +304,7 @@ function Home() {
                                                     justifyContent: 'center',
                                                 }} alt="Descripción de la imagen" >
                                                 <Box marginTop="1rem">
-                                                    <YouTube videoId={car.car_videoId} opts={commonOpts} />
+                                                    <YouTube videoId={"NMb4jU64NU"} opts={commonOpts} />
                                                 </Box>
                                             </CardMedia>
                                             <CardContent >

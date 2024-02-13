@@ -46,8 +46,8 @@ function App() {
                                 <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1%' }}>
                                     <Typography sx={home.homeTextH3Light}
                                     >
-                                        <br /> Para iniciar con el proceso de solictud de crédito quirografario, debe llenar el formulario de solictud y luego subirlo junto con los demás archivos requeridos para el proceso.
-                                        Los archivos se entregaran al oficial de crédito, el cual revisará su cuenta individual y si tiene garantías comprometidas.<br />
+                                        <br /> Para iniciar con el proceso de solictud de crédito quirografario, deberá llenar el formulario de solictud y luego subirlo junto con los demás archivos requeridos para el proceso.
+                                        Los archivos se entregarán al oficial de crédito, el cual revisará su cuenta individual y si tiene garantías comprometidas.<br />
                                         <span style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer' }} >  IMPORTANTE: </span> el monto al cual podrá acceder es el total de su cuenta individual, si desea un monto superior al de su cuenta individual, podrá presentar
                                         hasta 3 garantes que respalden el monto solicitado con sus cuentas individuales.<br /><br />
                                     </Typography>

@@ -34,13 +34,18 @@ function App() {
 
     const [isAlertSuccessOpen, setIsAlertSuccessOpen] = useState(false);
     const [isAlertErrorOpen, setIsAlertErrorOpen] = useState(false);
+    const [token, setToken] = useState(null);
 
     useEffect(() => {
         const userAuth = JSON.parse(window.localStorage.getItem('user'));
-        if(!userAuth || userAuth.user_role !== 'usuario'){
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
+        if (!userAuth || userAuth.user_role !== 'usuario') {
             window.location.href = '/prohibido';
         }
-    },[]); 
+    }, []);
 
     const [iconNameColor, setIconNameColor] = useState('action.active');
     const [iconIdColor, setIconIdColor] = useState('action.active');
@@ -174,6 +179,7 @@ function App() {
                 customer_personal_email: currentUser.customer_personal_email,
                 customer_phone: currentUser.customer_phone,
                 customer_direction: currentUser.customer_direction,
+                authorization:token,
             });
 
             if (response.data.success) {

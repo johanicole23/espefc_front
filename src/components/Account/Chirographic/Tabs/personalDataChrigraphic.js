@@ -80,7 +80,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         const newData = { ...data, [fieldName]: event.target.value };
         onDataChange(newData);
         if (fieldName === 'direction') {
-            if (!(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s]+$/.test(event.target.value))) {
+            if (!(/^[a-zA-Z0-9\s-]*$/.test(event.target.value))) {
                 setIsAlertDirectionOpen(true);
             }
             else {
@@ -97,7 +97,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         }
 
         if (fieldName === 'phoneConvention') {
-            if (!/^\d{7}$/.test(event.target.value)) {
+            if (!/^\d{0,7}$/.test(event.target.value)) {
                 setIsAlertPhoneConventionOpen(true);
             }
             else {
@@ -128,7 +128,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         const cellphone = cellphoneInputRef.current.value.trim();
         const phoneConvention = phoneConventionInputRef.current.value.trim();
         const sede = sedeInputRef.current.value.trim();
-        setIsNextButtonDisabled(!(direction.trim() !== '' && cellphone === 0 && phoneConvention.trim() !== '' && sede.trim() !== ''));
+        setIsNextButtonDisabled(!(direction.trim() !== '' && cellphone === 0  && sede.trim() !== ''));
 
     }
 
@@ -138,7 +138,7 @@ function Tab2({ data, onDataChange, onPrevTab, onNextTab }) {
         const cellphone = cellphoneInputRef.current.value.trim();
         const phoneConvention = phoneConventionInputRef.current.value.trim();
         const sede = sedeInputRef.current.value.trim();
-        setIsNextButtonDisabled(!(direction && cellphone && phoneConvention && sede));
+        setIsNextButtonDisabled(!(direction && cellphone  && sede));
     }, [data, setIsNextButtonDisabled]);
 
     const [currentIndex, setCurrentIndex] = useState(0);

@@ -30,7 +30,14 @@ function AccessEducation() {
     const [selectedId, setSelectedId] = useState(undefined);
     const [selectedData, setSelectedData] = useState({}); // Nuevo estado para almacenar los datos seleccionados
     const [educationData, setEducationData] = useState([]);
+    const [token, setToken] = useState(null);
+    useEffect(() => {
 
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
+    }, []);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -46,7 +53,7 @@ function AccessEducation() {
             }
         };
         fetchData();
-    },[]);
+    }, [token]);
 
     //Función que actualiza el estado del selectId
     const handleChange = (event) => {
@@ -72,7 +79,8 @@ function AccessEducation() {
         try {
             const response = await axios.post('http://localhost:3000/api/updateEducation', {
                 education_id: selectedId,
-                education_videoId: selectedData.education_videoId
+                education_videoId: selectedData.education_videoId,
+                authorization:token,
             });
 
             if (response.data.success) {
@@ -95,7 +103,7 @@ function AccessEducation() {
             // Realizar acciones después de esperar 5 segundos
             setIsAlertErrorNewOpen(false);
             setIsAlertSuccessNewOpen(false);
-            setSelectedId (undefined);
+            setSelectedId(undefined);
         }, 5000);
     };
 

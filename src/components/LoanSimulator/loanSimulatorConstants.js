@@ -22,7 +22,7 @@ export const cardFinality = [
     {
         image: salario,
         title: "Préstamo Quirografario",
-        descriptionP1: "Crédito destinado a la compra de tu casa y/o departamento",
+        descriptionP1: "Préstamo destinado a la compra de tu casa y/o departamento",
         interes: 9,
 
     },
@@ -38,7 +38,7 @@ export const cardFinality = [
     {
         image: education,
         title: "Préstamo  Educativo",
-        descriptionP1: "Para obtener crédito y pagar tus estudios en otro país",
+        descriptionP1: "Para obtener préstamo y pagar tus estudios en otro país",
         interes: 7,
 
     },

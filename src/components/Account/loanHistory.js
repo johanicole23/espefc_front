@@ -30,9 +30,15 @@ import home from '../../styles/pages/home';
 function LoanHistory() {
     const [loans, setLoans] = useState([]);
     const [userData, setUserData] = useState([]);
+    const [token, setToken] = useState(null);
 
     useEffect(() => {
         const newUserData = window.localStorage.getItem('user');
+        const token = window.localStorage.getItem('authUser');
+        if(token){
+            setToken(token);
+        }
+     
         if (newUserData) {
             setUserData(JSON.parse(newUserData));
         }
@@ -42,10 +48,11 @@ function LoanHistory() {
     const getLoans = async () => {
 
         try {
-            console.log(userData.user_id);
+           
             const response = await axios.post('http://localhost:3000/api/getLoansByUser',
                 {
                     user_id: parseInt(userData.user_id),
+                    authorization: token,
                 });
             setLoans(response.data.loans);
 

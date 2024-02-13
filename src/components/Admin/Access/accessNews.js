@@ -30,7 +30,7 @@ function AccessNews() {
     const [newData, setNewData] = useState([]);
     const newDataRef = useRef([]);
     const [dataChanged, setDataChanged] = useState(false);
-
+    const [token, setToken] = useState(null);
     const [updatedData, setUpdatedData] = useState({
         new_id: 1,
         new_title: '',
@@ -38,6 +38,12 @@ function AccessNews() {
         new_phrase: '',
     });
 
+    useEffect(() => {
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
+    }, []);
     useEffect(() => {
         const obtenerNoticias = async () => {
             try {
@@ -51,7 +57,7 @@ function AccessNews() {
         };
 
         obtenerNoticias();
-    }, []);
+    }, [token]);
 
     //Función que actualiza el estado del selectId
     const handleChange = (event) => {
@@ -73,7 +79,7 @@ function AccessNews() {
         }
     };
 
-
+    
     // Actualiza el estado de selectedData cuando se selecciona un nuevo ID 
     useEffect(() => {
         if (selectedId !== undefined) {
@@ -85,7 +91,13 @@ function AccessNews() {
 
     async function updateNewsOnServer() {
         try {
-            const response = await axios.post('http://localhost:3000/api/updateNew', updatedData);
+            const response = await axios.post('http://localhost:3000/api/updateNew', {
+                new_id: updatedData.new_id,
+                new_title: updatedData.new_title,
+                new_content: updatedData.new_content,
+                new_phrase: updatedData.new_phrase,
+                authorization: token,
+            });
 
             console.log(newDataRef.current[selectedId].new_title, selectedId);
             if (response.data.success) {
@@ -110,7 +122,7 @@ function AccessNews() {
             // Realizar acciones después de esperar 5 segundos
             setIsAlertErrorNewOpen(false);
             setIsAlertSuccessNewOpen(false);
-            setSelectedId (undefined);
+            setSelectedId(undefined);
         }, 5000);
     }
 

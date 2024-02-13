@@ -35,6 +35,7 @@ function AccessCars() {
     const [selectedIdBrand, setSelectedIdBrand] = useState(undefined);
     const [selectedIdBrandAddCar, setSelectedIdBrandAddCar] = useState(undefined);
     const [filteredCars, setFilteredCars] = useState([]);
+    const [token, setToken] = useState(null);
 
     const [selectedDataAddCar, setSelectedDataAddCar] = useState({
 
@@ -44,8 +45,7 @@ function AccessCars() {
         car_video_km: '',
         car_video_price: '',
         car_video_href: '',
-        car_video_brand: selectedIdBrandAddCar,
-
+        car_video_brand: selectedIdBrandAddCar
     });
 
 
@@ -80,11 +80,18 @@ function AccessCars() {
 
     };
 
+    useEffect(() => {
+        
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
+    }, []);
     
     useEffect(() => {
         const getCars = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/getCarVideos');
+                const response = await axios.get('http://localhost:3000/api/getCarVideos', { authorization: token });
                 setCarsData(response.data.car_videos);
                 console.log(response.data.car_videos);// Guardar en la ref
 
@@ -94,7 +101,7 @@ function AccessCars() {
         };
 
         getCars();
-    }, []);
+    }, [token]);
 
     //Función del modal para agregar un nuevo vehículo
     async function handleButtonAddCar() {
@@ -103,7 +110,16 @@ function AccessCars() {
             // Datos del carro para enviar al servidor
 
             // Realizar la solicitud al servidor
-            const response = await axios.post('http://localhost:3000/api/createCarVideo', selectedDataAddCar);
+            const response = await axios.post('http://localhost:3000/api/createCarVideo', {
+                car_videoId: selectedDataAddCar.car_videoId,
+                car_video_name: selectedDataAddCar.car_video_name,
+                car_video_year: selectedDataAddCar.car_video_year,
+                car_video_km: selectedDataAddCar.car_video_km,
+                car_video_price: selectedDataAddCar.car_video_price,
+                car_video_href: selectedDataAddCar.car_video_href,
+                car_video_brand: selectedDataAddCar.car_video_brand,
+                authorization: token
+            });
 
             // Manejar la respuesta del servidor
             console.log('Objeto creado.', response.data, selectedDataAddCar);
@@ -149,7 +165,7 @@ function AccessCars() {
                 car_video_price: selectedData.car_video_price,
                 car_video_href: selectedData.car_video_href,
                 car_video_brand: selectedData.car_video_brand,
-               
+                authorization: token
             });
 
             if (response.data.success) {

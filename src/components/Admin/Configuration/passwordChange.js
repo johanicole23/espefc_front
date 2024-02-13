@@ -28,12 +28,17 @@ const theme = createTheme({
 });
 
 function App() {
+    const [token, setToken] = useState(null);
     useEffect(() => {
         const userAuth = JSON.parse(window.localStorage.getItem('user'));
-        if(!userAuth || userAuth.user_role !== 'admin'){
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
+        if (!userAuth || userAuth.user_role !== 'admin') {
             window.location.href = '/prohibido';
         }
-    },[]);
+    }, []);
     const [password, setPassword] = useState('');
     const [passwordAgain, setPasswordAgain] = useState('');
     const [passwordNow, setPasswordNow] = useState('');
@@ -100,12 +105,12 @@ function App() {
         const newCustomerData = window.localStorage.getItem('customer');
         const newUserData = window.localStorage.getItem('user');
         console.log(newCustomerData);
-        if (newCustomerData&&newUserData) {
+        if (newCustomerData && newUserData) {
             setCustomerData(JSON.parse(newCustomerData));
             setUserData(JSON.parse(newUserData));
-            console.log(newCustomerData,newUserData);
+            console.log(newCustomerData, newUserData);
         }
-        
+
     }, []);
 
     const getPasswordStrength = () => {
@@ -160,6 +165,7 @@ function App() {
                     user_ci: userData.user_ci,
                     user_password: passwordNow,
                     user_new_password: password,
+                    authorization:token,
                 });
             console.log(response.data);
             setIsAlertChangeOk(true);

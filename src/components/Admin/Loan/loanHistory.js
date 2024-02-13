@@ -63,6 +63,7 @@ function LoanHistory() {
     const [loanId, setLoanId] = useState('');
     const [loanState, setLoanState] = useState('');
     const [filteredLoans, setFilteredLoans] = useState([]);
+    const [token, setToken] = useState(null);
 
     const dataLoans = useRef();
 
@@ -78,7 +79,13 @@ function LoanHistory() {
 
     });
 
-
+    useEffect(() => {
+        
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
+    }, []);
 
     useEffect(() => {
 
@@ -88,7 +95,7 @@ function LoanHistory() {
         }, 1000);
 
 
-    }, []);
+    }, [token]);
 
 
 
@@ -96,7 +103,7 @@ function LoanHistory() {
     const getLoans = async () => {
         try {
             // Realiza la solicitud HTTP al servidor
-            const response = await axios.get('http://localhost:3000/api/getLoans');
+            const response = await axios.post('http://localhost:3000/api/getLoans',{authorization:token});
 
             // Extrae los préstamos de la respuesta y actualiza el estado
             setLoans(response.data.loans);
@@ -168,6 +175,7 @@ function LoanHistory() {
                 loan_id: loanId,
                 loan_state: loanState,
                 loan_num: loanCredit,
+                authorization: token,
             });
             setIsAlertErrorCredit(false);
             setIsAlertSuccessCredit(true);
@@ -280,6 +288,7 @@ function LoanHistory() {
                     loan_deadline: selectedDataAddLoan.loan_deadline, // Ajusta la fecha según tus necesidades
                     loan_amortization_type: selectedDataAddLoan.loan_amortization_type,
                     loan_guarantors: selectedDataAddLoan.loan_guarantors,
+                    authorization: token,
 
                 });
 
@@ -312,7 +321,9 @@ function LoanHistory() {
     useEffect(() => {
         const fetchPendingUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/getApprovedUsers');
+                const response = await axios.post('http://localhost:3000/api/getApprovedUsers',{
+                    authorization: token,
+                });
                 setPendingUsers(response.data.customers);
                 console.log('Usuarios pendientes:', response.data);
             } catch (error) {
@@ -404,7 +415,7 @@ function LoanHistory() {
                                                 style={{
                                                     background: item.loan_state === 'Pendiente' ? '#005f8f' : item.loan_state === 'Rechazado' ? '#FE5B78' : item.loan_state === 'Aceptado' ? '#FE5B78' : '#b0d626',
                                                     color: 'white'
-                                                }}  label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '80px' }}>  {item.loan_state}</Typography>} />
+                                                }} label={<Typography sx={{ ...home.homeTextH14LightWhite, width: '80px' }}>  {item.loan_state}</Typography>} />
                                             <Typography marginLeft={'15px'} marginRight={'10px'} sx={home.homeTextH14Light}>Aceptar</Typography>
                                             <Chip style={{ background: 'white', color: '#b0d626' }} variant='outlined' icon={<CheckIcon style={{ color: '#b0d626' }} />} onClick={() => handleAccept(item.loan_id, item.loan_state)} />
                                             <Typography marginLeft={'15px'} marginRight={'10px'} sx={home.homeTextH14Light}>Rechazar</Typography>

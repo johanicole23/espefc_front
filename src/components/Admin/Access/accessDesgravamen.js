@@ -32,11 +32,20 @@ function AccessDesgravamen() {
     const [dataChanged, setDataChanged] = useState(false);
     const [selectedIdTypeAddDeductible, setSelectedIdTypeAddDeductible] = useState('');
     const [numDeductible, setNumDeductible] = useState('');
+    const [token, setToken] = useState(null);
 
     const [updatedData, setUpdatedData] = useState({
         deductible_number: '0',
         deductible_type: '',
     });
+
+    useEffect(() => {
+        
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
+    }, []);
 
     useEffect(() => {
         const obtenerDesgravamen = async () => {
@@ -51,7 +60,7 @@ function AccessDesgravamen() {
         };
 
         obtenerDesgravamen();
-    }, []);
+    }, [token]);
 
 
 
@@ -64,9 +73,9 @@ function AccessDesgravamen() {
             const response = await axios.post('http://localhost:3000/api/editDeductible', {
                 deductible_number: updatedData.deductible_number,
                 deductible_type: selectedIdTypeAddDeductible,
-
+                authorization:token,
             });
-           
+
             if (response.data.success) {
                 setIsAlertSuccessOpen(true);
                 setIsAlertErrorOpen(false);
@@ -103,24 +112,24 @@ function AccessDesgravamen() {
         setUpdatedData(updatedSelectedDataAddDeductible);
         console.log(event.target.value);
 
-        if(selectedValue ==="Quirografario"){
-           
+        if (selectedValue === "Quirografario") {
+
             setNumDeductible(newData[0].deductible_number);
         }
-        else if(selectedValue ==="Prendario"){
-            
+        else if (selectedValue === "Prendario") {
+
             setNumDeductible(newData[1].deductible_number);
         }
-        else if(selectedValue ==="Educativo"){
-            
+        else if (selectedValue === "Educativo") {
+
             setNumDeductible(newData[3].deductible_number);
         }
-        else if(selectedValue ==="Salud"){
-          
+        else if (selectedValue === "Salud") {
+
             setNumDeductible(newData[4].deductible_number);
         }
         console.log(newData[0].deductible_number);
-        
+
     };
 
     //Función que actualiza el estado de los campos de texto en AddCar

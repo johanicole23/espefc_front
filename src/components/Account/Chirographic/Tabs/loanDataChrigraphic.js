@@ -71,10 +71,14 @@ function Tab1({ data, onDataChange, onNextTab }) {
 
     const [customerData, setCustomerData] = useState([]);
     const [userData, setUserData] = useState([]);
-
+    const [token, setToken] = useState(null);
     useEffect(() => {
         const newCustomerData = window.localStorage.getItem('customer');
         const newUserData = window.localStorage.getItem('user');
+        const token = window.localStorage.getItem('authUser');
+        if (token) {
+            setToken(token);
+        }
         if (newCustomerData) {
             setCustomerData(JSON.parse(newCustomerData));
         }
@@ -156,7 +160,7 @@ function Tab1({ data, onDataChange, onNextTab }) {
             }
         }
         if (fieldName === 'accountNumber') {
-            if (!/^\d{20}$/.test( event.target.value)) {
+            if (!/^\d{6,15}$/.test(event.target.value)) {
                 setIsAlertNumberAccountOpen(true);
             }
             else {
@@ -209,7 +213,9 @@ function Tab1({ data, onDataChange, onNextTab }) {
 
     async function fetchInstitutions() {
         try {
-            const response = await axios.get('http://localhost:3000/api/institutions');
+            const response = await axios.post('http://localhost:3000/api/institutions',{
+                authorization: token,
+            });
             const data = response.data;
 
             if (data.success) {
@@ -230,7 +236,9 @@ function Tab1({ data, onDataChange, onNextTab }) {
     useEffect(() => {
         const getInstitutions = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/institutions');
+                const response = await axios.post('http://localhost:3000/api/institutions',{
+                    authorization: token,
+                });
                 setInstitutions(response.data.institutions);
 
 

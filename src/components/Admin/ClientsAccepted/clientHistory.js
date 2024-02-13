@@ -29,6 +29,7 @@ function LoanHistory() {
   const [isAlertErrorAddOpen, setIsAlertErrorAddOpen] = useState(false);
   const [userBalance, setUserBalance] = useState('');
   const [userId, setUserId] = useState('');
+  const [token, setToken] = useState(null);
 
   const handleOpenBalance = (idClient) => {
     setIsModalSucessOpen(true);
@@ -69,12 +70,21 @@ function LoanHistory() {
   const handleSearchChange = (event) => {
     setSearchValue(event.target.value);
   };
+  useEffect(() => {
+        
+    const token = window.localStorage.getItem('authUser');
+    if (token) {
+        setToken(token);
+    }
+}, []);
+
 
   useEffect(() => {
     // Función para obtener usuarios pendientes desde el servidor
     const fetchPendingUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/getApprovedUsers');
+        const response = await axios.post('http://localhost:3000/api/getApprovedUsers',
+        {authorization:token});
         setPendingUsers(response.data.customers);
         setUsersList(response.data.users);
       } catch (error) {
@@ -84,7 +94,7 @@ function LoanHistory() {
 
     // Llamada a la función al montar el componente (puedes ajustar según tus necesidades)
     fetchPendingUsers();
-  }, []);
+  }, [token]);
 
   const handleSwitchChange = async (event, index) => {
     try {
@@ -96,6 +106,7 @@ function LoanHistory() {
         console.log('El interruptor está activado');
         const response = await axios.post('http://localhost:3000/api/disableUser', {
           user_id: index,
+          authorization:token
         });
         if (response.data.success) {
           console.log('Usuario habilitado con éxito');
@@ -134,6 +145,7 @@ function LoanHistory() {
         {
           user_id: userId,
           user_balance: userBalance,
+          authorization:token
 
         });
 

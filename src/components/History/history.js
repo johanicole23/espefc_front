@@ -157,8 +157,8 @@ function History() {
                   alignContent: 'center',
                 }}>
                 <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>Horarios de Atención</Typography>
-                <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>Lunes a Viernes 8:00AM-6:00PM</Typography>
-                <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>Feriados 24H correo electrónico</Typography>
+                <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>Lunes a Viernes 8H00-16H30</Typography>
+                
               </Box>
               <Box sx={{
                 position: 'absolute',
@@ -184,7 +184,7 @@ function History() {
 
               <Box display="flex" justifyContent={"center"} component={"form"} sx={{ width: '50%', flex: '0 0 50%' }}>
                 <Paper elevation={5} sx={{ width: '60%', padding: '5%' }}>
-                  <Typography variant="body2" sx={home.homeTextH3}>Formulario de Contacto</Typography>
+                  <Typography variant="body2" sx={home.homeTextH3}>Formulario de Sugerencias</Typography>
                   <Box sx={{ display: 'flex', alignItems: 'flex-end', pb: '1%' }}>
                     <Grid container spacing={2}>
                       <Grid item xs={12} md={1}>

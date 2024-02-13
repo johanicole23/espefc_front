@@ -91,12 +91,12 @@ export const cardLoan = [
     {
         image: bolsa,
         title: "Préstamos Quirografarios",
-        description: "Fondos disponibles hasta en máximo 48 horas. Accede a tu préstamo por un monto igual al valor acumulado en tus Fondos de Reserva. ",
+        description: "¿Complicaciones? Nuestros préstamos quirografarios son la respuesta. Obtén el dinero que necesitas de manera ágil y sencilla." ,
     },
     {
         image: diamante,
         title: "Préstamos Prendarios",
-        description: "Prenda tus joyas de oro con las mejores ventajas competitivas: 180 días plazo, 2 opciones de renovación con la menor tasa de interés del mercado.",
+        description: "Ofrecemos condiciones flexibles, plazos de pago ajustados a tus necesidades y tasas de interés competitivas para tu nuevo vehículo",
     },
 ];
 
@@ -176,8 +176,8 @@ export const carImages = [
 ];
 
 export const loanCards = [
-    { image: bolsa, title: "Préstamos Quirografarios", description: "Fondos disponibles hasta en máximo 48 horas. Accede a tu préstamo por un monto igual al valor acumulado en tus Fondos de Reserva." },
-    { image: diamante, title: "Préstamos Prendarios", description: "Prenda tus joyas de oro con las mejores ventajas competitivas: 180 días plazo, 2 opciones de renovación con la menor tasa de interés del mercado." }
+    { image: bolsa, title: "Préstamos Quirografarios", description: " Nuestros préstamos quirografarios son la respuesta. Obtén el dinero que necesitas de manera ágil y sencilla." },
+    { image: diamante, title: "Préstamos Prendarios", description: "Ofrecemos condiciones flexibles, plazos de pago ajustados a tus necesidades y tasas de interés competitivas." }
 ];
 export const style = {
   
