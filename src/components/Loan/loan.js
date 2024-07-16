@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -9,7 +9,6 @@ import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea, CardActions } from '@mui/material';
 import Grow from '@mui/material/Grow';
 import { Grid } from '@material-ui/core';
-import { useNavigate } from 'react-router-dom';
 import YouTube from 'react-youtube';
 import axios from 'axios';
 
@@ -28,10 +27,7 @@ import {
     checked,
 } from './loanConstants';
 
-import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import SkipNextIcon from '@mui/icons-material/SkipNext';
-import IconButton from '@mui/material/IconButton';
+
 import DownloadIcon from '@mui/icons-material/Download';
 import education from '../../assets/loans/finance.png';
 
@@ -39,13 +35,10 @@ function Loans() {
 
     const [isModalSucessOpen, setIsModalSucessOpen] = useState(false);
     const [isModalEducationOpen, setIsModalEducationOpen] = useState(false);
-    const navigate = useNavigate();
-    const [selectedCard, setSelectedCard] = useState(null);
     const [selectedForm, setSelectedForm] = useState(null);
     const [educationData, setEducationData] = useState([]);
 
     const handleOpen = (item, index) => {
-        setSelectedCard(index);
         setSelectedForm(index);
         setIsModalSucessOpen(true);
     };
@@ -82,46 +75,6 @@ function Loans() {
         }, 1000);
     }, []);
 
-    //const educationData = [
-    //    {
-    //        education_id: '1',
-    //        education_videoId: '9sCVcWD1Svs',
-    //        
-    //    },
-    //    {
-    //        education_id: '2',
-    //        education_videoId: 'HMC0Dz9mnbI',           
-    //    },
-    //    {
-    //        education_id: '3',
-    //        education_videoId: '9sCVcWD1Svs',
-    //        
-    //    },
-    //    {
-    //        education_id: '4',
-    //        education_videoId: 'HMC0Dz9mnbI',           
-    //    },
-    //    {
-    //        education_id: '5',
-    //        education_videoId: '9sCVcWD1Svs',
-    //        
-    //    },
-    //    {
-    //        education_id: '6',
-    //        education_videoId: 'HMC0Dz9mnbI',           
-    //    },
-    //    {
-    //        education_id: '7',
-    //        education_videoId: '9sCVcWD1Svs',
-    //        
-    //    },
-    //    {
-    //        education_id: '8',
-    //        education_videoId: 'HMC0Dz9mnbI',           
-    //    },
-    //
-    //
-    //];
 
     // Opciones comunes para todos los reproductores de YouTube
     const commonOpts = {
@@ -145,9 +98,15 @@ function Loans() {
     return (
         <ThemeProvider theme={theme} >
 
-            {window.innerWidth >= 600 && <div><MyAppBar title="AppBar Component" /></div>}
+            {window.innerWidth > 600 && <div><MyAppBar title="AppBar Component" /></div>}
             {window.innerWidth <= 600 && <div><MyMobileAppBar /></div>}
-            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ padding: '1rem 0', marginTop: 12.5 }}>
+            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{
+                padding: '1rem 0', marginTop: 12.5,
+                '@media screen and (max-width: 600px)': {
+                    margin: "8rem 10% 2rem 10%",
+
+                },
+            }}>
                 <Typography variant="body2" sx={home.homeTextH1}>Servicios Financieros</Typography>
                 <Typography variant="body2" sx={home.homeTextH3Light}>¡Potencia tus proyectos y metas con nuestras opciones financieras diseñadas para tu bienestar!</Typography>
                 <Typography variant="body2" sx={home.homeTextH4}>Descubre los préstamos que el Fondo de Cesantía ESPE tiene para ti. </Typography>
@@ -158,12 +117,20 @@ function Loans() {
                         <CardContent >
 
                             <Typography variant="subtitle1" sx={home.homeTextH3}>Educación Financiera</Typography>
-                            <Typography variant="body2" sx={home.homeTextH4}>
+                            <Typography variant="body2" sx={{ ...home.homeTextH4, display: { xs: 'flex', md: 'none' } }}>
+                                ¡Descubre el camino hacia la libertad financiera con nuestros videos educativos!
+                            </Typography>
+                            <Typography variant="body2" sx={{ ...home.homeTextH4, display: { xs: 'none', md: 'flex' } }}>
                                 ¡Descubre el camino hacia la libertad financiera con nuestros videos educativos! Empodérate con conocimientos sólidos sobre manejo de dinero, inversiones y planificación financiera. ¡Tu futuro financiero comienza aquí!
                             </Typography>
-
                         </CardContent>
-                        <Box marginLeft="30%" >
+                        <Box sx={{
+                            marginLeft: "30%",
+                            '@media screen and (max-width: 600px)': {
+                                marginLeft: "10%",
+
+                            },
+                        }} >
                             <Button size="small" variant="contained" color="terciary"
                                 sx={buttons.loanButtonFinance}
                                 onClick={handleOpenEducation}>
@@ -173,7 +140,13 @@ function Loans() {
                     </Box>
                     <CardMedia
                         component="img"
-                        sx={{ width: '200px' }}
+                        sx={{
+                            width: '200px',
+                            '@media screen and (max-width: 600px)': {
+                                width: '150px',
+                                height: '175px',
+                            },
+                        }}
                         image={education}
                         alt="Live from space album cover"
                     />
@@ -224,44 +197,54 @@ function Loans() {
 
 
             <Grow in={checked} {...(checked ? { timeout: 1000 } : {})}>
+                <Box margin="3rem 0">
+                    <Grid container spacing={2}>
+                        {cardLoan.map((item, index) => (
 
-                <Grid container spacing={2}>
-                    {cardLoan.map((item, index) => (
+                            <Grid item xs={12} sm={6}>
+                                <Box margin={'2rem 0'} display="flex" justifyContent="space-around" alignItems="center"
+                                    sx={{
+                                        marginLeft: item.marginLeft, marginRight: item.marginRight,
+                                        '@media screen and (max-width: 600px)': {
+                                            margin: '0 10%'
+                                        },
+                                    }}
 
-                        <Grid item xs={12} sm={6}>
-                            <Box margin={'2rem 0'} display="flex" justifyContent="space-around" alignItems="center" sx={{ marginLeft: item.marginLeft, marginRight: item.marginRight }} >
+                                >
 
-                                <Card key={index} sx={loan.loanFormatCardLoan}>
-                                    <CardActionArea>
-                                        <CardMedia
-                                            sx={loan.loanCardLoanLogo} image={item.image} alt="Descripción de la imagen" />
-                                        <CardContent >
-                                            <Box display="flex" flexDirection={'column'} >
-                                                <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
-                                                <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
+                                    <Card key={index} sx={loan.loanFormatCardLoan}>
+                                        <CardActionArea>
+                                            <CardMedia
+                                                sx={loan.loanCardLoanLogo} image={item.image} alt="Descripción de la imagen" />
+                                            <CardContent >
+                                                <Box display="flex" flexDirection={'column'} >
+                                                    <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
+                                                    <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
+                                                </Box>
+                                            </CardContent>
+                                        </CardActionArea>
+                                        <CardActions >
+                                            <Box marginLeft="30%" >
+                                                <Button size="small" variant="outlined" color="secondary" onClick={() => handleOpen(item, index)} sx={buttons.appBarButtonText} >
+                                                    Quiero saber más
+                                                </Button>
                                             </Box>
-                                        </CardContent>
-                                    </CardActionArea>
-                                    <CardActions >
-                                        <Box marginLeft="30%" >
-                                            <Button size="small" variant="outlined" color="secondary" onClick={() => handleOpen(item, index)} sx={buttons.appBarButtonText} >
-                                                Quiero saber más
-                                            </Button>
-                                        </Box>
 
 
 
-                                    </CardActions>
-                                </Card>
+                                        </CardActions>
+                                    </Card>
 
 
-                            </Box>
-                        </Grid>
+                                </Box>
+                            </Grid>
 
-                    ))}
+                        ))}
 
 
-                </Grid>
+                    </Grid>
+                </Box>
+
 
             </Grow>
             {cardLoan.map((item) => (
@@ -283,6 +266,10 @@ function Loans() {
                             border: '0px solid #000',
                             boxShadow: 20,
                             p: 4,
+                            '@media screen and (max-width: 600px)': {
+                                width: '80%',
+                                padding: '1rem',
+                            },
                         }}>
                             <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
                                 <Box><MyToolBar title="ToolBar Component" /></Box>
@@ -334,7 +321,7 @@ function Loans() {
 
 
 
-            {window.innerWidth >= 600 && <div><MyFooter title="Pie de página" /></div>}
+            {window.innerWidth > 600 && <div><MyFooter title="Pie de página" /></div>}
             {window.innerWidth <= 600 && <div><MyFooterMobile /></div>}
 
 

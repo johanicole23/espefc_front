@@ -96,7 +96,7 @@ export const cardLoan = [
     {
         image: diamante,
         title: "Préstamos Prendarios",
-        description: "Ofrecemos condiciones flexibles, plazos de pago ajustados a tus necesidades y tasas de interés competitivas para tu nuevo vehículo",
+        description: "Ofrecemos condiciones flexibles, plazos de pago ajustados a tus necesidades y tasas de interés competitivas para tu vehículo",
     },
 ];
 

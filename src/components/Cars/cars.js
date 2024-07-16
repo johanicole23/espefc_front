@@ -2,25 +2,19 @@ import React, { useState, useRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider} from '@mui/material/styles';
 import buttons from '../../styles/buttons';
 import home from '../../styles/pages/home'
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { CardActionArea, CardActions } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
-import { Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
-import Modal from '@mui/material/Modal';
-import YouTube from 'react-youtube';
 import MyAppBar from '../MyComponents/myAppBar';
 import MyFooter from '../MyComponents/myFooter';
-import MyToolBar from '../MyComponents/myToolBar';
+import MyMobileAppBar from '../MyComponents/myMobileAppBar';
+import MyFooterMobile from '../MyComponents/myFooterMobile';
 import { theme, newImages, style } from './carsConstants';
 import CarsBrands from './carsBrands';
 import axios from 'axios';
@@ -56,10 +50,11 @@ function Home() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div><MyAppBar title="AppBar Component" /></div>
+      {window.innerWidth >= 600 && <div><MyAppBar title="AppBar Component" /></div>}
+      {window.innerWidth <= 600 && <div><MyMobileAppBar /></div>}
       <Carousel
-       // next={(next, active) => /*console.log(`we left ${active}, and are now at ${next}`)*/}
-       // prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
+        // next={(next, active) => /*console.log(`we left ${active}, and are now at ${next}`)*/}
+        // prev={(prev, active) => console.log(`we left ${active}, and are now at ${prev}`)}
         sx={home.carsCarruselPrincipal}
         animation="fade"
         timeout={5000} // Ajusta el valor del timeout a tu preferencia (en milisegundos)
@@ -77,7 +72,7 @@ function Home() {
                 textAlign: 'center', // Para centrar el contenido dentro de Box
               }}
             >
-              <img src={item.src} alt={item.alt} />
+              <img src={item.src} alt={item.alt} width={"100%"} height={450} />
 
               <Box
                 margin='0 8% 0 60%' // Margen igual a ambos lados
@@ -89,8 +84,8 @@ function Home() {
                   top: '150px',
                   '@media screen and (max-width: 600px)': {
                     position: 'absolute',
-                    top: '100px',
-                    marginLeft: '1%',
+                    top: '150px',
+                    margin: '0',
                   },
                 }}
               >
@@ -126,20 +121,32 @@ function Home() {
 
       <CarsBrands />
 
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ margin: '5rem 0 2rem 0' }}>
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center"
+        sx={{
+          margin: '4rem 0 2rem 0',
+          '@media screen and (max-width: 600px)': {
+            padding: '0 10%',
+          },
+        }}>
         <Typography variant="body2" sx={home.homeTextH4}>Funcionalidades disponibles</Typography>
-        <Typography variant="body2" sx={home.homeTextH1}>Prueba las funcionalidades a las que tienes acceso para informarte más sobre nosotros</Typography>
+        <Typography variant="body2" sx={home.homeTextH1}>Prueba las funcionalidades a las que tienes acceso</Typography>
       </Box>
 
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 20%' }}>
+      <Box sx={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 20%',
+        '@media screen and (max-width: 600px)': {
+          margin: '0 8% 3rem 8%',
+
+        },
+      }}>
 
         <List sx={style} component="nav" aria-label="mailbox folders">
           <ListItem button >
             <Link to="/simulador" style={{ textDecoration: 'none' }}>
               <ListItemText
                 primary="Simulador de Préstamos"
-                secondary="Prueba nuestro simulador de préstamos prendarios para conocer el valor de tus cuotas."
+                secondary="Prueba nuestro simulador de préstamos para conocer el valor de tus cuotas."
                 primaryTypographyProps={home.homeTextH2Left}
                 secondaryTypographyProps={home.homeTextH4Left} />
             </Link>
@@ -150,7 +157,7 @@ function Home() {
             <Link to="/prestamos" style={{ textDecoration: 'none' }}>
               <ListItemText
                 primary="Sección de Educación Financiera"
-                secondary="¿Tienes dudas? Nos preocupamos por tu aprendizaje financiero, por eso te ofrecemos nuestros conocimientos."
+                secondary="Nos preocupamos por tu aprendizaje financiero, por eso te ofrecemos nuestros conocimientos."
                 primaryTypographyProps={home.homeTextH2Left}
                 secondaryTypographyProps={home.homeTextH4Left} />
             </Link>
@@ -159,7 +166,8 @@ function Home() {
 
       </Box>
 
-      <div><MyFooter title="Pie de página" /></div>
+      {window.innerWidth > 600 && <div><MyFooter title="Pie de página" /></div>}
+      {window.innerWidth <= 600 && <div><MyFooterMobile /></div>}
 
     </ThemeProvider >
   );

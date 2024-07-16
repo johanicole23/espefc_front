@@ -13,7 +13,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-import PasswordIcon from '@mui/icons-material/Password';
+import PasswordIcon from  '@mui/icons-material/Lock';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Modal from '@mui/material/Modal';
 import Alert from '@mui/material/Alert';

@@ -87,7 +87,10 @@ function Tab1({ data, onDataChange, onNextTab }) {
         }
 
     }, []);
-
+    
+    useEffect(() => {
+        fetchInstitutions();
+    }, [token]);
 
     /* const handleAmountTextFieldFocus = () => {
        setIsAlertIdOpen(true);
@@ -213,37 +216,25 @@ function Tab1({ data, onDataChange, onNextTab }) {
 
     async function fetchInstitutions() {
         try {
-            const response = await axios.post('http://localhost:3000/api/institutions',{
-                authorization: token,
-            });
-            const data = response.data;
+            const response = await axios.post('http://localhost:3000/api/institutions', { authorization: token });
+            console.log("instituciones", response.data.institutions);
+            setInstitutions(response.data.institutions);
 
-            if (data.success) {
-
-                console.log(response.data.institutions);
-                return data.institutions;
-
-            } else {
-                console.error('Error al obtener las instituciones:', data.message);
-                return [];
-            }
         } catch (error) {
-            console.error('Error en la solicitud:', error);
-            return [];
+            console.error('Error al obtener las instituciones', error);
         }
     }
 
     useEffect(() => {
         const getInstitutions = async () => {
+           
             try {
-                const response = await axios.post('http://localhost:3000/api/institutions',{
-                    authorization: token,
-                });
+                const response = await axios.post('http://localhost:3000/api/institutions', { authorization: token });
+                console.log("instituciones", response.data.institutions);
                 setInstitutions(response.data.institutions);
-
-
+    
             } catch (error) {
-                console.error('Error al obtener vehículos', error);
+                console.error('Error al obtener las instituciones', error);
             }
         };
 

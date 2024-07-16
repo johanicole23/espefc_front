@@ -655,7 +655,7 @@ function Register() {
                                                     >
                                                         <br />No olvides que para acceder a los beneficios de esta plataforma debes estar afiliado al Fondo de Cesantía de la ESPE. <br />Si <span style={{ fontWeight: 'bold' }}>no te has afiliado aún</span>,
                                                         completa los siguientes documentos, dando <span style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer' }} onClick={handleClickDownloadDocuments} >  CLICK AQUÍ </span>
-                                                        y acércate a nuestra sucursal en la Universidad.<br /><br />
+                                                        y acércate a nuestra oficina en la Universidad.<br /><br />
                                                     </Typography>
 
                                                     <Button size="medium" variant="contained" color="secondary"

@@ -15,7 +15,7 @@ const simulator ={
         '&:hover': {
             transform: 'scale(1.1)',
         },
-    
+      
     },
    
     //Logo

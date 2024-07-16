@@ -145,286 +145,361 @@ function LoanSimulator() {
     const forms = [
         {
             index: 0, code: <div>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', ml: '15%', mt: '3rem' }} >
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}> <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>
-                            ¿Cuánto dinero necesitas que te prestemos? </Typography> </Grid>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}> <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>
-                            ¿En cuánto tiempo deseas pagar el préstamo? </Typography> </Grid>
-                    </Grid>
-                </Box>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', margin: '0 18%' }} >
+                <Box display="flex" justifyContent={"center"} component={"form"} sx={{ margin: '3rem 10% 0 10%' }} >
                     <Grid container spacing={5}>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
-                        } variant="standard" fullWidth margin="normal"
-                            value={valorPrestamo}
+                        <Grid item xs={12} md={6}>
+                            <Grid container spacing={5}>
+                                <Grid item xs={12} >
+                                    <Typography variant="body2" sx={home.homeTextH4Left}>
+                                        ¿Cuánto dinero necesitas que te prestemos?</Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <TextField id="input-with-sx" name="valorPrestamo"
+                                        label={<Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>}
+                                        variant="standard" fullWidth margin="normal"
+                                        value={valorPrestamo}
+                                        onChange={handleValorPrestamoChange} />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Grid container spacing={5}>
+                                <Grid item xs={12}>
+                                    <Typography variant="body2" sx={home.homeTextH4Left}>
+                                        ¿En cuánto tiempo deseas pagar el préstamo? </Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <TextField id="input-with-sx" name="tiempoPago"
+                                        label={<Typography sx={login.textoInput} >Ej.:84 Meses máx.</Typography>}
+                                        variant="standard" fullWidth margin="normal"
+                                        value={tiempoPago}
+                                        onChange={handleTiempoPagoChange} />
+                                </Grid>
+                            </Grid>
+                        </Grid>
 
-                            onChange={handleValorPrestamoChange} /> </Grid>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="tiempoPago" label={
-                            <Typography sx={login.textoInput} >Ej.:84 Meses máx.</Typography>
-                        } variant="standard" fullWidth margin="normal"
-                            value={tiempoPago}
-                            onChange={handleTiempoPagoChange} /> </Grid>
                     </Grid>
                 </Box>
-                <Box display="flex" margin={"0 20%"} >
-                    {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
-                        <Stack sx={{ width: '100%' }} spacing={2}>
-                            {isAlertValueLoanOpen && (
-                                <Alert
-                                    open={isAlertValueLoanOpen}
-                                    severity="warning"
-                                    sx={{
-                                        fontFamily: 'Cairo',
-                                        textAlign: 'Right',
-                                        fontSize: "14px",
-                                        fontWeight: 600,
-                                    }}
-                                >
-                                    El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
-                                </Alert>
+                <Grid container spacing={5}>
+                    <Grid item xs={12} md={6}> </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Box display="flex" sx={{
+                            width: '80%',
+                            '@media screen and (max-width: 600px)': {
+                                marginLeft: '10%'
+                            },
+                        }}  >
+                            {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
+                                <Stack spacing={2}>
+                                    {isAlertValueLoanOpen && (
+                                        <Alert
+                                            open={isAlertValueLoanOpen}
+                                            severity="warning"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
+                                        </Alert>
+                                    )}
+
+                                </Stack>
                             )}
 
-                        </Stack>
-                    )}
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                {isAlertValueTimeOpen && (
+                                    <Alert
+                                        open={isAlertValueTimeOpen}
+                                        severity="error"
+                                        sx={{
+                                            fontFamily: 'Cairo',
+                                            textAlign: 'Right',
+                                            fontSize: "14px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        El valor en meses es incorrecto.
+                                    </Alert>
+                                )}
 
-                    <Stack sx={{ width: '100%' }} spacing={2}>
-                        {isAlertValueTimeOpen && (
-                            <Alert
-                                open={isAlertValueTimeOpen}
-                                severity="error"
-                                sx={{
-                                    fontFamily: 'Cairo',
-                                    textAlign: 'Right',
-                                    fontSize: "14px",
-                                    fontWeight: 600,
-                                }}
-                            >
-                                El valor en meses es incorrecto.
-                            </Alert>
-                        )}
+                            </Stack>
 
-                    </Stack>
-
-                </Box>
-
-
+                        </Box>
+                    </Grid>
+                </Grid>
 
             </div>
         },
         {
             index: 1, code: <div>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', ml: '15%', mt: '3rem' }} >
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}> <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>
-                            ¿Cuánto dinero necesitas que te prestemos? </Typography> </Grid>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}> <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>
-                            ¿En cuánto tiempo deseas pagar el préstamo? </Typography> </Grid>
-                    </Grid>
-                </Box>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', margin: '0 18%' }} >
+                <Box display="flex" justifyContent={"center"} component={"form"} sx={{ margin: '3rem 10% 0 10%' }} >
                     <Grid container spacing={5}>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
-                        } variant="standard" fullWidth margin="normal"
-                            value={valorPrestamo}
-                            onChange={handleValorPrestamoChange} /> </Grid>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="tiempoPago" label={
-                            <Typography sx={login.textoInput} >Ej.:48 Meses máx.</Typography>
-                        } variant="standard" fullWidth margin="normal"
-                            value={tiempoPago}
-                            onChange={handleTiempoPagoChange} /> </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Grid container spacing={5}>
+                                <Grid item xs={12} >
+                                    <Typography variant="body2" sx={home.homeTextH4Left}>
+                                        ¿Cuánto dinero necesitas que te prestemos?</Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <TextField id="input-with-sx" name="valorPrestamo"
+                                        label={<Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>}
+                                        variant="standard" fullWidth margin="normal"
+                                        value={valorPrestamo}
+                                        onChange={handleValorPrestamoChange} />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Grid container spacing={5}>
+                                <Grid item xs={12}>
+                                    <Typography variant="body2" sx={home.homeTextH4Left}>
+                                        ¿En cuánto tiempo deseas pagar el préstamo? </Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <TextField id="input-with-sx" name="tiempoPago"
+                                        label={<Typography sx={login.textoInput} >Ej.:48 Meses máx.</Typography>}
+                                        variant="standard" fullWidth margin="normal"
+                                        value={tiempoPago}
+                                        onChange={handleTiempoPagoChange} />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
                     </Grid>
                 </Box>
-                <Box display="flex" margin={"0 20%"} >
-                    {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
-                        <Stack sx={{ width: '100%' }} spacing={2}>
-                            {isAlertValueLoanOpen && (
-                                <Alert
-                                    open={isAlertValueLoanOpen}
-                                    severity="warning"
-                                    sx={{
-                                        fontFamily: 'Cairo',
-                                        textAlign: 'Right',
-                                        fontSize: "14px",
-                                        fontWeight: 600,
-                                    }}
-                                >
-                                    El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
-                                </Alert>
+                <Grid container spacing={5}>
+                    <Grid item xs={12} md={6}> </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Box display="flex" sx={{
+                            width: '80%',
+                            '@media screen and (max-width: 600px)': {
+                                marginLeft: '10%'
+                            },
+                        }}  >
+                            {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
+                                <Stack spacing={2}>
+                                    {isAlertValueLoanOpen && (
+                                        <Alert
+                                            open={isAlertValueLoanOpen}
+                                            severity="warning"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
+                                        </Alert>
+                                    )}
+
+                                </Stack>
                             )}
 
-                        </Stack>
-                    )}
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                {isAlertValueTimeOpen && (
+                                    <Alert
+                                        open={isAlertValueTimeOpen}
+                                        severity="error"
+                                        sx={{
+                                            fontFamily: 'Cairo',
+                                            textAlign: 'Right',
+                                            fontSize: "14px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        El valor en meses es incorrecto.
+                                    </Alert>
+                                )}
 
-                    <Stack sx={{ width: '100%' }} spacing={2}>
-                        {isAlertValueTimeOpen && (
-                            <Alert
-                                open={isAlertValueTimeOpen}
-                                severity="error"
-                                sx={{
-                                    fontFamily: 'Cairo',
-                                    textAlign: 'Right',
-                                    fontSize: "14px",
-                                    fontWeight: 600,
-                                }}
-                            >
-                                El valor en meses es incorrecto.
-                            </Alert>
-                        )}
+                            </Stack>
 
-                    </Stack>
-
-                </Box>
+                        </Box>
+                    </Grid>
+                </Grid>
             </div>
         },
         {
             index: 2, code: <div>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', ml: '15%', mt: '3rem' }} >
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}> <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>
-                            ¿Cuánto dinero necesitas que te prestemos? </Typography> </Grid>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}> <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>
-                            ¿En cuánto tiempo deseas pagar el préstamo? </Typography> </Grid>
-                    </Grid>
-                </Box>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', margin: '0 18%' }} >
+                <Box display="flex" justifyContent={"center"} component={"form"} sx={{ margin: '3rem 10% 0 10%' }} >
                     <Grid container spacing={5}>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
-                        } variant="standard" fullWidth margin="normal"
-                            value={valorPrestamo}
-                            onChange={handleValorPrestamoChange} /> </Grid>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="tiempoPago" label={
-                            <Typography sx={login.textoInput} >Ej.:48 Meses máx.</Typography>
-                        } variant="standard" fullWidth margin="normal"
-                            value={tiempoPago}
-                            onChange={handleTiempoPagoChange} /> </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Grid container spacing={5}>
+                                <Grid item xs={12} >
+                                    <Typography variant="body2" sx={home.homeTextH4Left}>
+                                        ¿Cuánto dinero necesitas que te prestemos?</Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <TextField id="input-with-sx" name="valorPrestamo"
+                                        label={<Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>}
+                                        variant="standard" fullWidth margin="normal"
+                                        value={valorPrestamo}
+                                        onChange={handleValorPrestamoChange} />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Grid container spacing={5}>
+                                <Grid item xs={12}>
+                                    <Typography variant="body2" sx={home.homeTextH4Left}>
+                                        ¿En cuánto tiempo deseas pagar el préstamo? </Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <TextField id="input-with-sx" name="tiempoPago"
+                                        label={<Typography sx={login.textoInput} >Ej.:48 Meses máx.</Typography>}
+                                        variant="standard" fullWidth margin="normal"
+                                        value={tiempoPago}
+                                        onChange={handleTiempoPagoChange} />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
                     </Grid>
                 </Box>
-                <Box display="flex" margin={"0 20%"} >
-                    {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
-                        <Stack sx={{ width: '100%' }} spacing={2}>
-                            {isAlertValueLoanOpen && (
-                                <Alert
-                                    open={isAlertValueLoanOpen}
-                                    severity="warning"
-                                    sx={{
-                                        fontFamily: 'Cairo',
-                                        textAlign: 'Right',
-                                        fontSize: "14px",
-                                        fontWeight: 600,
-                                    }}
-                                >
-                                    El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
-                                </Alert>
+                <Grid container spacing={5}>
+                    <Grid item xs={12} md={6}> </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Box display="flex" sx={{
+                            width: '80%',
+                            '@media screen and (max-width: 600px)': {
+                                marginLeft: '10%'
+                            },
+                        }}  >
+                            {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
+                                <Stack spacing={2}>
+                                    {isAlertValueLoanOpen && (
+                                        <Alert
+                                            open={isAlertValueLoanOpen}
+                                            severity="warning"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
+                                        </Alert>
+                                    )}
+
+                                </Stack>
                             )}
 
-                        </Stack>
-                    )}
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                {isAlertValueTimeOpen && (
+                                    <Alert
+                                        open={isAlertValueTimeOpen}
+                                        severity="error"
+                                        sx={{
+                                            fontFamily: 'Cairo',
+                                            textAlign: 'Right',
+                                            fontSize: "14px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        El valor en meses es incorrecto.
+                                    </Alert>
+                                )}
 
-                    <Stack sx={{ width: '100%' }} spacing={2}>
-                        {isAlertValueTimeOpen && (
-                            <Alert
-                                open={isAlertValueTimeOpen}
-                                severity="error"
-                                sx={{
-                                    fontFamily: 'Cairo',
-                                    textAlign: 'Right',
-                                    fontSize: "14px",
-                                    fontWeight: 600,
-                                }}
-                            >
-                                El valor en meses es incorrecto.
-                            </Alert>
-                        )}
+                            </Stack>
 
-                    </Stack>
-
-                </Box>
+                        </Box>
+                    </Grid>
+                </Grid>
             </div>
         },
         {
             index: 3, code: <div>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', ml: '15%', mt: '3rem' }} >
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}> <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>
-                            ¿Cuánto dinero necesitas que te prestemos?</Typography> </Grid>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}> <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>
-                            ¿En cuánto tiempo deseas pagar el préstamo? </Typography> </Grid>
-                    </Grid>
-                </Box>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', margin: '0 18%' }} >
+
+                <Box display="flex" justifyContent={"center"} component={"form"} sx={{ margin: '3rem 10% 0 10%' }} >
                     <Grid container spacing={5}>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="valorPrestamo" label={
-                            <Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>
-                        } variant="standard" fullWidth margin="normal"
-                            value={valorPrestamo}
-                            onChange={handleValorPrestamoChange} /> </Grid>
-                        <Grid item xs={12} md={1}></Grid>
-                        <Grid item xs={12} md={4}><TextField id="input-with-sx" name="tiempoPago" label={
-                            <Typography sx={login.textoInput} >Ej.:48 Meses máx.</Typography>
-                        } variant="standard" fullWidth margin="normal"
-                            value={tiempoPago}
-                            onChange={handleTiempoPagoChange} /> </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Grid container spacing={5}>
+                                <Grid item xs={12} >
+                                    <Typography variant="body2" sx={home.homeTextH4Left}>
+                                        ¿Cuánto dinero necesitas que te prestemos?</Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <TextField id="input-with-sx" name="valorPrestamo"
+                                        label={<Typography sx={login.textoInput} >Ej.:${valorCuenta} máx.</Typography>}
+                                        variant="standard" fullWidth margin="normal"
+                                        value={valorPrestamo}
+                                        onChange={handleValorPrestamoChange} />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Grid container spacing={5}>
+                                <Grid item xs={12}>
+                                    <Typography variant="body2" sx={home.homeTextH4Left}>
+                                        ¿En cuánto tiempo deseas pagar el préstamo? </Typography>
+                                </Grid>
+                                <Grid item xs={12} >
+                                    <TextField id="input-with-sx" name="tiempoPago"
+                                        label={<Typography sx={login.textoInput} >Ej.:48 Meses máx.</Typography>}
+                                        variant="standard" fullWidth margin="normal"
+                                        value={tiempoPago}
+                                        onChange={handleTiempoPagoChange} />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
                     </Grid>
                 </Box>
-                <Box display="flex" margin={"0 20%"} >
-                    {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
-                        <Stack sx={{ width: '100%' }} spacing={2}>
-                            {isAlertValueLoanOpen && (
-                                <Alert
-                                    open={isAlertValueLoanOpen}
-                                    severity="warning"
-                                    sx={{
-                                        fontFamily: 'Cairo',
-                                        textAlign: 'Right',
-                                        fontSize: "14px",
-                                        fontWeight: 600,
-                                    }}
-                                >
-                                    El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
-                                </Alert>
+                <Grid container spacing={5}>
+                    <Grid item xs={12} md={6}> </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Box display="flex" sx={{
+                            width: '80%',
+                            '@media screen and (max-width: 600px)': {
+                                marginLeft: '10%'
+                            },
+                        }}  >
+                            {parseFloat(valorPrestamo) > parseFloat(valorCuenta) && (
+                                <Stack spacing={2}>
+                                    {isAlertValueLoanOpen && (
+                                        <Alert
+                                            open={isAlertValueLoanOpen}
+                                            severity="warning"
+                                            sx={{
+                                                fontFamily: 'Cairo',
+                                                textAlign: 'Right',
+                                                fontSize: "14px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            El valor del préstamo sobrepasa el valor de la cuenta. Necesita garantes.
+                                        </Alert>
+                                    )}
+
+                                </Stack>
                             )}
 
-                        </Stack>
-                    )}
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                {isAlertValueTimeOpen && (
+                                    <Alert
+                                        open={isAlertValueTimeOpen}
+                                        severity="error"
+                                        sx={{
+                                            fontFamily: 'Cairo',
+                                            textAlign: 'Right',
+                                            fontSize: "14px",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        El valor en meses es incorrecto.
+                                    </Alert>
+                                )}
 
-                    <Stack sx={{ width: '100%' }} spacing={2}>
-                        {isAlertValueTimeOpen && (
-                            <Alert
-                                open={isAlertValueTimeOpen}
-                                severity="error"
-                                sx={{
-                                    fontFamily: 'Cairo',
-                                    textAlign: 'Right',
-                                    fontSize: "14px",
-                                    fontWeight: 600,
-                                }}
-                            >
-                                El valor en meses es incorrecto.
-                            </Alert>
-                        )}
+                            </Stack>
 
-                    </Stack>
+                        </Box>
+                    </Grid>
+                </Grid>
 
-                </Box>
             </div>
         },
     ];
@@ -457,34 +532,46 @@ function LoanSimulator() {
 
     return (
         <Box>
-            <Box display="flex" justifyContent="space-evenly" alignItems="center" sx={{ margin: '0 10%' }} >
-                {cardFinality.map((item, index) => (
-                    <Card key={index}
-                        onClick={() => handleCardClick(index, item)}
-                        elevation={selectedCard === index ? 4 : 1}
-                        sx={simulator.simulatorFormatCardHouse} >
-                        <CardActionArea>
-                            <CardMedia
-                                sx={simulator.simulatorCardLogo} image={item.image} alt="Descripción de la imagen" />
-                            <CardContent >
-                                <Box display="flex" flexDirection={'column'} >
-                                    <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
-                                    <Typography variant="body2" sx={home.homeTextH4}>{item.descriptionP1}</Typography>
-                                </Box>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                ))}
+            <Box display="flex" justifyContent="space-evenly" alignItems="center"
+                sx={{
+                    margin: '0 4%',
+                    '@media screen and (max-width: 600px)': {
+                        margin: '0 10%',
+                    },
+
+                }} >
+                <Grid container spacing={2}>
+                    {cardFinality.map((item, index) => (
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Card key={index}
+                                onClick={() => handleCardClick(index, item)}
+                                elevation={selectedCard === index ? 4 : 1}
+                                sx={simulator.simulatorFormatCardHouse} >
+                                <CardActionArea>
+                                    <CardMedia
+                                        sx={simulator.simulatorCardLogo} image={item.image} alt="Descripción de la imagen" />
+                                    <CardContent >
+                                        <Box display="flex" flexDirection={'column'} >
+                                            <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
+                                            <Typography variant="body2" sx={home.homeTextH4}>{item.descriptionP1}</Typography>
+                                        </Box>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+
             </Box>
             <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', ml: '15%', mt: '3rem' }} >
                 <Typography variant='body2' sx={home.homeTextH1}>Usted ha escogido: {selectedTitle}</Typography>
             </Box>
 
             <Box>
-                <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '63%', ml: '15%', mt: '3rem' }} >
+                <Box display="flex" justifyContent={"center"} component={"form"} sx={{ margin: '3rem 10% 0 10%' }} >
 
-                    <Grid item xs={12} md={6}> <Typography variant="body2" marginLeft="15%" sx={home.homeTextH4Left}>
-                        Simula cuánto dinero tendrías en tu cuenta </Typography> </Grid>
+                    <Typography variant="body2" sx={home.homeTextH4Left}>
+                        Simula cuánto dinero tendrías en tu cuenta </Typography>
 
                 </Box>
                 <Box display="flex" justifyContent={"space-around"} component={"form"} sx={{ width: '70%', margin: '0 14%' }} >
@@ -506,18 +593,12 @@ function LoanSimulator() {
 
 
 
-            <Box display="flex" flexDirection="column"
-                sx={{
-                    position: 'relative',
-                    maxWidth: '100%',
-                    marginTop: '3rem',
-                    marginLeft: "18%"
-                }} >
+            <Box display="flex" justifyContent={"center"} sx={{ margin: '3rem 10% 0 10%' }}>
 
                 <Typography variant="body2" sx={home.homeTextH4Left}>¿Qué sistema de amortización deseas aplicar a tu préstamo? </Typography>
 
             </Box>
-            <Box display="flex" justifyContent={"space-evenly"} component={"form"} sx={{ width: '70%', margin: '0 18%' }} >
+            <Box display="flex" justifyContent={"space-evenly"} component={"form"} sx={{ margin: '1rem 8% 0 8%' }} >
                 <Card sx={loan.loanCardAmortization} onClick={handleSeleccionFrances}>
                     <CardActionArea>
                         <CardContent >
@@ -577,7 +658,7 @@ function LoanSimulator() {
                         }} />
                 </Box>
             )}
-            <Box display="flex" justifyContent={"center"} width="30%" marginLeft={'38%'} mt="3rem">
+            <Box display="flex" justifyContent={"center"} sx={{ margin: '3rem 10% 5rem 10%' }}>
                 <Button variant="contained" alignItems='center' color="secondary" onClick={handleOpen} sx={buttons.appBarButtonLogin} disabled={isDisabled}>
                     Calcular préstamo</Button>
                 <Modal

@@ -1,8 +1,9 @@
 
+import { height, width } from '@mui/system';
 import myTheme from '../../components/MyComponents/myTheme';
-const loan ={
+const loan = {
     //Card
-    loanCardAmortization:{
+    loanCardAmortization: {
         maxWidth: '350px',
         width: 300,
         height: 140,
@@ -15,6 +16,9 @@ const loan ={
         '&:hover': {
             transform: 'scale(1.1)',
         },
+        '@media screen and (max-width: 600px)': {
+            height: 200,
+          },
     },
     loanFormatCardLoan: {
         maxWidth: '400px',
@@ -36,7 +40,11 @@ const loan ={
         '&:hover': {
             transform: 'scale(1.05)',
         },
-        display : 'flex',
+        display: 'flex',
+        '@media screen and (max-width: 600px)': {
+           width:'90%',
+           height:'220px'
+        },
 
     },
     cardLoan: {
@@ -49,15 +57,15 @@ const loan ={
 
     },
     //Logo
-    
+
 
     loanCardLoanLogo: {
         display: 'flex',
         height: '250px',
         width: '400px',
         alignItems: 'center',
-        justifyContent: 'center',        
-       // padding:'5%'
+        justifyContent: 'center',
+        // padding:'5%'
 
     },
 
@@ -73,7 +81,7 @@ const loan ={
 
     },
 
-    
+
 
     loanFormat: {
         fontFamily: 'Cairo',
