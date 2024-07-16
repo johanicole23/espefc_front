@@ -4,7 +4,7 @@ import {
     ThemeProvider, createTheme, TextField, Alert,
     Stack, Typography, Box, Button, Paper, Popover
 } from '@mui/material';
-import PasswordIcon from '@mui/icons-material/Password';
+import PasswordIcon from  '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import home from '../../../styles/pages/home';
 import login from '../../../styles/pages/login';

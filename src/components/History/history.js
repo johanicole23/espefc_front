@@ -1,5 +1,5 @@
 // Importaciones de bibliotecas y componentes
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Fade } from '@mui/material';
@@ -19,7 +19,9 @@ import history from '../../styles/pages/history';
 import login from '../../styles/pages/login';
 import buttons from '../../styles/buttons';
 import MyAppBar from '../MyComponents/myAppBar';
+import MyMobileAppBar from '../MyComponents/myMobileAppBar';
 import MyFooter from '../MyComponents/myFooter';
+import MyFooterMobile from '../MyComponents/myFooterMobile';
 import {
   fcespeP1,
   fcespeP2,
@@ -61,7 +63,8 @@ function History() {
   return (
     <ThemeProvider theme={theme} >
 
-      <Box><MyAppBar title="AppBar Component" /></Box>
+      {window.innerWidth > 600 && <div><MyAppBar title="AppBar Component" /></div>}
+      {window.innerWidth <= 600 && <div><MyMobileAppBar /></div>}
       <Fade in={checked} {...(checked ? { timeout: 2000 } : {})}>
         <Box>
           <Paper sx={{
@@ -69,66 +72,107 @@ function History() {
             position: 'relative',
             maxWidth: '100%',
             marginTop: '6rem',
-            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.3)', // Añade una sombra al perfil
+            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.3)',
+            '@media screen and (max-width: 599px)': {
+              marginTop: '5rem',
+              height: '370px',
+              '& img': {
+                width: '100%',
+                height: '100px',
+                marginTop: '1rem'
+
+              },
+            },
 
           }}>
-            <img src={fcespeP1} alt="Espe imagen" />
+            <img src={fcespeP1} alt="Espe imagen" width={"100%"} height={450} />
             <Box sx={{
               position: 'absolute',
               top: 0,
               left: 0,
               zIndex: 0,
               padding: '1rem',
-              marginLeft: '50%',
-              marginTop: '18%',
-              marginRight: '10%',
+              margin: '18% 10% 0 50%',
+              '@media screen and (max-width: 599px)': {
+                margin: '150px 10% 0 10%',
+                padding: '0',
+              },
+
             }}>
               <Typography variant="body2" sx={home.homeTextH4}>El Fondo de Cesantía ESPE es una empresa que nace para mejorar la protección social de sus partícipes, mediante el otorgamiento de las prestaciones previstas en el Estatuto y reglamentos vigentes. Su registro se realizó en la Superintendencia de Bancos, de acuerdo con la resolución SBS-2011-914 del 09 noviembre del 2011. </Typography>
 
             </Box>
           </Paper>
 
-          <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ margin: '5rem 0 2rem 0 ' }}>
+          <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center"
+            sx={{
+              margin: '5rem 0 2rem 0 ',
+              '@media screen and (max-width: 600px)': {
+                padding: '0 10%',
+
+              },
+            }}>
             <Typography variant="body2" sx={home.homeTextH4}>Como empresa brindamos toda la atención y dirección a nuestros clientes.</Typography>
             <Typography variant="body2" sx={home.homeTextH1}>¿Qué es lo que buscamos?</Typography>
           </Box>
 
-          <Box display="flex" justifyContent="space-evenly" alignItems="center">
-            <Box display="flex" flexDirection={'column'} alignItems="left" sx={{ margin: '0 5%' }} >
-              {cardMisionVision.map((item) => (
-                <Card sx={home.homeFormatCardLoan}>
-                  <CardActionArea>
-                    <CardMedia
-                      sx={home.homeCardLoanLogo} image={item.image} alt="Descripción de la imagen" />
-                    <CardContent >
-                      <Box display="flex" flexDirection={'column'} >
-                        <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
-                        <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
-                      </Box>
-                    </CardContent>
-                  </CardActionArea>
+          <Box display="flex" justifyContent="center" alignItems="center">
 
-                </Card>
-              ))}
-            </Box>
-            <Box display="flex" flexDirection={'column'} alignItems="left" sx={{ margin: '0 5%' }} >
-              {cardFinality.map((item) => (
-                <Card sx={history.historyFormatCardFinality}>
-                  <CardActionArea>
-                    <CardMedia
-                      sx={history.historyCardLogo} image={item.image} alt="Descripción de la imagen" />
-                    <CardContent >
-                      <Box display="flex" flexDirection={'column'} sx={{ padding: '1rem' }} >
-                        <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
-                        <Typography variant="body2" sx={home.homeTextH4}>{item.descriptionP1}</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} >
+                <Box display="flex" flexDirection={'column'} sx={{
+                  margin: '0 20%',
+                  '@media screen and (max-width: 600px)': {
+                    margin: '0 10%',
+                  },
 
-                      </Box>
-                    </CardContent>
-                  </CardActionArea>
+                }} >
+                  {cardMisionVision.map((item) => (
+                    <Card sx={home.homeFormatCardLoan}>
+                      <CardActionArea>
+                        <CardMedia
+                          sx={home.homeCardLoanLogo} image={item.image} alt="Descripción de la imagen" />
+                        <CardContent >
+                          <Box display="flex" flexDirection={'column'} >
+                            <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
+                            <Typography variant="body2" sx={home.homeTextH4}>{item.description}</Typography>
+                          </Box>
+                        </CardContent>
+                      </CardActionArea>
 
-                </Card>
-              ))}
-            </Box>
+                    </Card>
+                  ))}
+                </Box>
+              </Grid>
+              <Grid item xs={12} sm={6} >
+                <Box display="flex" flexDirection={'column'} alignItems="left" sx={{
+                  margin: '0 10%',
+                  '@media screen and (max-width: 600px)': {
+                    margin: '0 10%',
+                  },
+
+                }}  >
+                  {cardFinality.map((item) => (
+                    <Card sx={history.historyFormatCardFinality}>
+                      <CardActionArea>
+                        <CardMedia
+                          sx={history.historyCardLogo} image={item.image} alt="Descripción de la imagen" />
+                        <CardContent >
+                          <Box display="flex" flexDirection={'column'} sx={{ padding: '1rem' }} >
+                            <Typography variant="subtitle1" sx={home.homeTextH3}>{item.title}</Typography>
+                            <Typography variant="body2" sx={home.homeTextH4}>{item.descriptionP1}</Typography>
+
+                          </Box>
+                        </CardContent>
+                      </CardActionArea>
+
+                    </Card>
+                  ))}
+                </Box>
+              </Grid>
+
+            </Grid>
+
           </Box>
           <Grow in={checked} {...(checked ? { timeout: 5000 } : {})}>
             <Paper sx={{
@@ -137,60 +181,64 @@ function History() {
               maxWidth: '100%',
               marginTop: '6rem',
               boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.3)', // Añade una sombra al perfil
+              '@media screen and (max-width: 599px)': {
+                marginTop: '5rem',
+                height: '350px',
+                '& img': {
+                  width: '100%',
+                  height: '100px',
 
+                },
+              },
             }}>
 
-              <img src={fcespeP2} alt="Espe imagen" />
+              <img src={fcespeP2} alt="Espe imagen" width={"100%"} height={430} />
               <div id="horarios"></div>
               <Box
                 sx={{
                   position: 'absolute',
+                  display: 'flex',
+                  flexDirection: 'column',
                   top: 0,
                   left: 0,
                   zIndex: 0,
                   padding: '1rem',
-                  marginLeft: '50%',
-                  marginTop: '8%',
-                  marginRight: '20%',
+                  margin: '10% 25% 0 45%',
                   justifyContent: 'center',
                   alignItems: 'center',
                   alignContent: 'center',
+                  '@media screen and (max-width: 599px)': {
+                    margin: '120px 10% 0 10%',
+                  },
                 }}>
                 <Typography variant="body2" sx={home.homeTitleCarruselPrincipal}>Horarios de Atención</Typography>
                 <Typography variant="body2" sx={home.homeSubtitleCarruselPrincipal}>Lunes a Viernes 8H00-16H30</Typography>
-                
-              </Box>
-              <Box sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                zIndex: 0,
-                marginLeft: '50%',
-                marginTop: '18%',
-                marginRight: '30%',
-              }}>
                 <Typography variant="body2" sx={home.homeTextH4}>Porque siempre nos preocupa tu bienestar y velamos por brindarte la atención que te mereces, conoce nuestro horario.</Typography>
               </Box>
 
+
             </Paper>
           </Grow>
-          <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ marginTop: '5rem ' }}>
+          <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ margin: '5rem 10%' }}>
             <Typography variant="body2" sx={home.homeTextH1}>Contacta a nuestro personal</Typography>
             <Typography variant="body2" sx={home.homeTextH4}>Para concretar una cita o si requieres más información.</Typography>
           </Box>
-
-          <div id="horarios">
-            <Box display="flex" justifyContent="space-evenly" alignItems="center" sx={{ margin: '3rem 0' }}>
-
-              <Box display="flex" justifyContent={"center"} component={"form"} sx={{ width: '50%', flex: '0 0 50%' }}>
-                <Paper elevation={5} sx={{ width: '60%', padding: '5%' }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Box display="flex" justifyContent={"center"} component={"form"} >
+                <Paper elevation={5} sx={{
+                  width: '60%', padding: '5%',
+                  '@media screen and (max-width: 599px)': {
+                    width: '70%',
+                  },
+                }}>
                   <Typography variant="body2" sx={home.homeTextH3}>Formulario de Sugerencias</Typography>
                   <Box sx={{ display: 'flex', alignItems: 'flex-end', pb: '1%' }}>
                     <Grid container spacing={2}>
-                      <Grid item xs={12} md={1}>
+                      <Grid item md={1}>
                         <BadgeIcon sx={{ color: 'action.active', mt: 5 }} />
                       </Grid>
-                      <Grid item xs={12} md={11}>
+                      <Grid item md={11}>
                         <TextField
                           id="nombre"
                           sx={{ color: 'action.active' }}
@@ -201,10 +249,10 @@ function History() {
                           onChange={handleInputChange('name')}
                         />
                       </Grid>
-                      <Grid item xs={12} md={1}>
+                      <Grid item md={1}>
                         <EmailIcon sx={{ color: 'action.active', mt: 5 }} />
                       </Grid>
-                      <Grid item xs={12} md={11}>
+                      <Grid item md={11}>
                         <TextField
                           id="correo"
                           sx={{ color: 'action.active' }}
@@ -215,10 +263,10 @@ function History() {
                           onChange={handleInputChange('mail')}
                         />
                       </Grid>
-                      <Grid item xs={12} md={1}>
+                      <Grid item md={1}>
                         <LocalPhoneIcon sx={{ color: 'action.active', mt: 5 }} />
                       </Grid>
-                      <Grid item xs={12} md={11}>
+                      <Grid item md={11}>
                         <TextField
                           id="telefono"
                           sx={{ color: 'action.active' }}
@@ -229,10 +277,10 @@ function History() {
                           onChange={handleInputChange('cellphone')}
                         />
                       </Grid>
-                      <Grid item xs={12} md={1}>
+                      <Grid item md={1}>
                         <MessageIcon sx={{ color: 'action.active', mt: 5 }} />
                       </Grid>
-                      <Grid item xs={12} md={11}>
+                      <Grid item md={11}>
                         <TextField
                           id="mensaje"
                           sx={{ color: 'action.active' }}
@@ -243,12 +291,12 @@ function History() {
                           onChange={handleInputChange('message')}
                         />
                       </Grid>
-                      <Grid item xs={12} md={12}>
+                      <Grid item md={12}>
                         <Button
                           variant="contained"
                           alignItems="center"
                           color="secondary"
-                          component={Link}                          
+                          component={Link}
                           sx={buttons.appBarButtonLogin}
                           onClick={enviarSugerencia}
                         >
@@ -261,8 +309,13 @@ function History() {
                   <InputLabel></InputLabel>
                 </Paper>
               </Box>
-
-              <Box display="flex" justifyContent={"center"} component={"form"} sx={{ width: '50%', flex: '0 0 50%' }}>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box display="flex" justifyContent={"center"} component={"form"} marginBottom={'3rem'} sx={{
+                '@media screen and (max-width: 599px)': {
+                  width: '100%',
+                },
+              }}>
                 <TableContainer sx={{ width: '80%' }} component={Paper}>
                   <Table sx={{ minWidth: ' 40%' }}>
                     <TableHead>
@@ -292,15 +345,14 @@ function History() {
                   </Table>
                 </TableContainer>
               </Box>
+            </Grid>
+          </Grid>
 
-            </Box>
-          </div>
         </Box>
       </Fade>
 
-
-      <Box><MyFooter title="Pie de página" /></Box>
-
+      {window.innerWidth > 600 && <div><MyFooter title="Pie de página" /></div>}
+      {window.innerWidth <= 600 && <div><MyFooterMobile /></div>}
 
 
     </ThemeProvider >

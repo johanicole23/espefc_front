@@ -3,7 +3,8 @@ import salario from '../../assets/credit/salario.png';
 import auto from '../../assets/credit/auto.png';
 import education from '../../assets/credit/educacion.png';
 import salud from '../../assets/credit/salud.png';
-import {  createTheme, } from '@mui/material/styles';
+import { createTheme, } from '@mui/material/styles';
+import { width } from '@mui/system';
 
 export const theme = createTheme({
     palette: {
@@ -61,4 +62,8 @@ export const style = {
     border: '0px solid #000',
     boxShadow: 20,
     p: 4,
+    '@media screen and (max-width: 600px)': {
+        width: '80%',
+        p: 2,
+    },
 };

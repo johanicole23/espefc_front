@@ -39,8 +39,11 @@ const history={
         width: '550px',        
         alignItems: 'center',
         justifyContent: 'center',       
-        paddingTop: 0
-
+        paddingTop: 0,
+        '@media screen and (max-width: 600px)': {
+            height: '270px',
+            width: '300px', 
+        },
     },
 }
 export default history;

@@ -24,7 +24,10 @@ const buttons = {
         fontFamily: "Cairo",
         textTransform: 'none',
         fontSize: "16px",
-        width: '45%'
+        width: '45%',
+        '@media screen and (max-width: 599px)': {
+            width: '250px',
+        },
     },
     appBarButtonRegister: {
         fontFamily: "Cairo",
@@ -39,7 +42,11 @@ const buttons = {
         textTransform: 'none',
         fontSize: "16px",
         color: 'white',
-        width: '60%'
+        width: '60%',
+        '@media screen and (max-width: 600px)': {
+            width:'80%',
+           
+         },
     },
 
 

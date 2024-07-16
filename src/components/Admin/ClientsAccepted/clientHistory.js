@@ -27,6 +27,7 @@ function LoanHistory() {
   const [usersList, setUsersList] = useState([]);
   const [isAlertSuccessAddOpen, setIsAlertSuccessAddOpen] = useState(false);
   const [isAlertErrorAddOpen, setIsAlertErrorAddOpen] = useState(false);
+  const [isAlertBalanceOpen, setIsAlertBalanceOpen] = useState(false);
   const [userBalance, setUserBalance] = useState('');
   const [userId, setUserId] = useState('');
   const [token, setToken] = useState(null);
@@ -34,7 +35,7 @@ function LoanHistory() {
   const handleOpenBalance = (idClient) => {
     setIsModalSucessOpen(true);
     setUserId(idClient);
-    console.log("seteando id:" ,idClient);
+    console.log("seteando id:", idClient);
   };
 
 
@@ -71,12 +72,12 @@ function LoanHistory() {
     setSearchValue(event.target.value);
   };
   useEffect(() => {
-        
+
     const token = window.localStorage.getItem('authUser');
     if (token) {
-        setToken(token);
+      setToken(token);
     }
-}, []);
+  }, []);
 
 
   useEffect(() => {
@@ -84,7 +85,7 @@ function LoanHistory() {
     const fetchPendingUsers = async () => {
       try {
         const response = await axios.post('http://localhost:3000/api/getApprovedUsers',
-        {authorization:token});
+          { authorization: token });
         setPendingUsers(response.data.customers);
         setUsersList(response.data.users);
       } catch (error) {
@@ -106,7 +107,7 @@ function LoanHistory() {
         console.log('El interruptor está activado');
         const response = await axios.post('http://localhost:3000/api/disableUser', {
           user_id: index,
-          authorization:token
+          authorization: token
         });
         if (response.data.success) {
           console.log('Usuario habilitado con éxito');
@@ -132,20 +133,26 @@ function LoanHistory() {
   function handleTextFieldChange(event) {
 
     const newValue = event.target.value;
-    setUserBalance(newValue);   
+    if (newValue < 25) {
+      setIsAlertBalanceOpen(true);
+    }
+    else {
+      setIsAlertBalanceOpen(false);
+    }
+    setUserBalance(newValue);
     setIsAlertErrorAddOpen(false);
     setIsAlertSuccessAddOpen(false);
 
   }
 
   async function handleButtonAddBalance() {
-   
+
     try {
       const response = await axios.post('http://localhost:3000/api/editBalanceManual',
         {
           user_id: userId,
           user_balance: userBalance,
-          authorization:token
+          authorization: token
 
         });
 
@@ -274,12 +281,28 @@ function LoanHistory() {
                 />
 
               </Box>
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                {isAlertBalanceOpen && (
+                  <Alert
+                    open={isAlertBalanceOpen}
+                    severity="error"
+                    sx={{
+                      fontFamily: 'Cairo',
+                      textAlign: 'Right',
+                      fontSize: "14px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    El valor debe ser igual o mayor a $25
+                  </Alert>
+                )}
+              </Stack>
 
 
 
               <Box marginTop={'2rem'} display={'flex'} justifyContent={'center'} alignContent={'center'}>
                 <Button size="medium" variant="contained" color="terciary"
-                  onClick={()=>handleButtonAddBalance()}
+                  onClick={() => handleButtonAddBalance()}
                   sx={buttons.appBarButtonRegister}
                   endIcon={<AddIcon />} >
                   Asignar monto

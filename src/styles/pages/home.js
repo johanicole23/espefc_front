@@ -1,3 +1,4 @@
+import { width } from '@mui/system';
 import myTheme from '../../components/MyComponents/myTheme';
 
 const home = {
@@ -19,26 +20,49 @@ const home = {
 
 
     homeCarruselPrincipal: {
-        height: '350px',
         flex: '0 0 100%',
         maxWidth: '100%',
         marginTop: 12.5,
         zIndex: 0,
-        '@media screen and (max-width: 600px)': {
-            marginTop:5,
+        '@media screen and (max-width: 599px)': {
+            marginTop: '5rem',
+            height: '370px', //450px para que se incluyan los textos despues de las diapositivas en mobile
+            '& img': {
+                width: '100%',
+                height: '100px',
+                marginTop: '1rem'
+
+            },
         },
 
     },
 
     homeCarruselNews: {
-        height: '430px',
         flex: '0 0 100%',
         maxWidth: '100%',
         marginTop: 12.5,
         zIndex: 0,
-        '@media screen and (max-width: 600px)': {
-            height: '400px',
-            display: 'none',
+        '@media screen and (max-width: 599px)': {
+            marginTop: 5,
+            height: '450px', //450px para que se incluyan los textos despues de las diapositivas en mobile
+            '& img': {
+                width: '100%',
+                height: '100px',
+                marginTop: '1rem'
+
+            },
+        },
+    },
+    homeCarruselNewsMobile: {
+        '@media screen and (max-width: 599px)': {
+            marginTop: '5',
+            height: '400px', //450px para que se incluyan los textos despues de las diapositivas en mobile
+            '& img': {
+                width: '100%',
+                height: '350px',
+                marginTop: '1rem'
+
+            },
         },
     },
 
@@ -57,14 +81,19 @@ const home = {
 
 
     carsCarruselPrincipal: {
-        height: '450px',
         flex: '0 0 100%',
         maxWidth: '100%',
         marginTop: 12.5,
         zIndex: 0,
-        '@media screen and (max-width: 600px)': {
-            height: '400px',
-            display: 'none',
+        '@media screen and (max-width: 599px)': {
+            marginTop: '5rem',
+            height: '450px', //450px para que se incluyan los textos despues de las diapositivas en mobile
+            '& img': {
+                width: '100%',
+                height: '100px',
+                marginTop: '1rem'
+
+            },
         },
     },
     homeCarruselPrincipalPetit: {
@@ -233,7 +262,7 @@ const home = {
         marginLeft: "150px",
         paddingTop: 0,
         '@media screen and (max-width: 600px)': {
-            marginLeft:"115px"
+            marginLeft: "42%"
         },
 
     },
@@ -245,7 +274,8 @@ const home = {
         alignItems: 'center',
         justifyContent: 'center',
         marginLeft: "10px",
-        paddingTop: 0
+        paddingTop: 0,
+
 
     },
     carsCardLogoOthers: {
@@ -254,8 +284,11 @@ const home = {
         width: '1000px',
         alignItems: 'center',
         justifyContent: 'center',
-       
-        paddingTop: 0
+
+        '@media (max-width: 600px)': {
+            height: '70px',
+            width: '300px',           
+        },
 
     },
 
@@ -274,7 +307,8 @@ const home = {
             transform: 'scale(1.1)',
         },
         '@media screen and (max-width: 600px)': {
-            height: '300px',
+            height: '250px',
+            
         },
 
     },
@@ -302,6 +336,10 @@ const home = {
         boxShadow: '0px 0px 10px 5px rgba(0, 0, 0, 0.1)',
         '&:hover': {
             transform: 'scale(1.1)',
+        },
+        '@media (max-width: 600px)': {
+            height: '70px',
+            width: '300px',           
         },
 
     },
